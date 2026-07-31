@@ -20,6 +20,16 @@ export default class AuthMiddleware {
     } = {}
   ) {
     await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+
+    const user = ctx.auth.getUserOrFail()
+
+    if (user.status === 'suspended') {
+      await ctx.auth.use('web').logout()
+
+      return ctx.response.forbidden({
+        message: 'Your account has been suspended',
+      })
+    }
     return next()
   }
 }
