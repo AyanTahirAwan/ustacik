@@ -36,6 +36,9 @@ export default class extends BaseSchema {
         .notNullable()
         .defaultTo('TRY')
 
+      
+        table.boolean('is_active').notNullable().defaultTo(true)
+
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
 
