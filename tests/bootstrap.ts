@@ -1,6 +1,7 @@
 import { assert } from '@japa/assert'
 import app from '@adonisjs/core/services/app'
 import type { Config } from '@japa/runner/types'
+import { apiClient } from '@japa/api-client'
 import { browserClient } from '@japa/browser-client'
 import { pluginAdonisJS } from '@japa/plugin-adonisjs'
 import { dbAssertions } from '@adonisjs/lucid/plugins/db'
@@ -20,6 +21,7 @@ export const plugins: Config['plugins'] = [
   assert(),
   pluginAdonisJS(app),
   dbAssertions(app),
+  apiClient(),
   browserClient({ runInSuites: ['browser'] }),
   sessionBrowserClient(app),
   authBrowserClient(app),
@@ -33,7 +35,7 @@ export const plugins: Config['plugins'] = [
  * The teardown functions are executed after all the tests
  */
 export const runnerHooks: Required<Pick<Config, 'setup' | 'teardown'>> = {
-  setup: [],
+  setup: [() => testUtils.db().migrate()],
   teardown: [],
 }
 
@@ -43,6 +45,18 @@ export const runnerHooks: Required<Pick<Config, 'setup' | 'teardown'>> = {
  */
 export const configureSuite: Config['configureSuite'] = (suite) => {
   if (['browser', 'functional', 'e2e'].includes(suite.name)) {
-    return suite.setup(() => testUtils.httpServer().start())
+    suite.setup(() => testUtils.httpServer().start())
+  }
+
+  if (suite.name === 'functional') {
+    suite.onTest((test) => {
+      test.setup(() => testUtils.db().truncate())
+    })
+
+    suite.onGroup((group) => {
+      group.tap((test) => {
+        test.setup(() => testUtils.db().truncate())
+      })
+    })
   }
 }
