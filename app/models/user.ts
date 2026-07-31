@@ -1,24 +1,64 @@
-import { UserSchema } from '#database/schema'
+import { BaseModel, column, hasOne, hasMany } from '@adonisjs/lucid/orm'
+import type { HasOne, HasMany } from '@adonisjs/lucid/types/relations'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+import { DateTime } from 'luxon'
+import Customer from '#models/customer'
+import Craftsman from '#models/craftsman'
+import Admin from '#models/admin'
+import RefreshToken from '#models/refresh_token'
 
-/**
- * User model represents a user in the application.
- * It extends UserSchema and includes authentication capabilities
- * through the withAuthFinder mixin.
- */
-export default class User extends compose(UserSchema, withAuthFinder(hash)) {
-  /**
-   * Get the user's initials from their full name or email.
-   * Returns the first letter of first and last name if available,
-   * otherwise returns the first two characters of the email username.
-   */
+const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
+  uids: ['email'],
+  
+  passwordColumnName: 'passwordHash',
+})
+
+
+export default class User extends compose(BaseModel, AuthFinder) {
+  @column({ isPrimary: true })
+  declare id: number
+
+  @column()
+  declare email: string
+
+  @column()
+  declare phoneNormalised: string
+
+  @column({ serializeAs: null })
+  declare passwordHash: string
+
+  @column()
+  declare role: 'customer' | 'craftsman' | 'admin'
+
+  @column()
+  declare status: 'active' | 'suspended'
+
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+
+  @hasOne(() => Customer, { foreignKey: 'userId' })
+  declare customer: HasOne<typeof Customer>
+
+  @hasOne(() => Craftsman, { foreignKey: 'userId' })
+  declare craftsman: HasOne<typeof Craftsman>
+
+  @hasOne(() => Admin, { foreignKey: 'userId' })
+  declare admin: HasOne<typeof Admin>
+
+  @hasMany(() => RefreshToken)
+  declare refreshTokens: HasMany<typeof RefreshToken>
+
+  get isActive() {
+    return this.status === 'active'
+  }
+
+  
   get initials() {
-    const [first, last] = this.fullName ? this.fullName.split(' ') : this.email.split('@')
-    if (first && last) {
-      return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase()
-    }
-    return `${first.slice(0, 2)}`.toUpperCase()
+    return this.email.slice(0, 2).toUpperCase()
   }
 }
