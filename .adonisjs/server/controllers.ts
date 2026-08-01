@@ -4,6 +4,11 @@
  */
 
 export const controllers = {
+  Catalog: () => import('#controllers/catalog_controller'),
+  Categories: () => import('#controllers/categories_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
+  Regions: () => import('#controllers/regions_controller'),
+  ServicePriceCatalogs: () => import('#controllers/service_price_catalogs_controller'),
   Session: () => import('#controllers/session_controller'),
+  SubServices: () => import('#controllers/sub_services_controller'),
 }

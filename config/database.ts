@@ -2,24 +2,21 @@ import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
 
 const dbConfig = defineConfig({
-  /**
-   * Default connection used for all queries.
+  /**Default connection used for all queries.
    */
   connection: 'sqlite',
 
-  /**
-   * Pretty-print SQL debug output in development logs.
-   */
+
   prettyPrintDebugQueries: true,
 
   connections: {
     /**
-     * SQLite connection (default).
+     * SQLite connection (It's default).
      */
     sqlite: {
       client: 'better-sqlite3',
       connection: {
-        filename: app.tmpPath('db.sqlite3'),
+filename: app.tmpPath(app.inTest ? 'test.sqlite3' : 'db.sqlite3'),
       },
       useNullAsDefault: true,
       migrations: {

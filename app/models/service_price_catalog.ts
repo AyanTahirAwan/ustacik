@@ -30,6 +30,9 @@ export default class ServicePriceCatalog extends BaseModel {
   @column()
   declare currency: 'TRY' | 'GBP' | 'EUR' | 'USD'
 
+  @column()
+  declare isActive: boolean
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
