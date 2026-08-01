@@ -1,8 +1,10 @@
 import User from '#models/user'
 import Customer from '#models/customer'
 import Craftsman from '#models/craftsman'
+import Subscription from '#models/subscription'
 import { signupValidator } from '#validators/user'
 import db from '@adonisjs/lucid/services/db'
+import { DateTime } from 'luxon'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class NewAccountController {
@@ -39,6 +41,7 @@ export default class NewAccountController {
         if (!payload.businessName || !payload.categoryId) {
           throw new Error('businessName and categoryId are required for craftsman signup')
         }
+
         await Craftsman.create(
           {
             userId: newUser.id,
@@ -47,6 +50,16 @@ export default class NewAccountController {
             trustLevel: 0,
             verbalConsent: false,
             totalJobs: 0,
+          },
+          { client: trx }
+        )
+
+        await Subscription.create(
+          {
+            craftsmanId: newUser.id,
+            planType: 'free',
+            status: 'active',
+            periodStart: DateTime.now(),
           },
           { client: trx }
         )
