@@ -16,16 +16,18 @@ export type JobStatus =
   | 'completed'
   | 'cancelled'
   | 'expired'
+  | 'disputed'
 
 
 const ALLOWED_TRANSITIONS: Record<JobStatus, JobStatus[]> = {
   pending: ['accepted', 'declined', 'cancelled', 'expired'],
-  accepted: ['in_progress', 'cancelled'],
-  in_progress: ['completed', 'cancelled'],
-  completed: [],
+  accepted: ['in_progress', 'cancelled', 'disputed'],
+  in_progress: ['completed', 'cancelled', 'disputed'],
+  completed: ['disputed'],
   declined: [],
   cancelled: [],
   expired: [],
+  disputed: ['completed', 'cancelled'],
 }
 
 export default class JobRequest extends BaseModel {
@@ -106,7 +108,7 @@ export default class JobRequest extends BaseModel {
     await this.save()
 
     if (next === 'completed') {
-      const craftsman = await this.related('craftsman').query().firstOrFail()
+      const craftsman = (await this.related('craftsman' as any).query().firstOrFail()) as Craftsman
       craftsman.totalJobs += 1
       await craftsman.save()
     }

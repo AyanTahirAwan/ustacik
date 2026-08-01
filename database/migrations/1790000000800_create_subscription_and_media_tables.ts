@@ -15,12 +15,12 @@ export default class extends BaseSchema {
         .onDelete('CASCADE')
 
       table
-        .enum('plan_type', ['free', 'paid'], { useNative: false })
+        .enum('plan_type', ['free', 'paid'], { useNative: false, enumName: 'subscription_plan_type' })
         .notNullable()
         .defaultTo('free')
 
       table
-        .enum('status', ['active', 'cancelled', 'past_due'], { useNative: false })
+        .enum('status', ['active', 'cancelled', 'past_due'], { useNative: false, enumName: 'subscription_status' })
         .notNullable()
         .defaultTo('active')
 

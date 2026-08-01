@@ -26,5 +26,11 @@ router
 router
   .group(() => {
     router.post('logout', [controllers.Session, 'destroy'])
+
+    // CRUD Resource Routes for Core & Verification layers
+    router.resource('jobs', controllers.JobRequests)
+    router.resource('reviews', controllers.Reviews)
+    router.resource('verifications', controllers.VerificationLogs)
+    router.resource('disputes', controllers.JobDisputes)
   })
   .use(middleware.auth())

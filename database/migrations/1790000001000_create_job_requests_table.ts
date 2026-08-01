@@ -7,6 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
 
       table.increments('id').notNullable()
+      table.string('request_id', 255).notNullable().unique()
 
       table
         .integer('customer_id')
@@ -55,7 +56,7 @@ export default class extends BaseSchema {
             'cancelled',
             'expired',
           ],
-          { useNative: false }
+          { useNative: false, enumName: 'job_request_status' }
         )
         .notNullable()
         .defaultTo('pending')

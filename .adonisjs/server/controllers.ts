@@ -4,6 +4,10 @@
  */
 
 export const controllers = {
+  JobDisputes: () => import('#controllers/job_disputes_controller'),
+  JobRequests: () => import('#controllers/job_requests_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
+  Reviews: () => import('#controllers/reviews_controller'),
   Session: () => import('#controllers/session_controller'),
+  VerificationLogs: () => import('#controllers/verification_logs_controller'),
 }
