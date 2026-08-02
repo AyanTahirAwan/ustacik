@@ -1,0 +1,22 @@
+@layout()
+  <div class="hero">
+    <h1>Search Services</h1>
+    <p>Find craftsmen and their service prices.</p>
+  </div>
+
+  <div class="page-placeholder">
+    <h2>Search Results — Placeholder</h2>
+    {{--
+      TODO: API integration
+      Run a service search using query filters:
+        GET /api/search/services
+        Query params: categoryId, subServiceId, regionId, minPrice, maxPrice
+      Expected response: { data: [{ id, craftsmanId, subServiceId, regionId,
+                                    minPrice, maxPrice, currency, isActive,
+                                    craftsman, region, subService }] }
+      Also consider GET /api/catalog/prices for active-only listings.
+    --}}
+    <p>No results yet. This page will show search results based on the query.</p>
+  </div>
+@end
+

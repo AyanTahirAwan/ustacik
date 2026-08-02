@@ -38,6 +38,19 @@ router.get('api/search/services', [controllers.Catalog, 'search'])
 
 /*
 |--------------------------------------------------------------------------
+| Public view routes — placeholder pages (no auth required)
+|--------------------------------------------------------------------------
+*/
+router.get('categories', ({ view }) => view.render('pages/categories/index'))
+router.get('categories/:categoryId', ({ params, view }) =>
+  view.render('pages/categories/show', { categoryId: params.categoryId })
+)
+router.get('regions', ({ view }) => view.render('pages/regions/index'))
+router.get('search', ({ view }) => view.render('pages/search/index'))
+router.get('craftsmen', ({ view }) => view.render('pages/craftsmen/index'))
+
+/*
+|--------------------------------------------------------------------------
 | Authenticated routes
 |--------------------------------------------------------------------------
 */
@@ -120,3 +133,59 @@ router
   })
   .use(middleware.auth())
   .use(middleware.role({ roles: ['craftsman', 'admin'] }))
+
+/*
+|--------------------------------------------------------------------------
+| Craftsman dashboard view routes — placeholder pages (auth + role)
+|--------------------------------------------------------------------------
+*/
+router
+  .group(() => {
+    router.get('craftsman', ({ view }) => view.render('pages/craftsman/dashboard'))
+
+    router.get('craftsman/service-prices', ({ view }) =>
+      view.render('pages/craftsman/service-prices/index')
+    )
+    router.get('craftsman/service-prices/create', ({ view }) =>
+      view.render('pages/craftsman/service-prices/create')
+    )
+    router.get('craftsman/service-prices/:priceId/edit', ({ params, view }) =>
+      view.render('pages/craftsman/service-prices/edit', { priceId: params.priceId })
+    )
+  })
+  .use(middleware.auth())
+  .use(middleware.role({ roles: ['craftsman', 'admin'] }))
+
+/*
+|--------------------------------------------------------------------------
+| Admin dashboard view routes — placeholder pages (auth + role admin)
+|--------------------------------------------------------------------------
+*/
+router
+  .group(() => {
+    router.get('admin', ({ view }) => view.render('pages/admin/dashboard'))
+
+    router.get('admin/categories', ({ view }) => view.render('pages/admin/categories/index'))
+    router.get('admin/categories/create', ({ view }) =>
+      view.render('pages/admin/categories/create')
+    )
+    router.get('admin/categories/:categoryId/edit', ({ params, view }) =>
+      view.render('pages/admin/categories/edit', { categoryId: params.categoryId })
+    )
+
+    router.get('admin/regions', ({ view }) => view.render('pages/admin/regions/index'))
+    router.get('admin/regions/create', ({ view }) => view.render('pages/admin/regions/create'))
+    router.get('admin/regions/:regionId/edit', ({ params, view }) =>
+      view.render('pages/admin/regions/edit', { regionId: params.regionId })
+    )
+
+    router.get('admin/sub-services', ({ view }) => view.render('pages/admin/sub-services/index'))
+    router.get('admin/sub-services/create', ({ view }) =>
+      view.render('pages/admin/sub-services/create')
+    )
+    router.get('admin/sub-services/:subServiceId/edit', ({ params, view }) =>
+      view.render('pages/admin/sub-services/edit', { subServiceId: params.subServiceId })
+    )
+  })
+  .use(middleware.auth())
+  .use(middleware.role({ roles: ['admin'] }))

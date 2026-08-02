@@ -1,0 +1,19 @@
+@dashboard_layout({ title: 'Edit Region' })
+  <div class="page-placeholder">
+    <h2>Edit Region #{{ regionId }} — Placeholder</h2>
+    {{--
+      TODO: API integration
+      Update a region via:
+        PATCH /api/admin/regions/:id
+      The route param :id is available as {{ regionId }}.
+      Load the record first with:
+        GET /api/admin/regions/:id
+      Optional update fields:
+        nameEn (string) — trimmed, min 2, max 120 chars, unique
+        nameTr (string) — trimmed, min 2, max 120 chars, unique
+      Also available: DELETE /api/admin/regions/:id (409 if referenced by price catalog)
+    --}}
+    <p>The edit region form will go here.</p>
+  </div>
+@end
+

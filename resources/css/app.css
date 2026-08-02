@@ -226,6 +226,85 @@ button:hover {
   align-items: center;
 }
 
+/* Scaffold shell */
+.app-shell {
+  display: flex;
+  max-width: 1440px;
+  margin: 0 30px;
+  min-height: calc(100vh - 65px);
+  background: #fff;
+  border: 1px solid var(--gray-3);
+}
+.dashboard-sidebar {
+  flex: 0 0 240px;
+  border-right: 1px solid var(--gray-3);
+  padding: 24px 16px;
+  background: var(--gray-1);
+}
+.dashboard-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dashboard-nav a {
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  color: var(--gray-8);
+}
+.dashboard-nav a:hover,
+.dashboard-nav a.current {
+  background: var(--gray-2);
+  color: var(--gray-12);
+}
+.nav-group-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-6);
+  margin: 12px 0 4px;
+}
+.dashboard-main {
+  flex: 1;
+  padding: 32px;
+}
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header h1 {
+  font-size: 28px;
+  letter-spacing: -0.4px;
+}
+.page-placeholder {
+  border: 1px dashed var(--gray-4);
+  border-radius: 8px;
+  padding: 48px 32px;
+  text-align: center;
+  color: var(--gray-7);
+}
+.page-placeholder h2 {
+  margin-bottom: 8px;
+  font-size: 20px;
+  color: var(--gray-10);
+}
+.page-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.page-actions .button {
+  display: inline-block;
+  padding: 8px 16px;
+  background: var(--gray-12);
+  color: #fff;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.page-actions .button:hover {
+  background: var(--gray-10);
+}
+
+
 @keyframes scale-up {
   from {
     transform: scale(0.7);

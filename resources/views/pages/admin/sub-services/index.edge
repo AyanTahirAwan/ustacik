@@ -1,0 +1,20 @@
+@dashboard_layout({ title: 'Manage Sub Services' })
+  <div class="page-actions">
+    <a class="button" href="/admin/sub-services/create">+ Create Sub Service</a>
+  </div>
+
+  <div class="page-placeholder">
+    <h2>Sub Services Management — Placeholder</h2>
+    {{--
+      TODO: API integration
+      List sub-services (optional categoryId filter) via:
+        GET /api/admin/sub-services?categoryId=
+      Expected response: { subServices: [{ id, categoryId, nameEn, nameTr, createdAt }] }
+      Actions per row:
+        - Edit   -> /admin/sub-services/:id/edit
+        - Delete -> DELETE /api/admin/sub-services/:id (409 on FK restriction)
+    --}}
+    <p>Sub services management table will go here.</p>
+  </div>
+@end
+

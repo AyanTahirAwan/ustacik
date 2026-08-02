@@ -1,0 +1,20 @@
+@dashboard_layout({ title: 'Manage Categories' })
+  <div class="page-actions">
+    <a class="button" href="/admin/categories/create">+ Create Category</a>
+  </div>
+
+  <div class="page-placeholder">
+    <h2>Categories Management — Placeholder</h2>
+    {{--
+      TODO: API integration
+      List categories with sub-service counts via:
+        GET /api/admin/categories
+      Expected response: { categories: [{ id, nameEn, nameTr, createdAt, subServicesCount }] }
+      Actions per row:
+        - Edit   -> /admin/categories/:id/edit
+        - Delete -> DELETE /api/admin/categories/:id (409 if sub-services exist)
+    --}}
+    <p>Categories management table will go here.</p>
+  </div>
+@end
+
