@@ -504,7 +504,7 @@ Public catalog endpoints require **no authentication**. They are used for browsi
 **Notes:**
 - Results ordered by `min_price` ascending, then `id` ascending.
 - Preloads: `craftsman` (**only** `userId`, `businessName`, `trustLevel`), `region`, and `subService` **with** its `category`.
-- **Known discrepancy:** Unlike `GET /api/catalog/prices`, this endpoint does **not** filter by `is_active`. Inactive price entries may appear in search results. The functional test suite documents this behavior and it should be addressed in the backend (out of scope for documentation).
+- **Only `is_active = true` entries are returned**, matching `GET /api/catalog/prices`.
 
 ---
 

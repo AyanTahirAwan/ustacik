@@ -172,7 +172,16 @@ export default class ServicePriceCatalogsController {
       })
     }
 
-    await servicePriceCatalog.save()
+    try {
+      await servicePriceCatalog.save()
+    } catch (error) {
+      if (this.isUniqueConstraint(error)) {
+        return response.conflict({
+          message: 'You already have a price entry for this sub-service in this region.',
+        })
+      }
+      throw error
+    }
 
     return response.ok({ servicePriceCatalog })
   }

@@ -223,6 +223,31 @@ test.group('Auth Matrix — Craftsman', () => {
 
     response.assertStatus(403)
   })
+
+  test('craftsman cannot toggle another craftsman price', async ({ client }) => {
+    const { lefkosa, leakRepair, plumbing, electrical } = await seedCatalog()
+    const craftsman1 = await createCraftsman(plumbing.id, {
+      email: 'c1-toggle@test.com',
+      phoneNormalised: '+905551000032',
+    })
+    const craftsman2 = await createCraftsman(electrical.id, {
+      email: 'c2-toggle@test.com',
+      phoneNormalised: '+905551000033',
+    })
+    const price = await createPriceEntry({
+      craftsmanId: craftsman1.id,
+      subServiceId: leakRepair.id,
+      regionId: lefkosa.id,
+    })
+
+    const response = await client
+      .patch(`/api/craftsman/service-prices/${price.id}/toggle-active`)
+      .withCsrfToken()
+      .accept('json')
+      .loginAs(craftsman2)
+
+    response.assertStatus(403)
+  })
 })
 
 // -------------------------------------------------------------------------
@@ -365,5 +390,25 @@ test.group('Auth Matrix — Admin', () => {
       .loginAs(admin)
 
     response.assertStatus(204)
+  })
+
+  test('admin can toggle any craftsman price', async ({ assert, client }) => {
+    const { lefkosa, leakRepair, plumbing } = await seedCatalog()
+    const craftsman = await createCraftsman(plumbing.id)
+    const price = await createPriceEntry({
+      craftsmanId: craftsman.id,
+      subServiceId: leakRepair.id,
+      regionId: lefkosa.id,
+    })
+    const admin = await createAdmin()
+
+    const response = await client
+      .patch(`/api/craftsman/service-prices/${price.id}/toggle-active`)
+      .withCsrfToken()
+      .accept('json')
+      .loginAs(admin)
+
+    response.assertStatus(200)
+    assert.isFalse(response.body().servicePriceCatalog.isActive)
   })
 })

@@ -183,7 +183,7 @@ test.group('Catalog CRUD — Public Access', () => {
 
     response.assertStatus(200)
     assert.isArray(response.body().data)
-    // Should return results (even if search doesn't filter by isActive.....we report this)
+    // Returns active price entries only (the search service filters by is_active)
   })
 })
 
