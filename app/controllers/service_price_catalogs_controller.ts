@@ -148,12 +148,30 @@ export default class ServicePriceCatalogsController {
 
     const payload = await request.validateUsing(updateServicePriceCatalogValidator)
 
+    // Apply provided values first, then validate the final combined range
+    // against the DB CHECK constraint. The validator's priceRange rule only
+    // compares values present in the SAME request payload, so a partial
+    // update (e.g. only minPrice raised above the existing maxPrice) would
+    // otherwise slip through and throw an unhandled 500 from the database.
     if (payload.minPrice !== undefined) servicePriceCatalog.minPrice = payload.minPrice
     if (payload.maxPrice !== undefined) servicePriceCatalog.maxPrice = payload.maxPrice
     if (payload.currency !== undefined) servicePriceCatalog.currency = payload.currency
     if (payload.subServiceId !== undefined) servicePriceCatalog.subServiceId = payload.subServiceId
     if (payload.regionId !== undefined) servicePriceCatalog.regionId = payload.regionId
     if (payload.isActive !== undefined) servicePriceCatalog.isActive = payload.isActive
+
+    if (servicePriceCatalog.maxPrice < servicePriceCatalog.minPrice) {
+      return response.unprocessableEntity({
+        errors: [
+          {
+            message: 'The max price must be greater than or equal to the min price',
+            rule: 'priceRange',
+            field: 'maxPrice',
+          },
+        ],
+      })
+    }
+
     await servicePriceCatalog.save()
 
     return response.ok({ servicePriceCatalog })
