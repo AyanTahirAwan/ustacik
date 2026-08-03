@@ -11,10 +11,9 @@ import RefreshToken from '#models/refresh_token'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
-  
+
   passwordColumnName: 'passwordHash',
 })
-
 
 export default class User extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
@@ -57,7 +56,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
     return this.status === 'active'
   }
 
-  
   get initials() {
     return this.email.slice(0, 2).toUpperCase()
   }

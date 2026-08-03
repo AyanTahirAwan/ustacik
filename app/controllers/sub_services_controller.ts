@@ -44,8 +44,7 @@ export default class SubServicesController {
     } catch (error) {
       if (this.isUniqueConstraint(error)) {
         return response.conflict({
-          message:
-            'A sub-service with this English name already exists in the selected category.',
+          message: 'A sub-service with this English name already exists in the selected category.',
         })
       }
       throw error
@@ -95,7 +94,8 @@ export default class SubServicesController {
     } catch (error) {
       if (this.isForeignKeyConstraint(error)) {
         return response.conflict({
-          message: 'Cannot delete this sub-service because it is referenced by price catalog entries.',
+          message:
+            'Cannot delete this sub-service because it is referenced by price catalog entries.',
         })
       }
       throw error
@@ -126,4 +126,3 @@ export default class SubServicesController {
     )
   }
 }
-

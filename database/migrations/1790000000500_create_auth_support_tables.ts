@@ -51,7 +51,10 @@ export default class extends BaseSchema {
 
       table.string('terms_version', 32).notNullable()
       table
-        .enum('agreement_type', ['TOS', 'WAIVER'], { useNative: false })
+        .enum('agreement_type', ['TOS', 'WAIVER'], {
+          useNative: false,
+          enumName: 'user_consent_agreement_type',
+        })
         .notNullable()
       table.string('ip', 45).notNullable()
       table.timestamp('accepted_at').notNullable()

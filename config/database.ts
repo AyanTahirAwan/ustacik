@@ -6,7 +6,6 @@ const dbConfig = defineConfig({
    */
   connection: 'sqlite',
 
-
   prettyPrintDebugQueries: true,
 
   connections: {
@@ -16,7 +15,7 @@ const dbConfig = defineConfig({
     sqlite: {
       client: 'better-sqlite3',
       connection: {
-filename: app.tmpPath(app.inTest ? 'test.sqlite3' : 'db.sqlite3'),
+        filename: app.tmpPath(app.inTest ? 'test.sqlite3' : 'db.sqlite3'),
       },
       useNullAsDefault: true,
       migrations: {

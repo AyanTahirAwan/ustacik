@@ -34,7 +34,10 @@ async function createAdmin() {
  * Create a craftsman user together with the required Craftsman profile row.
  * A category must exist before calling this helper.
  */
-async function createCraftsman(categoryId: number, overrides: Partial<{ email: string; phoneNormalised: string }> = {}) {
+async function createCraftsman(
+  categoryId: number,
+  overrides: Partial<{ email: string; phoneNormalised: string }> = {}
+) {
   const user = await User.create({
     email: overrides.email ?? 'craftsman@ustacik.test',
     phoneNormalised: overrides.phoneNormalised ?? '+905551000002',
@@ -127,10 +130,12 @@ test.group('Catalog CRUD — Public Access', () => {
   })
 
   test('GET /api/catalog/prices only returns active price entries', async ({ assert, client }) => {
-    const { lefkosa, leakRepair, plumbing } = await seedCatalog()
+    const { lefkosa, leakRepair, wiring, plumbing } = await seedCatalog()
     const craftsman = await createCraftsman(plumbing.id)
 
     // Create one active and one inactive price entry
+    // Use different subServiceId (leakRepair vs wiring) to avoid violating
+    // the composite unique constraint on (craftsman_id, sub_service_id, region_id)
     await ServicePriceCatalog.create({
       craftsmanId: craftsman.id,
       subServiceId: leakRepair.id,
@@ -142,7 +147,7 @@ test.group('Catalog CRUD — Public Access', () => {
     })
     await ServicePriceCatalog.create({
       craftsmanId: craftsman.id,
-      subServiceId: leakRepair.id,
+      subServiceId: wiring.id,
       regionId: lefkosa.id,
       minPrice: 300,
       maxPrice: 400,
@@ -192,6 +197,7 @@ test.group('Catalog CRUD — Admin Authorization', () => {
 
     const response = await client
       .post('/api/admin/categories')
+      .withCsrfToken()
       .loginAs(admin)
       .json({ nameEn: 'Gardening', nameTr: 'Bahçecilik' })
 
@@ -205,6 +211,7 @@ test.group('Catalog CRUD — Admin Authorization', () => {
 
     const response = await client
       .patch(`/api/admin/categories/${category.id}`)
+      .withCsrfToken()
       .loginAs(admin)
       .json({ nameEn: 'UpdatedName' })
 
@@ -218,6 +225,7 @@ test.group('Catalog CRUD — Admin Authorization', () => {
 
     const response = await client
       .delete(`/api/admin/categories/${category.id}`)
+      .withCsrfToken()
       .loginAs(admin)
 
     response.assertStatus(204)
@@ -229,6 +237,7 @@ test.group('Catalog CRUD — Admin Authorization', () => {
 
     const response = await client
       .post('/api/admin/categories')
+      .withCsrfToken()
       .loginAs(craftsman)
       .json({ nameEn: 'Gardening', nameTr: 'Bahçecilik' })
 
@@ -236,11 +245,12 @@ test.group('Catalog CRUD — Admin Authorization', () => {
   })
 
   test('customer cannot access admin category routes', async ({ client }) => {
-    await createCustomer()
+    const customer = await createCustomer()
 
     const response = await client
       .post('/api/admin/categories')
-      .loginAs(await createCustomer())
+      .withCsrfToken()
+      .loginAs(customer)
       .json({ nameEn: 'Gardening', nameTr: 'Bahçecilik' })
 
     response.assertStatus(403)
@@ -258,6 +268,7 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
 
     const response = await client
       .post('/api/craftsman/service-prices')
+      .withCsrfToken()
       .loginAs(craftsman)
       .json({
         subServiceId: leakRepair.id,
@@ -276,12 +287,16 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
     assert.isTrue(record.isActive)
   })
 
-  test('craftsman cannot provide craftsmanId manually (craftsmanId is derived from auth)', async ({ assert, client }) => {
+  test('craftsman cannot provide craftsmanId manually (craftsmanId is derived from auth)', async ({
+    assert,
+    client,
+  }) => {
     const { lefkosa, leakRepair, plumbing } = await seedCatalog()
     const craftsman = await createCraftsman(plumbing.id)
 
     const response = await client
       .post('/api/craftsman/service-prices')
+      .withCsrfToken()
       .loginAs(craftsman)
       .json({
         craftsmanId: 99999, // Should be ignored
@@ -320,6 +335,7 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
 
     const response = await client
       .patch(`/api/craftsman/service-prices/${price.id}`)
+      .withCsrfToken()
       .loginAs(craftsman)
       .json({ minPrice: 150, maxPrice: 300 })
 
@@ -344,6 +360,7 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
 
     const response = await client
       .delete(`/api/craftsman/service-prices/${price.id}`)
+      .withCsrfToken()
       .loginAs(craftsman)
 
     response.assertStatus(204)
@@ -366,6 +383,7 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
     // Toggle to inactive
     const response1 = await client
       .patch(`/api/craftsman/service-prices/${price.id}/toggle-active`)
+      .withCsrfToken()
       .loginAs(craftsman)
 
     response1.assertStatus(200)
@@ -374,6 +392,7 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
     // Toggle back to active
     const response2 = await client
       .patch(`/api/craftsman/service-prices/${price.id}/toggle-active`)
+      .withCsrfToken()
       .loginAs(craftsman)
 
     response2.assertStatus(200)
@@ -382,8 +401,14 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
 
   test('another craftsman cannot edit another craftsman price entry', async ({ client }) => {
     const { lefkosa, leakRepair, plumbing, electrical } = await seedCatalog()
-    const craftsman1 = await createCraftsman(plumbing.id, { email: 'craftsman1@test.com', phoneNormalised: '+905551000010' })
-    const craftsman2 = await createCraftsman(electrical.id, { email: 'craftsman2@test.com', phoneNormalised: '+905551000011' })
+    const craftsman1 = await createCraftsman(plumbing.id, {
+      email: 'craftsman1@test.com',
+      phoneNormalised: '+905551000010',
+    })
+    const craftsman2 = await createCraftsman(electrical.id, {
+      email: 'craftsman2@test.com',
+      phoneNormalised: '+905551000011',
+    })
 
     const price = await ServicePriceCatalog.create({
       craftsmanId: craftsman1.id,
@@ -397,6 +422,7 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
 
     const response = await client
       .patch(`/api/craftsman/service-prices/${price.id}`)
+      .withCsrfToken()
       .loginAs(craftsman2)
       .json({ minPrice: 999 })
 
@@ -405,8 +431,14 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
 
   test('another craftsman cannot delete another craftsman price entry', async ({ client }) => {
     const { lefkosa, leakRepair, plumbing, electrical } = await seedCatalog()
-    const craftsman1 = await createCraftsman(plumbing.id, { email: 'craftsman1@test.com', phoneNormalised: '+905551000012' })
-    const craftsman2 = await createCraftsman(electrical.id, { email: 'craftsman2@test.com', phoneNormalised: '+905551000013' })
+    const craftsman1 = await createCraftsman(plumbing.id, {
+      email: 'craftsman1@test.com',
+      phoneNormalised: '+905551000012',
+    })
+    const craftsman2 = await createCraftsman(electrical.id, {
+      email: 'craftsman2@test.com',
+      phoneNormalised: '+905551000013',
+    })
 
     const price = await ServicePriceCatalog.create({
       craftsmanId: craftsman1.id,
@@ -420,6 +452,7 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
 
     const response = await client
       .delete(`/api/craftsman/service-prices/${price.id}`)
+      .withCsrfToken()
       .loginAs(craftsman2)
 
     response.assertStatus(403)
@@ -432,6 +465,7 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
 
     const response = await client
       .post('/api/craftsman/service-prices')
+      .withCsrfToken()
       .loginAs(customer)
       .json({
         subServiceId: leakRepair.id,
@@ -457,6 +491,8 @@ test.group('Catalog CRUD — Validation', () => {
 
     const response = await client
       .post('/api/admin/categories')
+      .withCsrfToken()
+      .accept('json')
       .loginAs(admin)
       .json({ nameTr: 'Sadece Türkçe' })
 
@@ -470,6 +506,8 @@ test.group('Catalog CRUD — Validation', () => {
 
     const response = await client
       .post('/api/admin/categories')
+      .withCsrfToken()
+      .accept('json')
       .loginAs(admin)
       .json({ nameEn: 'Gardening', nameTr: 'Bahçe' })
 
@@ -482,6 +520,8 @@ test.group('Catalog CRUD — Validation', () => {
 
     const response = await client
       .post('/api/admin/sub-services')
+      .withCsrfToken()
+      .accept('json')
       .loginAs(admin)
       .json({ categoryId: 99999, nameEn: 'Test', nameTr: 'Test' })
 
@@ -496,6 +536,7 @@ test.group('Catalog CRUD — Validation', () => {
 
     const response = await client
       .post('/api/admin/sub-services')
+      .withCsrfToken()
       .loginAs(admin)
       .json({ categoryId: category.id, nameEn: 'Duplicate', nameTr: 'Tekrar' })
 
@@ -509,6 +550,8 @@ test.group('Catalog CRUD — Validation', () => {
 
     const response = await client
       .post('/api/craftsman/service-prices')
+      .withCsrfToken()
+      .accept('json')
       .loginAs(craftsman)
       .json({
         subServiceId: leakRepair.id,
@@ -528,6 +571,8 @@ test.group('Catalog CRUD — Validation', () => {
 
     const response = await client
       .post('/api/craftsman/service-prices')
+      .withCsrfToken()
+      .accept('json')
       .loginAs(craftsman)
       .json({
         subServiceId: leakRepair.id,
@@ -547,6 +592,8 @@ test.group('Catalog CRUD — Validation', () => {
 
     const response = await client
       .post('/api/craftsman/service-prices')
+      .withCsrfToken()
+      .accept('json')
       .loginAs(craftsman)
       .json({
         subServiceId: leakRepair.id,

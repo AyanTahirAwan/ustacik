@@ -8,7 +8,13 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class AdminVerificationLogSchema extends BaseModel {
-  static $columns = ['backgroundCheckNotes', 'clearanceLevelGranted', 'departmentCode', 'logId', 'supervisorId'] as const
+  static $columns = [
+    'backgroundCheckNotes',
+    'clearanceLevelGranted',
+    'departmentCode',
+    'logId',
+    'supervisorId',
+  ] as const
   $columns = AdminVerificationLogSchema.$columns
   @column()
   declare backgroundCheckNotes: string | null
@@ -51,7 +57,16 @@ export class CategorySchema extends BaseModel {
 }
 
 export class CraftsmanVerificationLogSchema extends BaseModel {
-  static $columns = ['bizRegDocUrl', 'guaranteeDocUrl', 'idCardVerified', 'logId', 'pastCustomer1Called', 'pastCustomer2Called', 'trustTierGranted', 'verbalConsentAudited'] as const
+  static $columns = [
+    'bizRegDocUrl',
+    'guaranteeDocUrl',
+    'idCardVerified',
+    'logId',
+    'pastCustomer1Called',
+    'pastCustomer2Called',
+    'trustTierGranted',
+    'verbalConsentAudited',
+  ] as const
   $columns = CraftsmanVerificationLogSchema.$columns
   @column()
   declare bizRegDocUrl: string | null
@@ -72,7 +87,17 @@ export class CraftsmanVerificationLogSchema extends BaseModel {
 }
 
 export class CraftsmanSchema extends BaseModel {
-  static $columns = ['bio', 'bizRegNo', 'businessName', 'categoryId', 'createdAt', 'totalJobs', 'trustLevel', 'userId', 'verbalConsent'] as const
+  static $columns = [
+    'bio',
+    'bizRegNo',
+    'businessName',
+    'categoryId',
+    'createdAt',
+    'totalJobs',
+    'trustLevel',
+    'userId',
+    'verbalConsent',
+  ] as const
   $columns = CraftsmanSchema.$columns
   @column()
   declare bio: string | null
@@ -95,7 +120,16 @@ export class CraftsmanSchema extends BaseModel {
 }
 
 export class CustomerAddressSchema extends BaseModel {
-  static $columns = ['createdAt', 'customerId', 'id', 'isDefault', 'label', 'landmark', 'regionId', 'street'] as const
+  static $columns = [
+    'createdAt',
+    'customerId',
+    'id',
+    'isDefault',
+    'label',
+    'landmark',
+    'regionId',
+    'street',
+  ] as const
   $columns = CustomerAddressSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -129,7 +163,13 @@ export class CustomerFavoriteSchema extends BaseModel {
 }
 
 export class CustomerVerificationLogSchema extends BaseModel {
-  static $columns = ['emailVerified', 'ipAddress', 'logId', 'phoneOtpVerified', 'whatsappReachable'] as const
+  static $columns = [
+    'emailVerified',
+    'ipAddress',
+    'logId',
+    'phoneOtpVerified',
+    'whatsappReachable',
+  ] as const
   $columns = CustomerVerificationLogSchema.$columns
   @column()
   declare emailVerified: boolean
@@ -144,7 +184,14 @@ export class CustomerVerificationLogSchema extends BaseModel {
 }
 
 export class CustomerSchema extends BaseModel {
-  static $columns = ['createdAt', 'defaultRegionId', 'fullName', 'language', 'smsOptIn', 'userId'] as const
+  static $columns = [
+    'createdAt',
+    'defaultRegionId',
+    'fullName',
+    'language',
+    'smsOptIn',
+    'userId',
+  ] as const
   $columns = CustomerSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -161,7 +208,18 @@ export class CustomerSchema extends BaseModel {
 }
 
 export class JobDisputeSchema extends BaseModel {
-  static $columns = ['adminResolutionNotes', 'craftsmanId', 'createdAt', 'customerId', 'customerNotes', 'id', 'jobId', 'reasonCategory', 'resolvedAt', 'status'] as const
+  static $columns = [
+    'adminResolutionNotes',
+    'craftsmanId',
+    'createdAt',
+    'customerId',
+    'customerNotes',
+    'id',
+    'jobId',
+    'reasonCategory',
+    'resolvedAt',
+    'status',
+  ] as const
   $columns = JobDisputeSchema.$columns
   @column()
   declare adminResolutionNotes: string | null
@@ -186,7 +244,17 @@ export class JobDisputeSchema extends BaseModel {
 }
 
 export class JobRequestSchema extends BaseModel {
-  static $columns = ['categoryId', 'craftsmanId', 'createdAt', 'customerId', 'description', 'id', 'regionId', 'status', 'updatedAt'] as const
+  static $columns = [
+    'categoryId',
+    'craftsmanId',
+    'createdAt',
+    'customerId',
+    'description',
+    'id',
+    'regionId',
+    'status',
+    'updatedAt',
+  ] as const
   $columns = JobRequestSchema.$columns
   @column()
   declare categoryId: number
@@ -269,7 +337,19 @@ export class ReviewHelpfulVoteSchema extends BaseModel {
 }
 
 export class ReviewSchema extends BaseModel {
-  static $columns = ['comment', 'communication', 'craftsmanId', 'craftsmanReply', 'createdAt', 'customerId', 'id', 'jobId', 'priceHonesty', 'punctuality', 'workmanship'] as const
+  static $columns = [
+    'comment',
+    'communication',
+    'craftsmanId',
+    'craftsmanReply',
+    'createdAt',
+    'customerId',
+    'id',
+    'jobId',
+    'priceHonesty',
+    'punctuality',
+    'workmanship',
+  ] as const
   $columns = ReviewSchema.$columns
   @column()
   declare comment: string | null
@@ -296,7 +376,18 @@ export class ReviewSchema extends BaseModel {
 }
 
 export class ServicePriceCatalogSchema extends BaseModel {
-  static $columns = ['craftsmanId', 'createdAt', 'currency', 'id', 'isActive', 'maxPrice', 'minPrice', 'regionId', 'subServiceId', 'updatedAt'] as const
+  static $columns = [
+    'craftsmanId',
+    'createdAt',
+    'currency',
+    'id',
+    'isActive',
+    'maxPrice',
+    'minPrice',
+    'regionId',
+    'subServiceId',
+    'updatedAt',
+  ] as const
   $columns = ServicePriceCatalogSchema.$columns
   @column()
   declare craftsmanId: number
@@ -336,7 +427,16 @@ export class SubServiceSchema extends BaseModel {
 }
 
 export class SubscriptionSchema extends BaseModel {
-  static $columns = ['craftsmanId', 'createdAt', 'id', 'monthlyFee', 'periodEnd', 'periodStart', 'planType', 'status'] as const
+  static $columns = [
+    'craftsmanId',
+    'createdAt',
+    'id',
+    'monthlyFee',
+    'periodEnd',
+    'periodStart',
+    'planType',
+    'status',
+  ] as const
   $columns = SubscriptionSchema.$columns
   @column()
   declare craftsmanId: number
@@ -393,7 +493,16 @@ export class UserNotificationSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'id', 'passwordHash', 'phoneNormalised', 'role', 'status', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'email',
+    'id',
+    'passwordHash',
+    'phoneNormalised',
+    'role',
+    'status',
+    'updatedAt',
+  ] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

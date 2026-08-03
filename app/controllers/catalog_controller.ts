@@ -3,6 +3,7 @@ import Region from '#models/region'
 import SubService from '#models/sub_service'
 import CatalogSearchService from '#services/catalog_search_service'
 import { catalogSearchValidator } from '#validators/catalog_search'
+import { catalogSubServicesValidator } from '#validators/catalog_filters'
 import type { HttpContext } from '@adonisjs/core/http'
 
 /**
@@ -24,7 +25,9 @@ export default class CatalogController {
    * Return the sub-services available within a category.
    */
   async subServices({ request, response }: HttpContext) {
-    const categoryId = request.param('categoryId')
+    const { categoryId } = await request.validateUsing(catalogSubServicesValidator, {
+      data: { categoryId: request.param('categoryId') },
+    })
     const subServices = await SubService.query().where('category_id', categoryId)
 
     return response.ok({ data: subServices })

@@ -10,7 +10,6 @@ import WorkPhoto from '#models/work_photo'
 import JobRequest from '#models/job_request'
 import Review from '#models/review'
 
-
 export const TRUST_LEVEL_LABELS = ['unverified', 'registered', 'verified', 'approved'] as const
 
 export default class Craftsman extends BaseModel {
@@ -28,7 +27,6 @@ export default class Craftsman extends BaseModel {
   @column()
   declare bio: string | null
 
- 
   @column()
   declare trustLevel: number
 
@@ -72,7 +70,6 @@ export default class Craftsman extends BaseModel {
     return TRUST_LEVEL_LABELS[this.trustLevel] ?? 'unverified'
   }
 
- 
   static async recomputeTrustLevel(craftsmanId: number) {
     const craftsman = await Craftsman.findOrFail(craftsmanId)
     const logs = await VerificationLog.query().where('craftsman_id', craftsmanId)

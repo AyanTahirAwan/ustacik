@@ -3,6 +3,7 @@ import {
   createServicePriceCatalogValidator,
   updateServicePriceCatalogValidator,
 } from '#validators/service_price_catalog'
+import { catalogPricesValidator } from '#validators/catalog_filters'
 import type { HttpContext } from '@adonisjs/core/http'
 
 /**
@@ -26,11 +27,8 @@ export default class ServicePriceCatalogsController {
    * filters, preloading the craftsman, sub-service, and region.
    */
   async index({ request, response }: HttpContext) {
-    const categoryId = request.input('categoryId')
-    const subServiceId = request.input('subServiceId')
-    const regionId = request.input('regionId')
-    const minPrice = request.input('minPrice')
-    const maxPrice = request.input('maxPrice')
+    const filters = await request.validateUsing(catalogPricesValidator)
+    const { categoryId, subServiceId, regionId, minPrice, maxPrice } = filters
 
     const query = ServicePriceCatalog.query()
       .where('is_active', true)
@@ -40,25 +38,25 @@ export default class ServicePriceCatalogsController {
       .orderBy('minPrice', 'asc')
       .orderBy('id', 'asc')
 
-    if (categoryId !== undefined && categoryId !== null && categoryId !== '') {
+    if (categoryId !== undefined) {
       query.whereHas('subService', (subServices) => {
         subServices.where('category_id', categoryId)
       })
     }
 
-    if (subServiceId !== undefined && subServiceId !== null && subServiceId !== '') {
+    if (subServiceId !== undefined) {
       query.where('sub_service_id', subServiceId)
     }
 
-    if (regionId !== undefined && regionId !== null && regionId !== '') {
+    if (regionId !== undefined) {
       query.where('region_id', regionId)
     }
 
-    if (minPrice !== undefined && minPrice !== null && minPrice !== '') {
+    if (minPrice !== undefined) {
       query.where('max_price', '>=', minPrice)
     }
 
-    if (maxPrice !== undefined && maxPrice !== null && maxPrice !== '') {
+    if (maxPrice !== undefined) {
       query.where('min_price', '<=', maxPrice)
     }
 
@@ -107,8 +105,7 @@ export default class ServicePriceCatalogsController {
     } catch (error) {
       if (this.isUniqueConstraint(error)) {
         return response.conflict({
-          message:
-            'You already have a price entry for this sub-service in this region.',
+          message: 'You already have a price entry for this sub-service in this region.',
         })
       }
       throw error
@@ -211,4 +208,3 @@ export default class ServicePriceCatalogsController {
     )
   }
 }
-

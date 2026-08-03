@@ -35,7 +35,10 @@ export default class CategoriesController {
    * Return a single category with its sub-services preloaded.
    */
   async show({ params, response }: HttpContext) {
-    const category = await Category.query().where('id', params.id).preload('subServices').firstOrFail()
+    const category = await Category.query()
+      .where('id', params.id)
+      .preload('subServices')
+      .firstOrFail()
 
     return response.ok({ category })
   }
@@ -89,4 +92,3 @@ export default class CategoriesController {
     )
   }
 }
-

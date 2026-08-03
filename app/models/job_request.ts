@@ -9,14 +9,7 @@ import Review from '#models/review'
 import JobDispute from '#models/job_dispute'
 
 export type JobStatus =
-  | 'pending'
-  | 'accepted'
-  | 'declined'
-  | 'in_progress'
-  | 'completed'
-  | 'cancelled'
-  | 'expired'
-
+  'pending' | 'accepted' | 'declined' | 'in_progress' | 'completed' | 'cancelled' | 'expired'
 
 const ALLOWED_TRANSITIONS: Record<JobStatus, JobStatus[]> = {
   pending: ['accepted', 'declined', 'cancelled', 'expired'],
@@ -79,7 +72,6 @@ export default class JobRequest extends BaseModel {
   @hasMany(() => JobDispute, { foreignKey: 'jobId' })
   declare disputes: HasMany<typeof JobDispute>
 
-  
   static async submit(data: {
     requestId: string
     customerId: number
@@ -106,7 +98,7 @@ export default class JobRequest extends BaseModel {
     await this.save()
 
     if (next === 'completed') {
-      const craftsman = await this.related('craftsman').query().firstOrFail()
+      const craftsman = await Craftsman.findOrFail(this.craftsmanId)
       craftsman.totalJobs += 1
       await craftsman.save()
     }

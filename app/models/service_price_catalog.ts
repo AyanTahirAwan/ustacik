@@ -5,7 +5,6 @@ import Craftsman from '#models/craftsman'
 import Region from '#models/region'
 import SubService from '#models/sub_service'
 
-
 export default class ServicePriceCatalog extends BaseModel {
   static table = 'service_price_catalogs'
 

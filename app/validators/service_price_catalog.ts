@@ -57,4 +57,3 @@ export const updateServicePriceCatalogValidator = vine.create({
   currency: vine.enum(['TRY', 'GBP', 'EUR', 'USD'] as const).optional(),
   isActive: vine.boolean().optional(),
 })
-

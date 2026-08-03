@@ -8,11 +8,11 @@ export type CatalogSearchFilters = {
   maximumPrice?: number
 }
 
-
 export default class CatalogSearchService {
   async search(filters: CatalogSearchFilters = {}) {
     const { categoryId, subServiceId, regionId, minimumPrice, maximumPrice } = filters
     const query = ServicePriceCatalog.query()
+      .where('is_active', true)
       .preload('craftsman', (craftsmen) =>
         craftsmen.select(['userId', 'businessName', 'trustLevel'])
       )
@@ -35,7 +35,6 @@ export default class CatalogSearchService {
       query.where('region_id', regionId)
     }
 
-   
     if (minimumPrice !== undefined) {
       query.where('max_price', '>=', minimumPrice)
     }

@@ -3,7 +3,6 @@ import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
 import SubService from '#models/sub_service'
 
-
 export default class Category extends BaseModel {
   @column({ isPrimary: true })
   declare id: number

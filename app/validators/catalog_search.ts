@@ -51,5 +51,10 @@ export const catalogSearchValidator = vine.create({
   subServiceId: positiveInteger(),
   regionId: positiveInteger(),
   minPrice: nonNegativePrice(),
-  maxPrice: vine.number().withoutDecimals().use(notNegative()).use(maximumPriceIsNotBelowMinimum()).optional(),
+  maxPrice: vine
+    .number()
+    .withoutDecimals()
+    .use(notNegative())
+    .use(maximumPriceIsNotBelowMinimum())
+    .optional(),
 })

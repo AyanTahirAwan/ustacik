@@ -32,12 +32,14 @@ export default class extends BaseSchema {
       table.decimal('min_price', 12, 2).notNullable()
       table.decimal('max_price', 12, 2).notNullable()
       table
-        .enum('currency', ['TRY', 'GBP', 'EUR', 'USD'], { useNative: false })
+        .enum('currency', ['TRY', 'GBP', 'EUR', 'USD'], {
+          useNative: false,
+          enumName: 'service_price_catalog_currency',
+        })
         .notNullable()
         .defaultTo('TRY')
 
-      
-        table.boolean('is_active').notNullable().defaultTo(true)
+      table.boolean('is_active').notNullable().defaultTo(true)
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

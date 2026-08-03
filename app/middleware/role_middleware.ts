@@ -28,4 +28,3 @@ export default class RoleMiddleware {
     return next()
   }
 }
-

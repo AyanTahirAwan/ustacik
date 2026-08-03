@@ -56,7 +56,6 @@ export default class Review extends BaseModel {
     return (this.punctuality + this.workmanship + this.priceHonesty + this.communication) / 4
   }
 
-
   static async submit(data: {
     jobId: number
     customerId: number

@@ -2,7 +2,6 @@ import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
   async up() {
-
     this.schema.createTable('verification_logs', (table) => {
       table.increments('id').notNullable()
 
@@ -45,7 +44,11 @@ export default class extends BaseSchema {
       table.boolean('verbal_consent_audited').notNullable().defaultTo(false)
       table.integer('trust_tier_granted').notNullable().defaultTo(1)
 
-      table.check('trust_tier_granted >= 1 AND trust_tier_granted <= 3', [], 'craftsman_trust_tier_range')
+      table.check(
+        'trust_tier_granted >= 1 AND trust_tier_granted <= 3',
+        [],
+        'craftsman_trust_tier_range'
+      )
     })
 
     this.schema.createTable('customer_verification_logs', (table) => {

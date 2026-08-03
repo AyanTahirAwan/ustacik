@@ -6,7 +6,6 @@ import Admin from '#models/admin'
 
 export type TrustLevelGrant = 'registered' | 'verified' | 'approved'
 
-
 export default class VerificationLog extends BaseModel {
   static table = 'verification_logs'
 
@@ -52,7 +51,6 @@ export default class VerificationLog extends BaseModel {
   @belongsTo(() => Admin, { foreignKey: 'checkedById' })
   declare checkedBy: BelongsTo<typeof Admin>
 
-  
   static async record(data: {
     craftsmanId: number
     checkedById: number

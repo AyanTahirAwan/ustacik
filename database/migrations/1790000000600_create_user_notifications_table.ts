@@ -1,6 +1,5 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
-
 export default class extends BaseSchema {
   protected tableName = 'user_notifications'
 
@@ -29,7 +28,7 @@ export default class extends BaseSchema {
             'dispute_opened',
             'system',
           ],
-          { useNative: false }
+          { useNative: false, enumName: 'user_notification_type' }
         )
         .notNullable()
 
