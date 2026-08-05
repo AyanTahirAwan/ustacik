@@ -1,22 +1,115 @@
 @layout()
-  <div class="hero">
-    <h1>Search Services</h1>
-    <p>Find craftsmen and their service prices.</p>
-  </div>
 
-  <div class="page-placeholder">
-    <h2>Search Results — Placeholder</h2>
-    {{--
-      TODO: API integration
-      Run a service search using query filters:
-        GET /api/search/services
-        Query params: categoryId, subServiceId, regionId, minPrice, maxPrice
-      Expected response: { data: [{ id, craftsmanId, subServiceId, regionId,
-                                    minPrice, maxPrice, currency, isActive,
-                                    craftsman, region, subService }] }
-      Also consider GET /api/catalog/prices for active-only listings.
-    --}}
-    <p>No results yet. This page will show search results based on the query.</p>
-  </div>
+  <section class="hero">
+    <div class="container">
+      <h1>Search Services</h1>
+      <p>Find craftsmen and compare service prices.</p>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="card">
+
+      <h2 class="card-title">
+        Find a Service
+      </h2>
+
+      <p class="card-description">
+        Search by category, region, or price.
+      </p>
+
+      @form({
+  method: 'GET',
+  url: '/search',
+  id: 'search-form'
+})
+
+        <div class="auth-field">
+          @field.root({ name: 'q' })
+            @!field.label({ text: 'Search' })
+            @!input.control({
+              type: 'text',
+              placeholder: 'Electrician, plumber...'
+            })
+            @!field.error()
+          @end
+        </div>
+
+        <div class="auth-field">
+  @field.root({ name: 'categoryId' })
+    @!field.label({ text: 'Category' })
+
+   @!select.control({
+  id: 'category-select',
+  options: [
+    { value: '', name: 'Loading categories...' }
+  ]
+})
+
+    @!field.error()
+  @end
+</div>
+
+<div class="auth-field">
+  @field.root({ name: 'regionId' })
+    @!field.label({ text: 'Region' })
+
+    @!select.control({
+  id: 'region-select',
+  options: [
+    { value: '', name: 'Loading regions...' }
+  ]
+})
+
+    @!field.error()
+  @end
+</div>
+
+<div class="auth-field">
+  @field.root({ name: 'minPrice' })
+    @!field.label({ text: 'Minimum Price' })
+
+    @!input.control({
+      type: 'number',
+      placeholder: '0'
+    })
+
+    @!field.error()
+  @end
+</div>
+
+<div class="auth-field">
+  @field.root({ name: 'maxPrice' })
+    @!field.label({ text: 'Maximum Price' })
+
+    @!input.control({
+      type: 'number',
+      placeholder: '1000'
+    })
+
+    @!field.error()
+  @end
+</div>
+
+        <div class="auth-actions">
+          @!button({
+            text: 'Search',
+            type: 'submit',
+            class: 'btn-primary'
+          })
+        </div>
+
+      @end
+
+    </div>
+  </section>
+
+  <section class="container">
+
+  <h2 class="card-title">Search Results</h2>
+
+  <div id="search-results" class="card-grid"></div>
+
+</section>
+
 @end
-

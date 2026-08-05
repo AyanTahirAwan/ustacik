@@ -1,6 +1,24 @@
-<h1>404 - Page not found</h1>
-<p>
-  This template is rendered by the
-  <a href="http://docs.adonisjs.com/guides/exception-handling#status-pages">status pages feature</a>
-  of the global exception handler.
-</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 - Page not found</title>
+    @vite(['resources/css/app.css'])
+  </head>
+  <body>
+    <section class="error-page">
+      <div class="error-card">
+        <div class="error-code">404</div>
+        <h1>Page not found</h1>
+        <p>
+          The page you are looking for doesn't exist, may have been removed, or
+          the link may be broken.
+        </p>
+        <div class="error-actions">
+          <a class="btn-primary" href="/">Back to Home</a>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
