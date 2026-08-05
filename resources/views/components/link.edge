@@ -6,7 +6,7 @@
     ? urlFor($props.get('route'), $props.get('routeParams'), $props.get('routeOptions'))
     : undefined)
 @let(activeClass = request.url() === linkHref ? 'current' : '')
-@let(classes = [activeClass])
+@let(classes = [activeClass, $props.get('class')].filter(Boolean))
 
 <a {{
   $props

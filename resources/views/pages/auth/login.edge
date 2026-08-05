@@ -1,32 +1,34 @@
 @layout()
-  <div class="form-container">
-    <div>
-      <h1>Login</h1>
-      <p>Enter your email and password below to log in</p>
-    </div>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-card-header">
+        <h1>Login</h1>
+        <p>Enter your email and password below to log in</p>
+      </div>
 
-    <div>
-      @form({ route: 'session.store', method: 'POST' })
-        <div>
-          @field.root({ name: 'email' })
-            @!field.label({ text: 'Email' })
-            @!input.control({ type: 'email' })
-            @!field.error()
-          @end
-        </div>
+      <div>
+        @form({ route: 'session.store', method: 'POST' })
+          <div class="auth-field">
+            @field.root({ name: 'email' })
+              @!field.label({ text: 'Email' })
+              @!input.control({ type: 'email' })
+              @!field.error()
+            @end
+          </div>
 
-        <div>
-          @field.root({ name: 'password' })
-            @!field.label({ text: 'Password' })
-            @!input.control({ type: 'password' })
-            @!field.error()
-          @end
-        </div>
+          <div class="auth-field">
+            @field.root({ name: 'password' })
+              @!field.label({ text: 'Password' })
+              @!input.control({ type: 'password' })
+              @!field.error()
+            @end
+          </div>
 
-        <div>
-          @!button({ text: 'Login', type: 'submit' })
-        </div>
-      @end
+          <div class="auth-actions">
+            @!button({ text: 'Login', type: 'submit', class: 'btn-primary' })
+          </div>
+        @end
+      </div>
     </div>
   </div>
 @end
