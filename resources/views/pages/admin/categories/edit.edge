@@ -1,0 +1,19 @@
+@dashboard_layout({ title: 'Edit Category' })
+  <div class="page-placeholder">
+    <h2>Edit Category #{{ categoryId }} — Placeholder</h2>
+    {{--
+      TODO: API integration
+      Update a category via:
+        PATCH /api/admin/categories/:id
+      The route param :id is available as {{ categoryId }}.
+      Load the record first with:
+        GET /api/admin/categories/:id
+      Optional update fields:
+        nameEn (string) — trimmed, min 2, max 120 chars, unique
+        nameTr (string) — trimmed, min 2, max 120 chars, unique
+      Also available: DELETE /api/admin/categories/:id (409 if sub-services exist)
+    --}}
+    <p>The edit category form will go here.</p>
+  </div>
+@end
+

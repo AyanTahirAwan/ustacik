@@ -1,0 +1,18 @@
+@dashboard_layout({ title: 'Create Sub Service' })
+  <div class="page-placeholder">
+    <h2>Create Sub Service — Placeholder</h2>
+    {{--
+      TODO: API integration
+      Create a sub-service via:
+        POST /api/admin/sub-services
+      Request body:
+        categoryId (number, required) — must exist in categories
+        nameEn     (string, required) — trimmed, min 2, max 120 chars
+        nameTr     (string, required) — trimmed, min 2, max 120 chars
+      Duplicate (categoryId, nameEn) -> 409.
+      Category selector data from: GET /api/admin/categories
+    --}}
+    <p>The create sub-service form will go here.</p>
+  </div>
+@end
+

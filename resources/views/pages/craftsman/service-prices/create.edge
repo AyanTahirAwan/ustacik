@@ -1,0 +1,24 @@
+@dashboard_layout({ title: 'Create Service Price' })
+  <div class="page-placeholder">
+    <h2>Create Service Price — Placeholder</h2>
+    {{--
+      TODO: API integration
+      Create a price entry via:
+        POST /api/craftsman/service-prices
+      Request body:
+        subServiceId (number, required) — must exist in sub_services
+        regionId     (number, required) — must exist in regions
+        minPrice     (number, required) — >= 0
+        maxPrice     (number, required) — >= minPrice
+        currency     (string, required) — TRY | GBP | EUR | USD
+        isActive     (boolean, optional) — defaults true
+      NOTE: craftsmanId is NEVER sent. It is derived from the session.
+      Form needs category -> sub-service and region selectors:
+        GET /api/catalog/categories
+        GET /api/catalog/categories/:categoryId/sub-services
+        GET /api/catalog/regions
+    --}}
+    <p>The create service price form will go here.</p>
+  </div>
+@end
+

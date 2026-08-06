@@ -1,0 +1,20 @@
+@dashboard_layout({ title: 'Edit Sub Service' })
+  <div class="page-placeholder">
+    <h2>Edit Sub Service #{{ subServiceId }} — Placeholder</h2>
+    {{--
+      TODO: API integration
+      Update a sub-service via:
+        PATCH /api/admin/sub-services/:id
+      The route param :id is available as {{ subServiceId }}.
+      Load the record first with:
+        GET /api/admin/sub-services/:id
+      Optional update fields:
+        categoryId (number) — must exist in categories
+        nameEn     (string) — trimmed, min 2, max 120 chars
+        nameTr     (string) — trimmed, min 2, max 120 chars
+      Also available: DELETE /api/admin/sub-services/:id (409 on FK restriction)
+    --}}
+    <p>The edit sub-service form will go here.</p>
+  </div>
+@end
+

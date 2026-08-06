@@ -1,6 +1,24 @@
-<h1>{{ error.code }} - Server error</h1>
-<p>
-  This template is rendered by the
-  <a href="http://docs.adonisjs.com/guides/exception-handling#status-pages">status pages feature</a>
-  of the global exception handler.
-</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ error.code }} - Server error</title>
+    @vite(['resources/css/app.css'])
+  </head>
+  <body>
+    <section class="error-page">
+      <div class="error-card">
+        <div class="error-code">{{ error.code }}</div>
+        <h1>Server error</h1>
+        <p>
+          Something went wrong on our end. Please try again shortly, or go back
+          to the home page.
+        </p>
+        <div class="error-actions">
+          <a class="btn-primary" href="/">Back to Home</a>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

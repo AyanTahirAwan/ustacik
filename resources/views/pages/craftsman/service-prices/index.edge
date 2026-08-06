@@ -1,0 +1,24 @@
+@dashboard_layout({ title: 'My Service Prices' })
+  <div class="page-actions">
+    <a class="button" href="/craftsman/service-prices/create">+ Create Service Price</a>
+  </div>
+
+  <div class="page-placeholder">
+    <h2>My Service Prices — Placeholder</h2>
+    {{--
+      TODO: API integration
+      List the craftsman's own price entries. The backend exposes:
+        POST   /api/craftsman/service-prices
+        GET    /api/craftsman/service-prices/:id
+        PATCH  /api/craftsman/service-prices/:id
+        DELETE /api/craftsman/service-prices/:id
+        PATCH  /api/craftsman/service-prices/:id/toggle-active
+      NOTE: The backend has NO "list my prices" endpoint yet.
+      The craftsman dashboard will need a dedicated list route OR
+      reuse a filtered view of /api/catalog/prices or /api/search/services.
+      Do NOT invent an endpoint — coordinate with the backend when needed.
+    --}}
+    <p>Your service price entries will be listed here.</p>
+  </div>
+@end
+

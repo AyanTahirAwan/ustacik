@@ -1,0 +1,20 @@
+@dashboard_layout({ title: 'Manage Regions' })
+  <div class="page-actions">
+    <a class="button" href="/admin/regions/create">+ Create Region</a>
+  </div>
+
+  <div class="page-placeholder">
+    <h2>Regions Management — Placeholder</h2>
+    {{--
+      TODO: API integration
+      List regions via:
+        GET /api/admin/regions
+      Expected response: { regions: [{ id, nameEn, nameTr, createdAt }] }
+      Actions per row:
+        - Edit   -> /admin/regions/:id/edit
+        - Delete -> DELETE /api/admin/regions/:id (409 if referenced by price catalog)
+    --}}
+    <p>Regions management table will go here.</p>
+  </div>
+@end
+

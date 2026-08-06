@@ -1,0 +1,25 @@
+@dashboard_layout({ title: 'Edit Service Price' })
+  <div class="page-placeholder">
+    <h2>Edit Service Price #{{ priceId }} — Placeholder</h2>
+    {{--
+      TODO: API integration
+      Update a price entry via:
+        PATCH /api/craftsman/service-prices/:id
+      The route param :id is available as {{ priceId }}.
+      Load the record first with:
+        GET /api/craftsman/service-prices/:id
+      Optional update fields:
+        subServiceId (number) — must exist in sub_services
+        regionId     (number) — must exist in regions
+        minPrice     (number) — >= 0
+        maxPrice     (number) — >= minPrice
+        currency     (string) — TRY | GBP | EUR | USD
+        isActive     (boolean)
+      Also available:
+        PATCH /api/craftsman/service-prices/:id/toggle-active (toggle visibility)
+        DELETE /api/craftsman/service-prices/:id (remove)
+    --}}
+    <p>The edit service price form will go here.</p>
+  </div>
+@end
+

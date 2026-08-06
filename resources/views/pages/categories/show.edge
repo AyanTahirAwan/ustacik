@@ -1,0 +1,19 @@
+@layout()
+  <div class="hero">
+    <h1>Category Details</h1>
+    <p>View sub-services within a category.</p>
+  </div>
+
+  <div class="page-placeholder">
+    <h2>Category #{{ categoryId }} — Placeholder</h2>
+    {{--
+      TODO: API integration
+      Fetch the selected category and its sub-services from:
+        GET /api/catalog/categories/:categoryId/sub-services
+      Expected response: { data: [{ id, categoryId, nameEn, nameTr, createdAt }] }
+      The route param :categoryId is available as {{ categoryId }}.
+    --}}
+    <p>No sub-services loaded yet. This page will show sub-services for this category.</p>
+  </div>
+@end
+
