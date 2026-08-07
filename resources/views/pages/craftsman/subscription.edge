@@ -1,0 +1,57 @@
+@craftsmanAccountLayout({ title: 'Subscription', active: 'subscription' })
+  <div id="craftsman-subscription-page">
+    <p id="craftsman-subscription-loading" class="craftsman-page-loading">
+      Loading subscription...
+    </p>
+
+    <div id="craftsman-subscription-error" class="alert alert-destructive craftsman-message" hidden>
+      <p id="craftsman-subscription-error-message"></p>
+    </div>
+
+    <section id="craftsman-subscription-content" class="card craftsman-subscription-card" hidden>
+      <div class="craftsman-section-header">
+        <div>
+          <h2 class="card-title">Subscription Details</h2>
+          <p class="card-description">
+            View the current subscription attached to your craftsman account.
+          </p>
+        </div>
+
+        <span id="craftsman-subscription-status" class="craftsman-subscription-status"></span>
+      </div>
+
+      <p id="craftsman-subscription-empty" class="craftsman-empty-state" hidden>
+        No subscription is currently attached to this account.
+      </p>
+
+      <dl id="craftsman-subscription-details" class="craftsman-subscription-details">
+        <div>
+          <dt>Plan</dt>
+          <dd id="craftsman-subscription-plan"></dd>
+        </div>
+
+        <div>
+          <dt>Status</dt>
+          <dd id="craftsman-subscription-status-text"></dd>
+        </div>
+
+        <div>
+          <dt>Period Start</dt>
+          <dd id="craftsman-subscription-start"></dd>
+        </div>
+
+        <div>
+          <dt>Period End</dt>
+          <dd id="craftsman-subscription-end"></dd>
+        </div>
+
+        <div>
+          <dt>Monthly Fee</dt>
+          <dd id="craftsman-subscription-fee"></dd>
+        </div>
+      </dl>
+    </section>
+  </div>
+
+  @vite(['resources/js/craftsman-subscription.js'])
+@end

@@ -8,7 +8,22 @@ export default defineConfig({
        * Entrypoints of your application. Each entrypoint will
        * result in a separate bundle.
        */
-      entrypoints: ['resources/css/app.css', 'resources/js/app.js'],
+      entrypoints: [
+        'resources/css/app.css',
+        'resources/css/customer-account.css',
+        'resources/js/app.js',
+        'resources/js/customer-profile.js',
+        'resources/js/customer-addresses.js',
+        'resources/js/customer-favorites.js',
+        'resources/js/customer-notifications.js',
+        'resources/css/craftsman-account.css',
+        'resources/js/craftsman-profile.js',
+        'resources/js/craftsman-work-photos.js',
+        'resources/js/craftsman-subscription.js',
+        'resources/css/admin-users.css',
+        'resources/js/admin-users.js',
+        'resources/js/admin-user-detail.js',
+      ],
 
       /**
        * Paths to watch and reload the browser on file change

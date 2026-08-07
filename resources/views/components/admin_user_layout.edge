@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>{{ $props.get('title') ?? 'Admin' }} — UstaÇık</title>
+
+  @vite([
+    'resources/css/app.css',
+    'resources/css/admin-users.css',
+    'resources/js/app.js',
+  ])
+
+  @stack('dumper')
+</head>
+<body>
+  @include('partials/header')
+
+  <main class="admin-management-shell">
+    <div class="admin-management-frame">
+      @include('partials/flash_alerts')
+
+      <header class="admin-management-header">
+        <div class="admin-management-brand">
+          UstaÇık Admin
+        </div>
+
+        <nav class="admin-management-nav" aria-label="Admin navigation">
+          <a
+            href="/admin"
+            class="{{ $props.get('active') === 'dashboard' ? 'is-active' : '' }}"
+          >
+            Dashboard
+          </a>
+
+          <a
+            href="/admin/users"
+            class="{{ $props.get('active') === 'users' ? 'is-active' : '' }}"
+          >
+            Users
+          </a>
+
+          <a href="/admin/categories">
+            Categories
+          </a>
+
+          <a href="/admin/regions">
+            Regions
+          </a>
+
+          <a href="/admin/sub-services">
+            Sub Services
+          </a>
+        </nav>
+      </header>
+
+      <section class="admin-management-content">
+        {{{ await $slots.main() }}}
+      </section>
+    </div>
+  </main>
+</body>
+</html>

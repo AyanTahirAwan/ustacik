@@ -1,0 +1,65 @@
+@craftsmanAccountLayout({ title: 'Work Photos', active: 'work-photos' })
+  <div id="craftsman-work-photos-page">
+    <p id="craftsman-work-photos-loading" class="craftsman-page-loading">
+      Loading work photos...
+    </p>
+
+    <div id="craftsman-work-photos-error" class="alert alert-destructive craftsman-message" hidden>
+      <p id="craftsman-work-photos-error-message"></p>
+    </div>
+
+    <div id="craftsman-work-photos-success" class="alert alert-success craftsman-message" hidden>
+      <p id="craftsman-work-photos-success-message"></p>
+    </div>
+
+    <div id="craftsman-work-photos-content" hidden>
+      <section class="card craftsman-work-photo-form-card">
+        <h2 class="card-title">Add Work Photo</h2>
+        <p class="card-description">
+          Add an image URL to your work portfolio.
+        </p>
+
+        @form({
+          action: '/api/craftsman/work-photos',
+          method: 'POST',
+          id: 'craftsman-work-photo-form'
+        })
+          <div class="craftsman-work-photo-form">
+            <div class="form-group">
+              <label class="form-label" for="craftsman-work-photo-url">Image URL</label>
+              <input
+                id="craftsman-work-photo-url"
+                class="form-control"
+                type="url"
+                maxlength="500"
+                placeholder="https://example.com/work-photo.jpg"
+                required
+              />
+            </div>
+
+            <button id="craftsman-work-photo-add" class="btn btn-primary" type="submit">
+              Add Photo
+            </button>
+          </div>
+        @end
+      </section>
+
+      <section class="card craftsman-work-photo-list-card">
+        <div class="craftsman-section-header">
+          <div>
+            <h2 class="card-title">Portfolio</h2>
+            <p class="card-description">Your saved work photos.</p>
+          </div>
+        </div>
+
+        <p id="craftsman-work-photos-empty" class="craftsman-empty-state" hidden>
+          You have not added any work photos yet.
+        </p>
+
+        <div id="craftsman-work-photos-list" class="craftsman-work-photos-grid"></div>
+      </section>
+    </div>
+  </div>
+
+  @vite(['resources/js/craftsman-work-photos.js'])
+@end

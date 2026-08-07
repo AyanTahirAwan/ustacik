@@ -1,0 +1,277 @@
+.craftsman-account-shell {
+  padding: 48px 24px 64px;
+}
+
+.craftsman-account-frame {
+  width: min(100%, 1200px);
+  margin: 0 auto;
+}
+
+.craftsman-account-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 28px 32px;
+  border: 1px solid var(--gray-3);
+  border-radius: 12px;
+  background-color: var(--bg-white);
+}
+
+.craftsman-account-heading p {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.craftsman-account-heading h1 {
+  margin: 0;
+}
+
+.craftsman-account-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.craftsman-account-nav a {
+  padding: 10px 18px;
+  border: 1px solid var(--brand-brown);
+  border-radius: 999px;
+  color: var(--brand-brown);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.craftsman-account-nav a.is-active {
+  background-color: var(--brand-brown);
+  color: var(--bg-white);
+}
+
+.craftsman-account-content {
+  padding-top: 32px;
+}
+
+.craftsman-page-loading,
+.craftsman-message,
+.craftsman-profile-card,
+.craftsman-work-photo-form-card,
+.craftsman-work-photo-list-card,
+.craftsman-subscription-card {
+  width: min(100%, 860px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.craftsman-message {
+  margin-bottom: 24px;
+}
+
+.craftsman-profile-card,
+.craftsman-work-photo-form-card,
+.craftsman-work-photo-list-card,
+.craftsman-subscription-card {
+  padding: 36px;
+}
+
+.craftsman-work-photo-form-card {
+  margin-bottom: 28px;
+}
+
+.craftsman-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.craftsman-trust-badge,
+.craftsman-subscription-status {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: var(--brand-brown);
+  color: var(--bg-white);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.craftsman-profile-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.craftsman-profile-full {
+  grid-column: 1 / -1;
+}
+
+.craftsman-profile-bio {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.craftsman-consent-row {
+  padding: 16px 0;
+}
+
+.craftsman-consent-row label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.craftsman-consent-row input {
+  width: 18px;
+  height: 18px;
+}
+
+.craftsman-profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.craftsman-profile-actions [hidden] {
+  display: none !important;
+}
+
+.craftsman-work-photo-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 16px;
+}
+
+.craftsman-work-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.craftsman-work-photo-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--gray-3);
+  border-radius: 10px;
+  background-color: var(--bg-white);
+}
+
+.craftsman-work-photo-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background-color: var(--gray-3);
+}
+
+.craftsman-work-photo-url {
+  margin: 0;
+  padding: 14px;
+  overflow-wrap: anywhere;
+  color: var(--text-grey);
+  font-size: 0.8rem;
+}
+
+.craftsman-work-photo-remove {
+  margin: 0 14px 14px;
+}
+
+.craftsman-empty-state {
+  margin: 0;
+  padding: 30px;
+  border: 1px dashed var(--brand-brown);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.craftsman-subscription-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+}
+
+.craftsman-subscription-details div {
+  padding: 20px;
+  border: 1px solid var(--gray-3);
+  border-radius: 10px;
+}
+
+.craftsman-subscription-details dt {
+  margin-bottom: 8px;
+  color: var(--text-grey);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.craftsman-subscription-details dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+@media (max-width: 899px) {
+  .craftsman-account-topbar {
+    align-items: flex-start;
+  }
+
+  .craftsman-account-nav {
+    justify-content: flex-start;
+  }
+
+  .craftsman-work-photos-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 799px) {
+  .craftsman-account-shell {
+    padding: 28px 16px 48px;
+  }
+
+  .craftsman-account-topbar {
+    flex-direction: column;
+    padding: 24px 16px;
+  }
+
+  .craftsman-account-nav {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .craftsman-account-nav a {
+    text-align: center;
+  }
+
+  .craftsman-profile-card,
+  .craftsman-work-photo-form-card,
+  .craftsman-work-photo-list-card,
+  .craftsman-subscription-card {
+    padding: 24px;
+  }
+
+  .craftsman-section-header {
+    flex-direction: column;
+  }
+
+  .craftsman-profile-fields,
+  .craftsman-subscription-details,
+  .craftsman-work-photos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .craftsman-work-photo-form {
+    grid-template-columns: 1fr;
+  }
+
+  .craftsman-work-photo-form .btn {
+    width: 100%;
+  }
+}

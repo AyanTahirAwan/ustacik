@@ -1,0 +1,101 @@
+@customerAccountLayout({ title: 'My Profile', active: 'profile' })
+  <div id="customer-profile-page">
+    <p id="customer-profile-loading" class="customer-profile-loading">Loading profile...</p>
+
+    <div
+      id="customer-profile-error"
+      class="alert alert-destructive customer-profile-message"
+      hidden
+    >
+      <p id="customer-profile-error-message">Unable to load your profile. Please try again.</p>
+    </div>
+
+    <div
+      id="customer-profile-success"
+      class="alert alert-success customer-profile-message"
+      hidden
+    >
+      <p id="customer-profile-success-message"></p>
+    </div>
+
+    <div id="customer-profile-content" hidden>
+      <div class="card customer-profile-card">
+        <h2 class="card-title">Profile Details</h2>
+        <p class="card-description">Your profile information will appear here.</p>
+
+        @form({
+          action: '/api/customer/profile',
+          method: 'POST',
+          id: 'customer-profile-form',
+          class: 'customer-profile-form'
+        })
+          <div class="customer-profile-fields">
+            <div class="form-group customer-profile-field customer-profile-field-full">
+              <label class="form-label" for="customer-profile-full-name">Full Name</label>
+              <input
+                id="customer-profile-full-name"
+                class="form-control"
+                type="text"
+                readonly
+              />
+            </div>
+
+            <div class="form-group customer-profile-field">
+              <label class="form-label" for="customer-profile-email">Email</label>
+              <input id="customer-profile-email" class="form-control" type="email" readonly />
+            </div>
+
+            <div class="form-group customer-profile-field">
+              <label class="form-label" for="customer-profile-phone">Phone</label>
+              <input id="customer-profile-phone" class="form-control" type="text" readonly />
+            </div>
+
+            <div class="form-group customer-profile-field">
+              <label class="form-label" for="customer-profile-region">Default Region</label>
+              <select id="customer-profile-region" class="form-control" disabled>
+                <option value="">Not selected</option>
+              </select>
+            </div>
+
+            <div class="form-group customer-profile-field">
+              <label class="form-label" for="customer-profile-language">Language</label>
+              <input
+                id="customer-profile-language"
+                class="form-control"
+                type="text"
+                readonly
+              />
+            </div>
+
+            <div class="form-group customer-profile-field customer-profile-field-full">
+              <div class="customer-profile-checkbox">
+                <input
+                  id="customer-profile-sms-opt-in"
+                  class="form-control customer-profile-checkbox-input"
+                  type="checkbox"
+                  disabled
+                />
+                <label class="form-label" for="customer-profile-sms-opt-in">
+                  SMS Notifications
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="customer-profile-actions">
+            <button id="customer-profile-edit" class="btn-primary" type="button">
+              Edit Profile
+            </button>
+            <button id="customer-profile-save" class="btn-primary" type="submit" hidden>
+              Save Changes
+            </button>
+            <button id="customer-profile-cancel" class="btn-back" type="button" hidden>
+              Cancel
+            </button>
+          </div>
+        @end
+      </div>
+    </div>
+  </div>
+  @vite(['resources/js/customer-profile.js'])
+@end

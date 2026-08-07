@@ -75,6 +75,11 @@ router
 
 router
   .group(() => {
+    router.get('customer/profile', ({ view }) => view.render('pages/customer/profile'))
+    router.get('customer/addresses', ({ view }) => view.render('pages/customer/addresses'))
+    router.get('customer/favorites', ({ view }) => view.render('pages/customer/favorites'))
+    router.get('customer/notifications', ({ view }) => view.render('pages/customer/notifications'))
+
     router.get('api/customer/profile', [CustomersController, 'show'])
     router.patch('api/customer/profile', [CustomersController, 'update'])
     router.get('api/customer/addresses', [CustomerAddressesController, 'index'])
@@ -110,6 +115,9 @@ router
 
 router
   .group(() => {
+    router.get('craftsman/profile', ({ view }) => view.render('pages/craftsman/profile'))
+    router.get('craftsman/work-photos', ({ view }) => view.render('pages/craftsman/work-photos'))
+    router.get('craftsman/subscription', ({ view }) => view.render('pages/craftsman/subscription'))
     router.get('api/craftsman/profile', [CraftsmenController, 'showOwn'])
     router.patch('api/craftsman/profile', [CraftsmenController, 'updateOwn'])
     router.get('api/craftsman/work-photos', [WorkPhotosController, 'index'])
@@ -186,6 +194,11 @@ router
     router.delete('api/admin/reviews/:id', [ReviewsController, 'destroy'])
 
     router.get('admin', ({ view }) => view.render('pages/admin/dashboard'))
+
+    router.get('admin/users', ({ view }) => view.render('pages/admin/users/index'))
+    router.get('admin/users/:userId', ({ params, view }) =>
+      view.render('pages/admin/users/show', { userId: params.userId })
+    )
 
     router.get('admin/categories', ({ view }) => view.render('pages/admin/categories/index'))
     router.get('admin/categories/:categoryId/edit', ({ params, view }) =>

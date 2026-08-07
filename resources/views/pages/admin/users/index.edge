@@ -1,0 +1,105 @@
+@adminUserLayout({ title: 'User Management', active: 'users' })
+  <div id="admin-users-page" class="admin-users-page">
+    <section class="admin-users-intro">
+      <div>
+        <p class="admin-users-kicker">Platform Administration</p>
+        <h2>User Management</h2>
+        <p>
+          Review registered accounts and filter users by role or account status.
+        </p>
+      </div>
+    </section>
+
+    <div
+      id="admin-users-error"
+      class="alert alert-destructive admin-users-message"
+      hidden
+    >
+      <p id="admin-users-error-message"></p>
+    </div>
+
+    <section class="admin-users-panel">
+      <form id="admin-users-filter-form" class="admin-users-filter-bar">
+        <div class="form-group">
+          <label class="form-label" for="admin-users-role">
+            Role
+          </label>
+
+          <select id="admin-users-role" class="form-control">
+            <option value="">All roles</option>
+            <option value="customer">Customer</option>
+            <option value="craftsman">Craftsman</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="admin-users-status">
+            Status
+          </label>
+
+          <select id="admin-users-status" class="form-control">
+            <option value="">All statuses</option>
+            <option value="active">Active</option>
+            <option value="suspended">Suspended</option>
+          </select>
+        </div>
+
+        <div class="admin-users-filter-actions">
+          <button class="btn-primary" type="submit">
+            Apply Filters
+          </button>
+
+          <button
+            id="admin-users-filter-reset"
+            class="btn-back"
+            type="button"
+          >
+            Reset
+          </button>
+        </div>
+      </form>
+
+      <div class="admin-users-panel-heading">
+        <div>
+          <h3>Platform Users</h3>
+          <p>
+            <span id="admin-users-count">0</span>
+            user(s) found.
+          </p>
+        </div>
+      </div>
+
+      <p id="admin-users-loading" class="admin-users-loading">
+        Loading users...
+      </p>
+
+      <p id="admin-users-empty" class="admin-users-empty" hidden>
+        No users match the selected filters.
+      </p>
+
+      <div
+        id="admin-users-table-wrapper"
+        class="admin-users-table-wrapper"
+        hidden
+      >
+        <table class="admin-users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="admin-users-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  @vite(['resources/js/admin-users.js'])
+@end

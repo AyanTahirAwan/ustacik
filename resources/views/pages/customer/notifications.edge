@@ -1,0 +1,54 @@
+@customerAccountLayout({ title: 'Notifications', active: 'notifications' })
+  <div id="customer-notifications-page">
+    <p id="customer-notifications-loading" class="customer-notifications-loading">
+      Loading notifications...
+    </p>
+
+    <div
+      id="customer-notifications-error"
+      class="alert alert-destructive customer-notifications-message"
+      hidden
+    >
+      <p id="customer-notifications-error-message">
+        Unable to load your notifications. Please try again.
+      </p>
+    </div>
+
+    <section
+      id="customer-notifications-content"
+      class="card customer-notifications-card"
+      hidden
+    >
+      <div class="customer-notifications-header">
+        <div>
+          <h2 class="card-title">Your Notifications</h2>
+          <p class="card-description">
+            Updates related to your account and activity.
+          </p>
+        </div>
+
+        <span
+          id="customer-notifications-unread-count"
+          class="customer-notifications-count"
+          hidden
+        ></span>
+      </div>
+
+      <p
+        id="customer-notifications-empty"
+        class="customer-notifications-empty"
+        hidden
+      >
+        You do not have any notifications yet.
+      </p>
+
+      <div
+        id="customer-notifications-list"
+        class="customer-notifications-list"
+        aria-live="polite"
+      ></div>
+    </section>
+  </div>
+
+  @vite(['resources/js/customer-notifications.js'])
+@end

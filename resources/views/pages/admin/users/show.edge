@@ -1,0 +1,134 @@
+@adminUserLayout({ title: 'User Details', active: 'users' })
+  <div
+    id="admin-user-detail-page"
+    class="admin-user-detail-page"
+    data-user-id="{{ userId }}"
+  >
+    <section class="admin-user-detail-intro">
+      <div>
+        <p class="admin-users-kicker">User Management</p>
+        <h2>User Details</h2>
+        <p>
+          Review account information and role-specific profile data.
+        </p>
+      </div>
+
+      <a href="/admin/users" class="btn-back admin-user-back">
+        Back to Users
+      </a>
+    </section>
+
+    <div
+      id="admin-user-detail-error"
+      class="alert alert-destructive admin-users-message"
+      hidden
+    >
+      <p id="admin-user-detail-error-message"></p>
+    </div>
+
+    <div
+      id="admin-user-detail-success"
+      class="alert alert-success admin-users-message"
+      hidden
+    >
+      <p id="admin-user-detail-success-message"></p>
+    </div>
+
+    <p id="admin-user-detail-loading" class="admin-users-loading">
+      Loading user...
+    </p>
+
+    <section
+      id="admin-user-detail-content"
+      class="admin-user-detail-panel"
+      hidden
+    >
+      <div class="admin-user-summary">
+        <div>
+          <h3 id="admin-user-display-name"></h3>
+          <p id="admin-user-email"></p>
+        </div>
+
+        <div class="admin-user-summary-badges">
+          <span id="admin-user-role" class="admin-user-badge"></span>
+          <span id="admin-user-status" class="admin-user-badge"></span>
+        </div>
+      </div>
+
+      <div class="admin-user-section">
+        <div class="admin-user-section-heading">
+          <h3>Account Information</h3>
+        </div>
+
+        <dl class="admin-user-detail-grid">
+          <div>
+            <dt>User ID</dt>
+            <dd id="admin-user-id"></dd>
+          </div>
+
+          <div>
+            <dt>Phone</dt>
+            <dd id="admin-user-phone"></dd>
+          </div>
+
+          <div>
+            <dt>Created</dt>
+            <dd id="admin-user-created"></dd>
+          </div>
+
+          <div>
+            <dt>Updated</dt>
+            <dd id="admin-user-updated"></dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="admin-user-section">
+        <div class="admin-user-section-heading">
+          <h3>Role Details</h3>
+          <p>
+            Information associated with this user's current role.
+          </p>
+        </div>
+
+        <dl
+          id="admin-user-role-details"
+          class="admin-user-detail-grid"
+        ></dl>
+      </div>
+
+      <div class="admin-user-section admin-user-action-section">
+        <div class="admin-user-section-heading">
+          <h3>Account Actions</h3>
+          <p>
+            Suspend this account when administrative access should be restricted.
+          </p>
+        </div>
+
+        @form({
+          action: '/api/admin/users',
+          method: 'POST',
+          id: 'admin-user-action-form'
+        })
+          <button
+            id="admin-user-suspend"
+            class="btn-primary"
+            type="button"
+          >
+            Suspend User
+          </button>
+        @end
+
+        <p
+          id="admin-user-already-suspended"
+          class="admin-user-suspended-note"
+          hidden
+        >
+          This account is already suspended.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  @vite(['resources/js/admin-user-detail.js'])
+@end

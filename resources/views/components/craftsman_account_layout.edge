@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ $props.get('title') ?? 'Craftsman Account' }} — UstaÇık</title>
+
+  @vite([
+    'resources/css/app.css',
+    'resources/css/craftsman-account.css',
+    'resources/js/app.js',
+  ])
+
+  @stack('dumper')
+</head>
+<body>
+  @include('partials/header')
+
+  <main class="craftsman-account-shell">
+    <section class="craftsman-account-frame">
+      @include('partials/flash_alerts')
+
+      <div class="craftsman-account-topbar">
+        <div class="craftsman-account-heading">
+          <p>Craftsman Account</p>
+          <h1>{{ $props.get('title') ?? 'Craftsman Account' }}</h1>
+        </div>
+
+        <nav class="craftsman-account-nav" aria-label="Craftsman account navigation">
+          <a href="/craftsman">
+            Dashboard
+          </a>
+
+          <a
+            href="/craftsman/profile"
+            class="{{ $props.get('active') === 'profile' ? 'is-active' : '' }}"
+          >
+            My Profile
+          </a>
+
+          <a
+            href="/craftsman/work-photos"
+            class="{{ $props.get('active') === 'work-photos' ? 'is-active' : '' }}"
+          >
+            Work Photos
+          </a>
+
+          <a
+            href="/craftsman/subscription"
+            class="{{ $props.get('active') === 'subscription' ? 'is-active' : '' }}"
+          >
+            Subscription
+          </a>
+        </nav>
+      </div>
+
+      <div class="craftsman-account-content">
+        {{{ await $slots.main() }}}
+      </div>
+    </section>
+  </main>
+</body>
+</html>

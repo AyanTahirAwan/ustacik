@@ -1,0 +1,94 @@
+@customerAccountLayout({ title: 'My Favorites', active: 'favorites' })
+  <div id="customer-favorites-page">
+    <p id="customer-favorites-loading" class="customer-favorites-loading">
+      Loading favorites...
+    </p>
+
+    <div
+      id="customer-favorites-error"
+      class="alert alert-destructive customer-favorites-message"
+      hidden
+    >
+      <p id="customer-favorites-error-message">
+        Unable to load your favorites. Please try again.
+      </p>
+    </div>
+
+    <div
+      id="customer-favorites-success"
+      class="alert alert-success customer-favorites-message"
+      hidden
+    >
+      <p id="customer-favorites-success-message"></p>
+    </div>
+
+    <div id="customer-favorites-content" hidden>
+      <section class="card customer-favorites-add-card">
+        <div class="customer-favorites-section-header">
+          <div>
+            <h2 class="card-title">Add Favorite</h2>
+            <p class="card-description">
+              Select a craftsman to save to your favorites.
+            </p>
+          </div>
+        </div>
+
+        @form({
+          action: '/api/customer/favorites',
+          method: 'POST',
+          id: 'customer-favorite-form',
+          class: 'customer-favorite-form'
+        })
+          <div class="form-group customer-favorite-select-field">
+            <label class="form-label" for="customer-favorite-craftsman">
+              Craftsman
+            </label>
+
+            <select
+              id="customer-favorite-craftsman"
+              class="form-control"
+              required
+            >
+              <option value="">Select a craftsman</option>
+            </select>
+          </div>
+
+          <button id="customer-favorite-add" class="btn-primary" type="submit">
+            Add to Favorites
+          </button>
+        @end
+
+        <p
+          id="customer-favorites-no-available"
+          class="customer-favorites-no-available"
+          hidden
+        >
+          There are no additional craftsmen available to add.
+        </p>
+      </section>
+
+      <section class="card customer-favorites-list-card">
+        <div class="customer-favorites-section-header">
+          <div>
+            <h2 class="card-title">Saved Craftsmen</h2>
+            <p class="card-description">
+              Review and manage the craftsmen saved to your account.
+            </p>
+          </div>
+        </div>
+
+        <p id="customer-favorites-empty" class="customer-favorites-empty" hidden>
+          You have not saved any craftsmen yet.
+        </p>
+
+        <div
+          id="customer-favorites-list"
+          class="customer-favorites-list"
+          aria-live="polite"
+        ></div>
+      </section>
+    </div>
+  </div>
+
+  @vite(['resources/js/customer-favorites.js'])
+@end

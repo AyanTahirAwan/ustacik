@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ $props.get('title') ?? 'Customer Account' }} — UstaÇık</title>
+  @vite([
+    'resources/css/app.css',
+    'resources/css/customer-account.css',
+    'resources/js/app.js',
+  ])
+  @stack('dumper')
+</head>
+<body>
+  @include('partials/header')
+
+  <main class="customer-account-shell">
+    <section class="customer-account-frame">
+      @include('partials/flash_alerts')
+
+      <div class="customer-account-topbar">
+        <div class="customer-account-heading">
+          <p>Customer Account</p>
+          <h1>{{ $props.get('title') ?? 'Customer Account' }}</h1>
+        </div>
+
+        <nav class="customer-account-nav" aria-label="Customer account navigation">
+          <a
+            href="/customer/profile"
+            class="{{ $props.get('active') === 'profile' ? 'is-active' : '' }}"
+          >
+            My Profile
+          </a>
+
+          <a
+            href="/customer/addresses"
+            class="{{ $props.get('active') === 'addresses' ? 'is-active' : '' }}"
+          >
+            My Addresses
+          </a>
+
+          <a
+            href="/customer/favorites"
+            class="{{ $props.get('active') === 'favorites' ? 'is-active' : '' }}"
+          >
+            My Favorites
+          </a>
+
+          <a
+            href="/customer/notifications"
+            class="{{ $props.get('active') === 'notifications' ? 'is-active' : '' }}"
+          >
+            Notifications
+          </a>
+        </nav>
+      </div>
+
+      <div class="customer-account-content">
+        {{{ await $slots.main() }}}
+      </div>
+    </section>
+  </main>
+</body>
+</html>
