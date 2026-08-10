@@ -20,7 +20,7 @@ export default class extends BaseSchema {
       table
         .integer('craftsman_id')
         .unsigned()
-        .notNullable()
+        .nullable()
         .references('user_id')
         .inTable('craftsmen')
         .onDelete('RESTRICT')

@@ -83,17 +83,18 @@ export default class JobRequest extends BaseModel {
 
   
   static async submit(data: {
-    requestId: string
+    requestId?: string
     customerId: number
-    craftsmanId: number
+    craftsmanId?: number
     categoryId: number
     regionId: number
     description: string
   }) {
-    const existing = await JobRequest.findBy('request_id', data.requestId)
+    const requestId = data.requestId || `REQ-${Date.now()}-${Math.floor(Math.random() * 10000)}`
+    const existing = await JobRequest.findBy('request_id', requestId)
     if (existing) return existing
 
-    return JobRequest.create({ ...data, status: 'pending' })
+    return JobRequest.create({ ...data, requestId, status: 'pending' })
   }
 
   canTransitionTo(next: JobStatus) {

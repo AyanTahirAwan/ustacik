@@ -191,7 +191,7 @@ export class JobRequestSchema extends BaseModel {
   @column()
   declare categoryId: number
   @column()
-  declare craftsmanId: number
+  declare craftsmanId: number | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
