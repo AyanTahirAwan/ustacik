@@ -59,7 +59,7 @@ async function createAdminFixture(label: string) {
 
 test.group('Authorization and ownership', (group) => {
   // Roll back every test so authorization scenarios remain independent.
-  group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
 
   // Customer routes enforce both role access and profile ownership.
   test('keeps customer profile reads and updates scoped to the authenticated customer', async ({

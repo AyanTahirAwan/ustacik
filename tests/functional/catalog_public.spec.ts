@@ -1,5 +1,10 @@
 import Category from '#models/category'
+import Craftsman from '#models/craftsman'
+import CustomerAddress from '#models/customer_address'
 import Region from '#models/region'
+import ServicePriceCatalog from '#models/service_price_catalog'
+import SubService from '#models/sub_service'
+import testUtils from '@adonisjs/core/services/test_utils'
 import { createCraftsman, createPriceEntry, seedCatalog } from './helpers.js'
 import { test } from '@japa/runner'
 
@@ -14,7 +19,8 @@ import { test } from '@japa/runner'
 // GET /api/search/services — validation
 // -------------------------------------------------------------------------
 
-test.group('Public Catalog — Search Validation', () => {
+test.group('Public Catalog — Search Validation', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('maxPrice lower than minPrice returns 422', async ({ assert, client }) => {
     const response = await client
       .get('/api/search/services?minPrice=200&maxPrice=100')
@@ -66,7 +72,8 @@ test.group('Public Catalog — Search Validation', () => {
 // GET /api/catalog/categories/:categoryId/sub-services
 // -------------------------------------------------------------------------
 
-test.group('Public Catalog — Sub-Services', () => {
+test.group('Public Catalog — Sub-Services', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('valid category returns its sub-services', async ({ assert, client }) => {
     const { plumbing, leakRepair } = await seedCatalog()
 
@@ -103,11 +110,16 @@ test.group('Public Catalog — Sub-Services', () => {
 // Empty collections
 // -------------------------------------------------------------------------
 
-test.group('Public Catalog — Empty Collections', () => {
+test.group('Public Catalog — Empty Collections', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('GET /api/catalog/categories with no records returns 200 and empty array', async ({
     assert,
     client,
   }) => {
+    await ServicePriceCatalog.query().delete()
+    await Craftsman.query().delete()
+    await SubService.query().delete()
+    await Category.query().delete()
     const total = await Category.query().count('* as total')
     assert.equal(Number(total[0].$extras.total), 0)
 
@@ -122,6 +134,9 @@ test.group('Public Catalog — Empty Collections', () => {
     assert,
     client,
   }) => {
+    await ServicePriceCatalog.query().delete()
+    await CustomerAddress.query().delete()
+    await Region.query().delete()
     const total = await Region.query().count('* as total')
     assert.equal(Number(total[0].$extras.total), 0)
 

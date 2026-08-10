@@ -1,3 +1,4 @@
+import testUtils from '@adonisjs/core/services/test_utils'
 import Category from '#models/category'
 import Region from '#models/region'
 import SubService from '#models/sub_service'
@@ -11,7 +12,8 @@ import { test } from '@japa/runner'
  * -------------------------------------------------------------------------
  */
 
-test.group('Edge Cases — Deleted Resources', () => {
+test.group('Edge Cases — Deleted Resources', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('updating a deleted category returns 404', async ({ client }) => {
     const admin = await createAdmin()
     const category = await Category.create({ nameEn: 'Temp', nameTr: 'Geçici' })
@@ -105,7 +107,8 @@ test.group('Edge Cases — Deleted Resources', () => {
   })
 })
 
-test.group('Edge Cases — Duplicate Resources', () => {
+test.group('Edge Cases — Duplicate Resources', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('duplicate category nameEn returns 422', async ({ assert, client }) => {
     const admin = await createAdmin()
     await Category.create({ nameEn: 'Gardening', nameTr: 'Bahçecilik' })
@@ -188,7 +191,8 @@ test.group('Edge Cases — Duplicate Resources', () => {
   })
 })
 
-test.group('Edge Cases — Empty Search Results', () => {
+test.group('Edge Cases — Empty Search Results', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('search with no matching data returns empty array', async ({ assert, client }) => {
     const { plumbing, lefkosa, leakRepair } = await seedCatalog()
     const craftsman = await createCraftsman(plumbing.id)
@@ -223,7 +227,8 @@ test.group('Edge Cases — Empty Search Results', () => {
   })
 })
 
-test.group('Edge Cases — Malformed Query Parameters', () => {
+test.group('Edge Cases — Malformed Query Parameters', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('malformed categoryId on public prices returns 422', async ({ assert, client }) => {
     const response = await client.get('/api/catalog/prices?categoryId=abc').accept('json')
 
@@ -249,7 +254,8 @@ test.group('Edge Cases — Malformed Query Parameters', () => {
   })
 })
 
-test.group('Edge Cases — Sensitive Data', () => {
+test.group('Edge Cases — Sensitive Data', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('passwordHash is never exposed on user responses', async ({ assert, client }) => {
     const admin = await createAdmin()
     const response = await client.get('/api/admin/categories').accept('json').loginAs(admin)
@@ -280,7 +286,7 @@ test.group('Edge Cases — Sensitive Data', () => {
 
   test('region list does not leak passwordHash', async ({ assert, client }) => {
     const admin = await createAdmin()
-    await Region.create({ nameEn: 'Lefkosa', nameTr: 'Lefkoşa' })
+    await Region.firstOrCreate({ nameEn: 'Lefkosa', nameTr: 'Lefkoşa' })
 
     const response = await client.get('/api/admin/regions').accept('json').loginAs(admin)
 
@@ -291,7 +297,8 @@ test.group('Edge Cases — Sensitive Data', () => {
   })
 })
 
-test.group('Edge Cases — Non-existent IDs', () => {
+test.group('Edge Cases — Non-existent IDs', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('non-existent price returns 404 on show', async ({ client }) => {
     const { plumbing } = await seedCatalog()
     const craftsman = await createCraftsman(plumbing.id)

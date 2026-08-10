@@ -25,11 +25,11 @@ const regionProperties = ['id', 'nameEn', 'nameTr', 'createdAt']
 
 test.group('Customer addresses', (group) => {
   // Roll back every test to isolate address and user records.
-  group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
 
   // Authentication and role middleware protect customer address routes.
   test('rejects unauthenticated access', async ({ client }) => {
-    const response = await client.get('/customer/addresses').accept('json')
+    const response = await client.get('/api/customer/addresses').accept('json')
 
     response.assertStatus(401)
     response.assertBody({
@@ -40,7 +40,7 @@ test.group('Customer addresses', (group) => {
   test('rejects a craftsman from customer routes', async ({ client }) => {
     const { user } = await createCraftsmanFixture('wrong-role')
 
-    const response = await client.get('/customer/addresses').loginAs(user).accept('json')
+    const response = await client.get('/api/customer/addresses').loginAs(user).accept('json')
 
     response.assertStatus(403)
     response.assertBody({
@@ -52,7 +52,7 @@ test.group('Customer addresses', (group) => {
   test('returns an empty collection for a customer without addresses', async ({ client }) => {
     const { user } = await createCustomerFixture('empty-addresses')
 
-    const response = await client.get('/customer/addresses').loginAs(user).accept('json')
+    const response = await client.get('/api/customer/addresses').loginAs(user).accept('json')
 
     response.assertStatus(200)
     response.assertBody({ addresses: [] })
@@ -63,7 +63,7 @@ test.group('Customer addresses', (group) => {
     const region = await createRegionFixture('crud-region')
 
     const createResponse = await client
-      .post('/customer/addresses')
+      .post('/api/customer/addresses')
       .loginAs(user)
       .withCsrfToken()
       .accept('json')
@@ -102,7 +102,7 @@ test.group('Customer addresses', (group) => {
       is_default: true,
     })
 
-    const listResponse = await client.get('/customer/addresses').loginAs(user).accept('json')
+    const listResponse = await client.get('/api/customer/addresses').loginAs(user).accept('json')
 
     listResponse.assertStatus(200)
     assert.onlyProperties(listResponse.body(), ['addresses'])
@@ -122,7 +122,7 @@ test.group('Customer addresses', (group) => {
     assert.isString(listedAddress.createdAt)
 
     const updateResponse = await client
-      .patch(`/customer/addresses/${createdAddress.id}`)
+      .patch(`/api/customer/addresses/${createdAddress.id}`)
       .loginAs(user)
       .withCsrfToken()
       .accept('json')
@@ -158,7 +158,7 @@ test.group('Customer addresses', (group) => {
     })
 
     const deleteResponse = await client
-      .delete(`/customer/addresses/${createdAddress.id}`)
+      .delete(`/api/customer/addresses/${createdAddress.id}`)
       .loginAs(user)
       .withCsrfToken()
       .accept('json')
@@ -177,7 +177,7 @@ test.group('Customer addresses', (group) => {
     const { user } = await createCustomerFixture('missing-fields')
 
     const response = await client
-      .post('/customer/addresses')
+      .post('/api/customer/addresses')
       .loginAs(user)
       .withCsrfToken()
       .accept('json')
@@ -205,7 +205,7 @@ test.group('Customer addresses', (group) => {
     assert.isAbove(invalidRegionId, 0)
 
     const response = await client
-      .post('/customer/addresses')
+      .post('/api/customer/addresses')
       .loginAs(user)
       .withCsrfToken()
       .accept('json')
@@ -239,7 +239,7 @@ test.group('Customer addresses', (group) => {
     })
 
     const updateResponse = await client
-      .patch(`/customer/addresses/${address.id}`)
+      .patch(`/api/customer/addresses/${address.id}`)
       .loginAs(userB)
       .withCsrfToken()
       .accept('json')
@@ -248,7 +248,7 @@ test.group('Customer addresses', (group) => {
     updateResponse.assertStatus(404)
 
     const deleteResponse = await client
-      .delete(`/customer/addresses/${address.id}`)
+      .delete(`/api/customer/addresses/${address.id}`)
       .loginAs(userB)
       .withCsrfToken()
       .accept('json')
@@ -273,7 +273,7 @@ test.group('Customer addresses', (group) => {
     await removedAddress.delete()
 
     const updateResponse = await client
-      .patch(`/customer/addresses/${unknownAddressId}`)
+      .patch(`/api/customer/addresses/${unknownAddressId}`)
       .loginAs(user)
       .withCsrfToken()
       .accept('json')
@@ -282,7 +282,7 @@ test.group('Customer addresses', (group) => {
     updateResponse.assertStatus(404)
 
     const deleteResponse = await client
-      .delete(`/customer/addresses/${unknownAddressId}`)
+      .delete(`/api/customer/addresses/${unknownAddressId}`)
       .loginAs(user)
       .withCsrfToken()
       .accept('json')
@@ -299,9 +299,8 @@ test.group('Customer addresses', (group) => {
     const response = await client
       .post('/customer/addresses')
       .loginAs(user)
-      .accept('json')
       .redirects(0)
-      .json({
+      .form({
         regionId: region.id,
         label: 'Home',
         street: 'Example Street 10',
@@ -340,7 +339,7 @@ test.group('Customer addresses', (group) => {
     })
 
     const response = await client
-      .patch(`/customer/addresses/${secondAddress.id}`)
+      .patch(`/api/customer/addresses/${secondAddress.id}`)
       .loginAs(userA)
       .withCsrfToken()
       .accept('json')

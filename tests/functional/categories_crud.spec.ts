@@ -1,4 +1,5 @@
 import Category from '#models/category'
+import testUtils from '@adonisjs/core/services/test_utils'
 import { createAdmin, seedCatalog } from './helpers.js'
 import { test } from '@japa/runner'
 
@@ -9,7 +10,8 @@ import { test } from '@japa/runner'
  * -------------------------------------------------------------------------
  */
 
-test.group('Categories CRUD — Admin Index', () => {
+test.group('Categories CRUD — Admin Index', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('admin can list categories with subServicesCount', async ({ assert, client }) => {
     const admin = await createAdmin()
     const { plumbing, leakRepair } = await seedCatalog()
@@ -24,8 +26,8 @@ test.group('Categories CRUD — Admin Index', () => {
     // Verify response structure / fields
     const plumbingCategory = categories.find((c: { id: number }) => c.id === plumbing.id)
     assert.isDefined(plumbingCategory)
-    assert.equal(plumbingCategory.nameEn, 'Plumbing')
-    assert.equal(plumbingCategory.nameTr, 'Tesisat')
+    assert.equal(plumbingCategory.nameEn, plumbing.nameEn)
+    assert.equal(plumbingCategory.nameTr, plumbing.nameTr)
 
     // Verify subServicesCount preload is present and correct
     assert.equal(plumbingCategory.subServicesCount, 1)
@@ -49,7 +51,8 @@ test.group('Categories CRUD — Admin Index', () => {
   })
 })
 
-test.group('Categories CRUD — Admin Show', () => {
+test.group('Categories CRUD — Admin Show', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('admin can view a single category with sub-services preloaded', async ({
     assert,
     client,
@@ -65,13 +68,13 @@ test.group('Categories CRUD — Admin Show', () => {
     response.assertStatus(200)
     const category = response.body().category
     assert.equal(category.id, plumbing.id)
-    assert.equal(category.nameEn, 'Plumbing')
-    assert.equal(category.nameTr, 'Tesisat')
+    assert.equal(category.nameEn, plumbing.nameEn)
+    assert.equal(category.nameTr, plumbing.nameTr)
     // sub-services preloaded
     assert.isArray(category.subServices)
     assert.equal(category.subServices.length, 1)
     assert.equal(category.subServices[0].id, leakRepair.id)
-    assert.equal(category.subServices[0].nameEn, 'Leak Repair')
+    assert.equal(category.subServices[0].nameEn, leakRepair.nameEn)
   })
 
   test('non-existent category returns 404 on show', async ({ client }) => {
@@ -83,7 +86,8 @@ test.group('Categories CRUD — Admin Show', () => {
   })
 })
 
-test.group('Categories CRUD — Admin Update & Delete', () => {
+test.group('Categories CRUD — Admin Update & Delete', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('admin can update both localized names', async ({ assert, client }) => {
     const admin = await createAdmin()
     const category = await Category.create({ nameEn: 'Old', nameTr: 'Eski' })

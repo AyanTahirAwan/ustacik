@@ -1,3 +1,4 @@
+import testUtils from '@adonisjs/core/services/test_utils'
 import {
   createAdmin,
   createCraftsman,
@@ -19,7 +20,8 @@ import { test } from '@japa/runner'
 // Unauthenticated access
 // -------------------------------------------------------------------------
 
-test.group('Auth Matrix — Unauthenticated', () => {
+test.group('Auth Matrix — Unauthenticated', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('unauthenticated GET on admin route returns 401', async ({ client }) => {
     const response = await client.get('/api/admin/categories').accept('json')
 
@@ -57,7 +59,8 @@ test.group('Auth Matrix — Unauthenticated', () => {
 // Customer access
 // -------------------------------------------------------------------------
 
-test.group('Auth Matrix — Customer', () => {
+test.group('Auth Matrix — Customer', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('customer cannot access admin category CRUD', async ({ client }) => {
     const customer = await createCustomer()
 
@@ -136,7 +139,8 @@ test.group('Auth Matrix — Customer', () => {
 // Craftsman access
 // -------------------------------------------------------------------------
 
-test.group('Auth Matrix — Craftsman', () => {
+test.group('Auth Matrix — Craftsman', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('craftsman cannot access admin category CRUD', async ({ client }) => {
     const { plumbing } = await seedCatalog()
     const craftsman = await createCraftsman(plumbing.id)
@@ -202,14 +206,8 @@ test.group('Auth Matrix — Craftsman', () => {
 
   test('craftsman cannot view another craftsman price', async ({ client }) => {
     const { lefkosa, leakRepair, plumbing, electrical } = await seedCatalog()
-    const craftsman1 = await createCraftsman(plumbing.id, {
-      email: 'c1@test.com',
-      phoneNormalised: '+905551000030',
-    })
-    const craftsman2 = await createCraftsman(electrical.id, {
-      email: 'c2@test.com',
-      phoneNormalised: '+905551000031',
-    })
+    const craftsman1 = await createCraftsman(plumbing.id)
+    const craftsman2 = await createCraftsman(electrical.id)
     const price = await createPriceEntry({
       craftsmanId: craftsman1.id,
       subServiceId: leakRepair.id,
@@ -226,14 +224,8 @@ test.group('Auth Matrix — Craftsman', () => {
 
   test('craftsman cannot toggle another craftsman price', async ({ client }) => {
     const { lefkosa, leakRepair, plumbing, electrical } = await seedCatalog()
-    const craftsman1 = await createCraftsman(plumbing.id, {
-      email: 'c1-toggle@test.com',
-      phoneNormalised: '+905551000032',
-    })
-    const craftsman2 = await createCraftsman(electrical.id, {
-      email: 'c2-toggle@test.com',
-      phoneNormalised: '+905551000033',
-    })
+    const craftsman1 = await createCraftsman(plumbing.id)
+    const craftsman2 = await createCraftsman(electrical.id)
     const price = await createPriceEntry({
       craftsmanId: craftsman1.id,
       subServiceId: leakRepair.id,
@@ -254,7 +246,8 @@ test.group('Auth Matrix — Craftsman', () => {
 // Admin access
 // -------------------------------------------------------------------------
 
-test.group('Auth Matrix — Admin', () => {
+test.group('Auth Matrix — Admin', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('admin can access admin category CRUD', async ({ assert, client }) => {
     const admin = await createAdmin()
 
@@ -266,16 +259,17 @@ test.group('Auth Matrix — Admin', () => {
 
   test('admin can create admin region', async ({ assert, client }) => {
     const admin = await createAdmin()
+    const regionName = `AdminRegion_${Date.now()}`
 
     const response = await client
       .post('/api/admin/regions')
       .withCsrfToken()
       .accept('json')
       .loginAs(admin)
-      .json({ nameEn: 'AdminRegion', nameTr: 'AdminBölge' })
+      .json({ nameEn: regionName, nameTr: `${regionName}_TR` })
 
     response.assertStatus(201)
-    assert.equal(response.body().region.nameEn, 'AdminRegion')
+    assert.equal(response.body().region.nameEn, regionName)
   })
 
   test('admin can create craftsman price', async ({ assert, client }) => {

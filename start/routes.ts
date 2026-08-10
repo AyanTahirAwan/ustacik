@@ -68,22 +68,32 @@ router
     router.get('api/jobs', [JobRequestsController, 'index'])
     router.get('api/jobs/:id', [JobRequestsController, 'show'])
 
-    router.get('api/notifications', [UserNotificationsController, 'index'])
+    router.get('api/notifications', [UserNotificationsController, 'index']).as('api.notifications.index')
+    router.get('notifications', [UserNotificationsController, 'index']).as('notifications.index')
     router.patch('api/notifications/:id/read', [UserNotificationsController, 'markRead'])
   })
   .use(middleware.auth())
 
 router
   .group(() => {
-    router.get('api/customer/profile', [CustomersController, 'show'])
-    router.patch('api/customer/profile', [CustomersController, 'update'])
-    router.get('api/customer/addresses', [CustomerAddressesController, 'index'])
-    router.post('api/customer/addresses', [CustomerAddressesController, 'store'])
-    router.patch('api/customer/addresses/:id', [CustomerAddressesController, 'update'])
-    router.delete('api/customer/addresses/:id', [CustomerAddressesController, 'destroy'])
-    router.get('api/customer/favorites', [CustomerFavoritesController, 'index'])
-    router.post('api/customer/favorites', [CustomerFavoritesController, 'store'])
-    router.delete('api/customer/favorites/:craftsmanId', [CustomerFavoritesController, 'destroy'])
+    router.get('customer/profile', [CustomersController, 'show']).as('customer.profile.show')
+    router.patch('customer/profile', [CustomersController, 'update']).as('customer.profile.update')
+    router.get('api/customer/profile', [CustomersController, 'show']).as('api.customer.profile.show')
+    router.patch('api/customer/profile', [CustomersController, 'update']).as('api.customer.profile.update')
+    router.get('api/customer/addresses', [CustomerAddressesController, 'index']).as('api.customer.addresses.index')
+    router.post('api/customer/addresses', [CustomerAddressesController, 'store']).as('api.customer.addresses.store')
+    router.patch('api/customer/addresses/:id', [CustomerAddressesController, 'update']).as('api.customer.addresses.update')
+    router.delete('api/customer/addresses/:id', [CustomerAddressesController, 'destroy']).as('api.customer.addresses.destroy')
+    router.get('customer/addresses', [CustomerAddressesController, 'index']).as('customer.addresses.index')
+    router.post('customer/addresses', [CustomerAddressesController, 'store']).as('customer.addresses.store')
+    router.patch('customer/addresses/:id', [CustomerAddressesController, 'update']).as('customer.addresses.update')
+    router.delete('customer/addresses/:id', [CustomerAddressesController, 'destroy']).as('customer.addresses.destroy')
+    router.get('api/customer/favorites', [CustomerFavoritesController, 'index']).as('api.customer.favorites.index')
+    router.post('api/customer/favorites', [CustomerFavoritesController, 'store']).as('api.customer.favorites.store')
+    router.delete('api/customer/favorites/:craftsmanId', [CustomerFavoritesController, 'destroy']).as('api.customer.favorites.destroy')
+    router.get('customer/favorites', [CustomerFavoritesController, 'index']).as('customer.favorites.index')
+    router.post('customer/favorites', [CustomerFavoritesController, 'store']).as('customer.favorites.store')
+    router.delete('customer/favorites/:craftsmanId', [CustomerFavoritesController, 'destroy']).as('customer.favorites.destroy')
 
     router.post('api/jobs', [JobRequestsController, 'store'])
     router.patch('api/jobs/:id', [JobRequestsController, 'update'])
@@ -97,6 +107,7 @@ router
 router
   .group(() => {
     router.patch('api/jobs/:id/cancel', [JobRequestsController, 'cancel'])
+    router.delete('api/jobs/:id', [JobRequestsController, 'destroy'])
   })
   .use(middleware.auth())
   .use(middleware.role({ roles: ['customer', 'admin'] }))
@@ -110,11 +121,14 @@ router
 
 router
   .group(() => {
-    router.get('api/craftsman/profile', [CraftsmenController, 'showOwn'])
-    router.patch('api/craftsman/profile', [CraftsmenController, 'updateOwn'])
+    router.get('api/craftsman/profile', [CraftsmenController, 'showOwn']).as('api.craftsman.profile.show')
+    router.patch('api/craftsman/profile', [CraftsmenController, 'updateOwn']).as('api.craftsman.profile.update')
+    router.get('craftsman/profile', [CraftsmenController, 'showOwn']).as('craftsman.profile.show')
+    router.patch('craftsman/profile', [CraftsmenController, 'updateOwn']).as('craftsman.profile.update')
     router.get('api/craftsman/work-photos', [WorkPhotosController, 'index'])
     router.post('api/craftsman/work-photos', [WorkPhotosController, 'store'])
-    router.delete('api/craftsman/work-photos/:id', [WorkPhotosController, 'destroy'])
+    router.delete('api/craftsman/work-photos/:id', [WorkPhotosController, 'destroy']).as('api.craftsman.work-photos.destroy')
+    router.delete('craftsman/work-photos/:id', [WorkPhotosController, 'destroy']).as('craftsman.work-photos.destroy')
     router.get('api/craftsman/subscription', [SubscriptionsController, 'show'])
     router.get('api/craftsman/verification-logs', [VerificationLogsController, 'own'])
 
@@ -146,17 +160,22 @@ router
     )
   })
   .use(middleware.auth())
-  .use(middleware.role({ roles: ['craftsman'] }))
+  .use(middleware.role({ roles: ['craftsman', 'admin'] }))
 
 router
   .group(() => {
-    router.get('api/admin/users', [UsersController, 'index'])
-    router.get('api/admin/users/:id', [UsersController, 'show'])
-    router.patch('api/admin/users/:id/suspend', [UsersController, 'suspend'])
+    router.get('api/admin/users', [UsersController, 'index']).as('api.admin.users.index')
+    router.get('admin/users', [UsersController, 'index']).as('admin.users.index')
+    router.get('api/admin/users/:id', [UsersController, 'show']).as('api.admin.users.show')
+    router.get('admin/users/:id', [UsersController, 'show']).as('admin.users.show')
+    router.patch('api/admin/users/:id/suspend', [UsersController, 'suspend']).as('api.admin.users.suspend')
+    router.patch('admin/users/:id/suspend', [UsersController, 'suspend']).as('admin.users.suspend')
 
     router.get('api/admin/categories', [CategoriesController, 'index'])
+    router.post('api/admin/categories', [CategoriesController, 'store'])
     router.get('api/admin/categories/:id', [CategoriesController, 'show'])
     router.patch('api/admin/categories/:id', [CategoriesController, 'update'])
+    router.delete('api/admin/categories/:id', [CategoriesController, 'destroy'])
 
     router.get('api/admin/sub-services', [SubServicesController, 'index'])
     router.post('api/admin/sub-services', [SubServicesController, 'store'])

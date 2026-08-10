@@ -35,7 +35,7 @@ export default class extends BaseSchema {
         .enum(
           'reason_category',
           ['price', 'workmanship', 'punctuality', 'communication', 'other'],
-          { useNative: false }
+          { useNative: false, enumName: 'dispute_reason_enum' }
         )
         .notNullable()
 
@@ -43,7 +43,7 @@ export default class extends BaseSchema {
       table.text('admin_resolution_notes').nullable()
 
       table
-        .enum('status', ['OPEN', 'INVESTIGATING', 'CLOSED'], { useNative: false })
+        .enum('status', ['OPEN', 'INVESTIGATING', 'CLOSED'], { useNative: false, enumName: 'dispute_status_enum' })
         .notNullable()
         .defaultTo('OPEN')
 

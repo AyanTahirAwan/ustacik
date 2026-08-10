@@ -57,7 +57,7 @@ export default class extends BaseSchema {
             'cancelled',
             'expired',
           ],
-          { useNative: false }
+          { useNative: false, enumName: 'job_status_enum' }
         )
         .notNullable()
         .defaultTo('pending')

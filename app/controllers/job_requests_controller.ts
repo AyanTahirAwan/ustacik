@@ -114,7 +114,7 @@ export default class JobRequestsController {
     try {
       await job.transitionTo('cancelled')
       return response.ok({ job })
-    } catch (error) {
+    } catch (error: any) {
       return response.badRequest({ message: error.message })
     }
   }
@@ -134,7 +134,7 @@ export default class JobRequestsController {
     try {
       await job.transitionTo(status)
       return response.ok({ job })
-    } catch (error) {
+    } catch (error: any) {
       return response.badRequest({ message: error.message })
     }
   }

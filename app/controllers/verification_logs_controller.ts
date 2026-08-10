@@ -1,4 +1,5 @@
 import VerificationLog from '#models/verification_log'
+import Craftsman from '#models/craftsman'
 import { recordVerificationValidator } from '#validators/verification_log'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -26,8 +27,10 @@ export default class VerificationLogsController {
     const admin = auth.getUserOrFail()
     const payload = await request.validateUsing(recordVerificationValidator)
 
+    const craftsman = await Craftsman.findOrFail(params.craftsmanId)
+
     const log = await VerificationLog.record({
-      craftsmanId: Number(params.craftsmanId),
+      craftsmanId: craftsman.userId,
       checkedById: admin.id,
       ...payload,
     })

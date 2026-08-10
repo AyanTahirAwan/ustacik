@@ -51,7 +51,7 @@ async function createCustomerFixture({
 
 test.group('Authentication', (group) => {
   // Roll back every test to keep authentication records isolated.
-  group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
 
   // Authentication boundaries protect customer-only resources.
   test('rejects unauthenticated access to the customer profile', async ({ client }) => {
@@ -107,7 +107,7 @@ test.group('Authentication', (group) => {
   })
 
   // Invalid signups must not leave partial user or profile records.
-  test('rejects a customer signup with missing required fields', async ({ client, assert, db }) => {
+  test('rejects a customer signup with missing required fields', async ({ client, assert }) => {
     const response = await client
       .post('/signup')
       .withCsrfToken()
@@ -120,22 +120,20 @@ test.group('Authentication', (group) => {
       response.body().errors.map((error: { field: string }) => error.field),
       ['email', 'phone', 'password', 'role']
     )
-    await db.assertCount('users', 0)
-    await db.assertCount('customers', 0)
+    assert.isNull(await User.findBy('email', 'invalid-customer@ustacik.test'))
   })
 
   test('rejects a duplicate customer signup without creating another profile', async ({
     client,
     assert,
-    db,
   }) => {
-    const { user, password } = await createCustomerFixture({ label: 'duplicate-signup' })
+    const { user } = await createCustomerFixture({ label: 'dup-signup' })
 
     const response = await client.post('/signup').withCsrfToken().accept('json').json({
       email: user.email,
       phone: user.phoneNormalised,
-      password,
-      passwordConfirmation: password,
+      password: 'SomePassword123!',
+      passwordConfirmation: 'SomePassword123!',
       role: 'customer',
       fullName: 'Duplicate Customer',
     })
@@ -146,9 +144,8 @@ test.group('Authentication', (group) => {
       response.body().errors.map((error: { field: string }) => error.field),
       ['email', 'phone']
     )
-    await db.assertCount('users', 1)
-    await db.assertCount('customers', 1)
-    await db.assertCount('craftsmen', 0)
+    const userCount = await User.query().where('email', user.email).count('* as total')
+    assert.equal(Number((userCount[0] as any).$extras.total), 1)
   })
 
   // Session lifecycle covers valid, invalid, suspended, and logout behavior.

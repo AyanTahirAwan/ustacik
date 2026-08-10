@@ -1,6 +1,7 @@
 import Craftsman from '#models/craftsman'
 import Customer from '#models/customer'
 import User from '#models/user'
+import testUtils from '@adonisjs/core/services/test_utils'
 import { createAdmin, createCustomer, seedCatalog } from './helpers.js'
 import { test } from '@japa/runner'
 
@@ -19,7 +20,8 @@ import { test } from '@japa/runner'
 // Signup
 // -------------------------------------------------------------------------
 
-test.group('Auth Flow — Signup', () => {
+test.group('Auth Flow — Signup', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('customer signup creates a user and customer profile and redirects', async ({
     assert,
     client,
@@ -72,7 +74,7 @@ test.group('Auth Flow — Signup', () => {
   })
 
   test('duplicate email is rejected with 422', async ({ assert, client }) => {
-    await createCustomer()
+    await createCustomer({ email: 'customer@ustacik.test' })
 
     const response = await client.post('/signup').withCsrfToken().accept('json').json({
       email: 'customer@ustacik.test',
@@ -87,7 +89,7 @@ test.group('Auth Flow — Signup', () => {
   })
 
   test('duplicate phone is rejected with 422', async ({ assert, client }) => {
-    await createCustomer()
+    await createCustomer({ phoneNormalised: '+905551000003' })
 
     const response = await client.post('/signup').withCsrfToken().accept('json').json({
       email: 'another-customer@ustacik.test',
@@ -158,7 +160,8 @@ test.group('Auth Flow — Signup', () => {
 // Login
 // -------------------------------------------------------------------------
 
-test.group('Auth Flow — Login', () => {
+test.group('Auth Flow — Login', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('valid login establishes a session for the authenticated user', async ({ client }) => {
     const customer = await createCustomer({ email: 'login-user@ustacik.test' })
 
@@ -208,7 +211,8 @@ test.group('Auth Flow — Login', () => {
 // Logout
 // -------------------------------------------------------------------------
 
-test.group('Auth Flow — Logout', () => {
+test.group('Auth Flow — Logout', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('authenticated logout succeeds with a redirect', async ({ client }) => {
     const admin = await createAdmin()
 

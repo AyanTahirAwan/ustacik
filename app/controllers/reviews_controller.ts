@@ -34,7 +34,7 @@ export default class ReviewsController {
       })
 
       return response.created({ review })
-    } catch (error) {
+    } catch (error: any) {
       return response.badRequest({ message: error.message })
     }
   }
@@ -47,7 +47,7 @@ export default class ReviewsController {
     try {
       await review.reply(user.id, payload.message)
       return response.ok({ review })
-    } catch (error) {
+    } catch (error: any) {
       return response.badRequest({ message: error.message })
     }
   }

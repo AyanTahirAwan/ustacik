@@ -42,7 +42,7 @@ export default class VerificationLog extends BaseModel {
   @column()
   declare notes: string | null
 
-  @column.dateTime()
+  @column.dateTime({ autoCreate: true })
   declare verifiedAt: DateTime
 
   @belongsTo(() => Craftsman, { foreignKey: 'craftsmanId' })

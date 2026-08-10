@@ -29,7 +29,7 @@ export default class extends BaseSchema {
             'dispute_opened',
             'system',
           ],
-          { useNative: false }
+          { useNative: false, enumName: 'notification_type_enum' }
         )
         .notNullable()
 

@@ -5,7 +5,7 @@ const password = () => vine.string().minLength(8).maxLength(64)
 const phone = () => vine.string().trim().minLength(8).maxLength(32)
 
 export const signupValidator = vine.create({
-  email: email().unique({ table: 'users', column: 'email' }),
+  email: email().unique({ table: 'users', column: 'email', caseInsensitive: true }),
   phone: phone().unique({ table: 'users', column: 'phone_normalised' }),
   password: password().confirmed({ confirmationField: 'passwordConfirmation' }),
   role: vine.enum(['customer', 'craftsman'] as const),

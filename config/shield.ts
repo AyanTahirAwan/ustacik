@@ -45,7 +45,8 @@ const shieldConfig = defineConfig({
      * Routes that should be excluded from CSRF protection.
      * Useful for webhooks or API endpoints that use other auth methods.
      */
-    exceptRoutes: [],
+    exceptRoutes: (ctx) =>
+      ctx.request.url().startsWith('/api') || Boolean(ctx.request.header('accept')?.includes('json')),
 
     /**
      * Enable XSRF-TOKEN cookie for JavaScript frameworks.

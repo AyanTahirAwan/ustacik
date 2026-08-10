@@ -10,15 +10,16 @@ import JobRequest from '#models/job_request'
 import Review from '#models/review'
 
 async function createTestData() {
-  const customer = await User.create({ email: 'customer@test.com', phoneNormalised: '+1000000001', passwordHash: 'password123', role: 'customer', status: 'active' })
+  const rand = Math.random().toString(36).substring(7)
+  const customer = await User.create({ email: `customer_${rand}@test.com`, phoneNormalised: `+1${Date.now().toString().slice(-9)}`, passwordHash: 'password123', role: 'customer', status: 'active' })
   await Customer.create({ userId: customer.id, fullName: 'Test Customer', language: 'en', smsOptIn: true })
 
-  const craftsman = await User.create({ email: 'craftsman@test.com', phoneNormalised: '+1000000002', passwordHash: 'password123', role: 'craftsman', status: 'active' })
-  const category = await Category.create({ nameEn: 'Plumbing', nameTr: 'Tesisatçı' })
-  const region = await Region.create({ nameEn: 'Istanbul', nameTr: 'İstanbul' })
+  const craftsman = await User.create({ email: `craftsman_${rand}@test.com`, phoneNormalised: `+2${Date.now().toString().slice(-9)}`, passwordHash: 'password123', role: 'craftsman', status: 'active' })
+  const category = await Category.firstOrCreate({ nameEn: 'Plumbing' }, { nameEn: 'Plumbing', nameTr: 'Tesisatçı' })
+  const region = await Region.firstOrCreate({ nameEn: 'Istanbul' }, { nameEn: 'Istanbul', nameTr: 'İstanbul' })
   await Craftsman.create({ userId: craftsman.id, businessName: 'Test Craftsman', categoryId: category.id, trustLevel: 1, verbalConsent: true, totalJobs: 0 })
 
-  const admin = await User.create({ email: 'admin@test.com', phoneNormalised: '+1000000003', passwordHash: 'password123', role: 'admin', status: 'active' })
+  const admin = await User.create({ email: `admin_${rand}@test.com`, phoneNormalised: `+3${Date.now().toString().slice(-9)}`, passwordHash: 'password123', role: 'admin', status: 'active' })
   await Admin.create({ userId: admin.id, fullName: 'Test Admin', clearanceLvl: 3 })
 
   return { customer, craftsman, admin, category, region }

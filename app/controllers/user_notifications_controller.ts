@@ -11,4 +11,17 @@ export default class UserNotificationsController {
 
     return response.ok({ notifications })
   }
+
+  async markRead({ auth, params, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const notification = await UserNotification.query()
+      .where('id', params.id)
+      .where('user_id', user.id)
+      .firstOrFail()
+
+    notification.isRead = true
+    await notification.save()
+
+    return response.ok(notification)
+  }
 }

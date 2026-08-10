@@ -12,11 +12,11 @@ export default class extends BaseSchema {
       table.string('password_hash', 255).notNullable()
 
       table
-        .enum('role', ['customer', 'craftsman', 'admin'], { useNative: false })
+        .enum('role', ['customer', 'craftsman', 'admin'], { useNative: false, enumName: 'users_role_enum' })
         .notNullable()
 
       table
-        .enum('status', ['active', 'suspended'], { useNative: false })
+        .enum('status', ['active', 'suspended'], { useNative: false, enumName: 'users_status_enum' })
         .notNullable()
         .defaultTo('active')
 

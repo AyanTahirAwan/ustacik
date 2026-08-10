@@ -1,4 +1,4 @@
-import { BaseModel, column, hasOne, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasOne, hasMany, beforeSave } from '@adonisjs/lucid/orm'
 import type { HasOne, HasMany } from '@adonisjs/lucid/types/relations'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
@@ -39,6 +39,13 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+
+  @beforeSave()
+  static async hashUserPassword(user: User) {
+    if (user.$dirty.passwordHash && !hash.use('scrypt').isValidHash(user.passwordHash)) {
+      user.passwordHash = await hash.use('scrypt').make(user.passwordHash)
+    }
+  }
 
   @hasOne(() => Customer, { foreignKey: 'userId' })
   declare customer: HasOne<typeof Customer>

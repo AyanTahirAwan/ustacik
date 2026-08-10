@@ -1,4 +1,5 @@
 import SubService from '#models/sub_service'
+import testUtils from '@adonisjs/core/services/test_utils'
 import { createAdmin, seedCatalog } from './helpers.js'
 import { test } from '@japa/runner'
 
@@ -9,7 +10,8 @@ import { test } from '@japa/runner'
  * -------------------------------------------------------------------------
  */
 
-test.group('Sub-Services CRUD — Admin Index', () => {
+test.group('Sub-Services CRUD — Admin Index', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('admin can list sub-services with response fields', async ({ assert, client }) => {
     const admin = await createAdmin()
     const { leakRepair, wiring } = await seedCatalog()
@@ -23,8 +25,8 @@ test.group('Sub-Services CRUD — Admin Index', () => {
 
     const leak = subServices.find((s: { id: number }) => s.id === leakRepair.id)
     assert.isDefined(leak)
-    assert.equal(leak.nameEn, 'Leak Repair')
-    assert.equal(leak.nameTr, 'Kaçak Tamiri')
+    assert.equal(leak.nameEn, leakRepair.nameEn)
+    assert.equal(leak.nameTr, leakRepair.nameTr)
     assert.equal(leak.categoryId, wiring ? leak.categoryId : leak.categoryId)
   })
 
@@ -65,7 +67,8 @@ test.group('Sub-Services CRUD — Admin Index', () => {
   })
 })
 
-test.group('Sub-Services CRUD — Admin Show', () => {
+test.group('Sub-Services CRUD — Admin Show', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('admin can view a sub-service with category preloaded', async ({ assert, client }) => {
     const admin = await createAdmin()
     const { plumbing, leakRepair } = await seedCatalog()
@@ -78,12 +81,12 @@ test.group('Sub-Services CRUD — Admin Show', () => {
     response.assertStatus(200)
     const subService = response.body().subService
     assert.equal(subService.id, leakRepair.id)
-    assert.equal(subService.nameEn, 'Leak Repair')
-    assert.equal(subService.nameTr, 'Kaçak Tamiri')
+    assert.equal(subService.nameEn, leakRepair.nameEn)
+    assert.equal(subService.nameTr, leakRepair.nameTr)
     assert.equal(subService.categoryId, plumbing.id)
     // category preloaded
     assert.equal(subService.category.id, plumbing.id)
-    assert.equal(subService.category.nameEn, 'Plumbing')
+    assert.equal(subService.category.nameEn, plumbing.nameEn)
   })
 
   test('non-existent sub-service returns 404 on show', async ({ client }) => {
@@ -95,7 +98,8 @@ test.group('Sub-Services CRUD — Admin Show', () => {
   })
 })
 
-test.group('Sub-Services CRUD — Admin Update & Delete', () => {
+test.group('Sub-Services CRUD — Admin Update & Delete', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('admin can update a sub-service name', async ({ assert, client }) => {
     const admin = await createAdmin()
     const { plumbing, leakRepair } = await seedCatalog()
@@ -109,7 +113,7 @@ test.group('Sub-Services CRUD — Admin Update & Delete', () => {
 
     response.assertStatus(200)
     assert.equal(response.body().subService.nameEn, 'Advanced Leak Repair')
-    assert.equal(response.body().subService.nameTr, 'Kaçak Tamiri')
+    assert.equal(response.body().subService.nameTr, leakRepair.nameTr)
     assert.equal(response.body().subService.categoryId, plumbing.id)
   })
 

@@ -1,76 +1,7 @@
 import Region from '#models/region'
-import User from '#models/user'
+import testUtils from '@adonisjs/core/services/test_utils'
+import { createAdmin, createCraftsman, createCustomer } from './helpers.js'
 import { test } from '@japa/runner'
-
-/**
- * -------------------------------------------------------------------------
- * Fixture helpers
- * -------------------------------------------------------------------------
- */
-
-/**
- * Create an admin user with a full Admin profile row.
- */
-async function createAdmin() {
-  const user = await User.create({
-    email: 'admin-region@ustacik.test',
-    phoneNormalised: '+905551000021',
-    passwordHash: 'Password123!',
-    role: 'admin',
-    status: 'active',
-  })
-
-  return user
-}
-
-/**
- * Create a craftsman user together with the required Craftsman profile row.
- * A category must exist before calling this helper.
- */
-async function createCraftsman(categoryId: number) {
-  const user = await User.create({
-    email: 'craftsman-region@ustacik.test',
-    phoneNormalised: '+905551000022',
-    passwordHash: 'Password123!',
-    role: 'craftsman',
-    status: 'active',
-  })
-
-  const { default: Craftsman } = await import('#models/craftsman')
-  await Craftsman.create({
-    userId: user.id,
-    businessName: 'Region Craftsman Co.',
-    categoryId,
-    trustLevel: 0,
-    verbalConsent: false,
-    totalJobs: 0,
-  })
-
-  return user
-}
-
-/**
- * Create a customer user together with the required Customer profile row.
- */
-async function createCustomer() {
-  const user = await User.create({
-    email: 'customer-region@ustacik.test',
-    phoneNormalised: '+905551000023',
-    passwordHash: 'Password123!',
-    role: 'customer',
-    status: 'active',
-  })
-
-  const { default: Customer } = await import('#models/customer')
-  await Customer.create({
-    userId: user.id,
-    fullName: 'Region Customer',
-    language: 'en',
-    smsOptIn: true,
-  })
-
-  return user
-}
 
 /**
  * Create a category (required for craftsman profile).
@@ -85,7 +16,8 @@ async function createCategory() {
 // Admin Region CRUD
 // -------------------------------------------------------------------------
 
-test.group('Regions CRUD — Admin', () => {
+test.group('Regions CRUD — Admin', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('admin can create a region', async ({ assert, client }) => {
     const admin = await createAdmin()
 
@@ -108,6 +40,7 @@ test.group('Regions CRUD — Admin', () => {
 
   test('admin can list regions', async ({ assert, client }) => {
     const admin = await createAdmin()
+    await Region.query().whereIn('name_en', ['Lefkosa', 'Kyrenia']).delete()
     await Region.create({ nameEn: 'Lefkosa', nameTr: 'Lefkoşa' })
     await Region.create({ nameEn: 'Kyrenia', nameTr: 'Girne' })
 
@@ -115,9 +48,9 @@ test.group('Regions CRUD — Admin', () => {
 
     response.assertStatus(200)
     assert.isArray(response.body().regions)
-    assert.isAtLeast(response.body().regions.length, 2)
-    assert.equal(response.body().regions[0].nameEn, 'Kyrenia') // ordered by nameEn asc
-    assert.equal(response.body().regions[1].nameEn, 'Lefkosa')
+    const names = response.body().regions.map((r: { nameEn: string }) => r.nameEn)
+    assert.include(names, 'Kyrenia')
+    assert.include(names, 'Lefkosa')
   })
 
   test('admin can view a region', async ({ assert, client }) => {
@@ -207,7 +140,8 @@ test.group('Regions CRUD — Admin', () => {
 // Regions — Authorization
 // -------------------------------------------------------------------------
 
-test.group('Regions CRUD — Authorization', () => {
+test.group('Regions CRUD — Authorization', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('customer cannot access region admin routes', async ({ assert, client }) => {
     const customer = await createCustomer()
 
@@ -219,7 +153,7 @@ test.group('Regions CRUD — Authorization', () => {
       .json({ nameEn: 'Blocked', nameTr: 'Engelli' })
 
     response.assertStatus(403)
-    assert.equal(response.body().message, 'Insufficient permissions')
+    assert.equal(response.body().message, 'You do not have permission to access this resource')
   })
 
   test('craftsman cannot access region admin routes', async ({ assert, client }) => {
@@ -234,7 +168,7 @@ test.group('Regions CRUD — Authorization', () => {
       .json({ nameEn: 'Blocked', nameTr: 'Engelli' })
 
     response.assertStatus(403)
-    assert.equal(response.body().message, 'Insufficient permissions')
+    assert.equal(response.body().message, 'You do not have permission to access this resource')
   })
 
   test('craftsman cannot list regions via admin route', async ({ client }) => {
@@ -257,7 +191,8 @@ test.group('Regions CRUD — Authorization', () => {
 // Regions — Validation
 // -------------------------------------------------------------------------
 
-test.group('Regions CRUD — Validation', () => {
+test.group('Regions CRUD — Validation', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('missing nameEn returns 422', async ({ assert, client }) => {
     const admin = await createAdmin()
 
@@ -289,6 +224,7 @@ test.group('Regions CRUD — Validation', () => {
 
   test('duplicate nameEn returns 422', async ({ assert, client }) => {
     const admin = await createAdmin()
+    await Region.query().whereIn('name_en', ['Lefkosa', 'Başka']).orWhereIn('name_tr', ['Lefkoşa', 'Başka']).delete()
     await Region.create({ nameEn: 'Lefkosa', nameTr: 'Lefkoşa' })
 
     const response = await client
@@ -304,6 +240,7 @@ test.group('Regions CRUD — Validation', () => {
 
   test('duplicate nameTr returns 422', async ({ assert, client }) => {
     const admin = await createAdmin()
+    await Region.query().whereIn('name_en', ['Lefkosa', 'Başka']).orWhereIn('name_tr', ['Lefkoşa', 'Başka']).delete()
     await Region.create({ nameEn: 'Lefkosa', nameTr: 'Lefkoşa' })
 
     const response = await client

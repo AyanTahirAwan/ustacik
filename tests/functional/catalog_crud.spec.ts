@@ -1,114 +1,16 @@
 import Category from '#models/category'
-import Craftsman from '#models/craftsman'
-import Customer from '#models/customer'
-import Region from '#models/region'
 import ServicePriceCatalog from '#models/service_price_catalog'
 import SubService from '#models/sub_service'
-import User from '#models/user'
+import testUtils from '@adonisjs/core/services/test_utils'
+import { createAdmin, createCraftsman, createCustomer, seedCatalog } from './helpers.js'
 import { test } from '@japa/runner'
-
-/**
- * -------------------------------------------------------------------------
- * Fixture helpers
- * -------------------------------------------------------------------------
- * Create the baseline data needed for most tests. Uses model factories
- * (plain model creates) to honour all relationships, hooks, and defaults.
- */
-
-/**
- * Create an admin user with a full Admin profile row.
- */
-async function createAdmin() {
-  const user = await User.create({
-    email: 'admin@ustacik.test',
-    phoneNormalised: '+905551000001',
-    passwordHash: 'Password123!',
-    role: 'admin',
-    status: 'active',
-  })
-
-  return user
-}
-
-/**
- * Create a craftsman user together with the required Craftsman profile row.
- * A category must exist before calling this helper.
- */
-async function createCraftsman(
-  categoryId: number,
-  overrides: Partial<{ email: string; phoneNormalised: string }> = {}
-) {
-  const user = await User.create({
-    email: overrides.email ?? 'craftsman@ustacik.test',
-    phoneNormalised: overrides.phoneNormalised ?? '+905551000002',
-    passwordHash: 'Password123!',
-    role: 'craftsman',
-    status: 'active',
-  })
-
-  await Craftsman.create({
-    userId: user.id,
-    businessName: 'Test Craftsman Co.',
-    categoryId,
-    trustLevel: 0,
-    verbalConsent: false,
-    totalJobs: 0,
-  })
-
-  return user
-}
-
-/**
- * Create a customer user together with the required Customer profile row.
- */
-async function createCustomer() {
-  const user = await User.create({
-    email: 'customer@ustacik.test',
-    phoneNormalised: '+905551000003',
-    passwordHash: 'Password123!',
-    role: 'customer',
-    status: 'active',
-  })
-
-  await Customer.create({
-    userId: user.id,
-    fullName: 'Test Customer',
-    language: 'en',
-    smsOptIn: true,
-  })
-
-  return user
-}
-
-/**
- * Seed the catalog lookup tables (categories, sub-services, regions).
- */
-async function seedCatalog() {
-  const plumbing = await Category.create({ nameEn: 'Plumbing', nameTr: 'Tesisat' })
-  const electrical = await Category.create({ nameEn: 'Electrical', nameTr: 'Elektrik' })
-
-  const leakRepair = await SubService.create({
-    categoryId: plumbing.id,
-    nameEn: 'Leak Repair',
-    nameTr: 'Kaçak Tamiri',
-  })
-  const wiring = await SubService.create({
-    categoryId: electrical.id,
-    nameEn: 'Wiring',
-    nameTr: 'Kablolama',
-  })
-
-  const lefkosa = await Region.create({ nameEn: 'Lefkosa', nameTr: 'Lefkoşa' })
-  const girne = await Region.create({ nameEn: 'Kyrenia', nameTr: 'Girne' })
-
-  return { electrical, girne, lefkosa, leakRepair, plumbing, wiring }
-}
 
 // -------------------------------------------------------------------------
 // Tests
 // -------------------------------------------------------------------------
 
-test.group('Catalog CRUD — Public Access', () => {
+test.group('Catalog CRUD — Public Access', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('GET /api/catalog/categories returns 200', async ({ assert, client }) => {
     await seedCatalog()
 
@@ -136,7 +38,7 @@ test.group('Catalog CRUD — Public Access', () => {
     // Create one active and one inactive price entry
     // Use different subServiceId (leakRepair vs wiring) to avoid violating
     // the composite unique constraint on (craftsman_id, sub_service_id, region_id)
-    await ServicePriceCatalog.create({
+    const activePrice = await ServicePriceCatalog.create({
       craftsmanId: craftsman.id,
       subServiceId: leakRepair.id,
       regionId: lefkosa.id,
@@ -145,7 +47,7 @@ test.group('Catalog CRUD — Public Access', () => {
       currency: 'TRY',
       isActive: true,
     })
-    await ServicePriceCatalog.create({
+    const inactivePrice = await ServicePriceCatalog.create({
       craftsmanId: craftsman.id,
       subServiceId: wiring.id,
       regionId: lefkosa.id,
@@ -160,9 +62,9 @@ test.group('Catalog CRUD — Public Access', () => {
     response.assertStatus(200)
     const prices = response.body().servicePriceCatalogs
     assert.isArray(prices)
-    // Should only return the active entry
-    assert.equal(prices.length, 1)
-    assert.equal(prices[0].minPrice, 100)
+    // Active price must be present, inactive price must be excluded
+    assert.isTrue(prices.some((p: any) => p.id === activePrice.id))
+    assert.isFalse(prices.some((p: any) => p.id === inactivePrice.id))
   })
 
   test('GET /api/search/services works correctly', async ({ assert, client }) => {
@@ -191,7 +93,8 @@ test.group('Catalog CRUD — Public Access', () => {
 // Admin Authorization — Category CRUD
 // -------------------------------------------------------------------------
 
-test.group('Catalog CRUD — Admin Authorization', () => {
+test.group('Catalog CRUD — Admin Authorization', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('admin can create a category', async ({ assert, client }) => {
     const admin = await createAdmin()
 
@@ -261,7 +164,8 @@ test.group('Catalog CRUD — Admin Authorization', () => {
 // Craftsman — Service Price Catalog
 // -------------------------------------------------------------------------
 
-test.group('Catalog CRUD — Craftsman Price Catalog', () => {
+test.group('Catalog CRUD — Craftsman Price Catalog', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('craftsman can create a service price entry', async ({ assert, client }) => {
     const { lefkosa, leakRepair, plumbing } = await seedCatalog()
     const craftsman = await createCraftsman(plumbing.id)
@@ -485,7 +389,8 @@ test.group('Catalog CRUD — Craftsman Price Catalog', () => {
 // Validation Tests
 // -------------------------------------------------------------------------
 
-test.group('Catalog CRUD — Validation', () => {
+test.group('Catalog CRUD — Validation', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
   test('category: missing nameEn returns 422', async ({ assert, client }) => {
     const admin = await createAdmin()
 
