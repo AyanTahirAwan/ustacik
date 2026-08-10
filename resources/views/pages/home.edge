@@ -1,7 +1,9 @@
 @layout()
   <section class="hero-ad-banner">
     <h2>Advertisement</h2>
-    <p>Welcome to Ustacik! Find trusted home repair professionals or join our craftsman network today.</p>
+    <p>
+      Welcome to Ustacik! Find trusted home repair professionals or join our craftsman network today.
+    </p>
   </section>
 
   <div class="card-grid">
@@ -13,7 +15,11 @@
         </p>
       </div>
       <div class="action-container">
-        @!link({ route: 'new_account.create', text: 'Get Started →', class: 'btn-primary' })
+        @!link({
+          route: 'new_account.create',
+          text: 'Get Started →',
+          class: 'btn-primary',
+        })
       </div>
     </div>
 
@@ -25,7 +31,7 @@
         </p>
       </div>
       <div class="action-container">
-        @!link({ route: 'home', text: 'Browse Services →', class: 'btn-primary' })
+        @!link({ href: '/categories', text: 'Browse Services →', class: 'btn-primary' })
       </div>
     </div>
   </div>

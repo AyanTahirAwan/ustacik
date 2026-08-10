@@ -4,16 +4,13 @@
     <p>Browse all service categories.</p>
   </div>
 
-  <div class="page-placeholder">
-    <h2>Category List — Placeholder</h2>
-    {{--
-      TODO: API integration
-      Fetch and list categories from:
-        GET /api/catalog/categories
-      Expected response: { data: [{ id, nameEn, nameTr, createdAt }] }
-      Each item should link to /categories/:id (Category Details).
-    --}}
-    <p>No categories loaded yet. This page will list service categories.</p>
-  </div>
+  <section aria-labelledby="categories-heading">
+    <h2 id="categories-heading" class="section-heading">Choose a service</h2>
+    <p class="section-subheading">Select a category to explore the services available.</p>
+    <div id="categories-list" class="catalog-grid" aria-live="polite">
+      <div class="empty-state">
+        <p>Loading categories…</p>
+      </div>
+    </div>
+  </section>
 @end
-

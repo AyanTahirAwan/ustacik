@@ -12,10 +12,10 @@ export default class NewAccountController {
     return view.render('pages/auth/signup')
   }
 
-  async store({ request, response, auth }: HttpContext) {
+  async store({ request, response, session }: HttpContext) {
     const payload = await request.validateUsing(signupValidator)
 
-    const user = await db.transaction(async (trx) => {
+    await db.transaction(async (trx) => {
       const newUser = await User.create(
         {
           email: payload.email,
@@ -68,7 +68,7 @@ export default class NewAccountController {
       return newUser
     })
 
-    await auth.use('web').login(user)
-    response.redirect().toRoute('home')
+    session.flash('success', 'Account created successfully. You can now log in.')
+    response.redirect().toRoute('session.create')
   }
 }

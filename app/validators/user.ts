@@ -14,3 +14,8 @@ export const signupValidator = vine.create({
   businessName: vine.string().trim().minLength(2).maxLength(160).optional(),
   categoryId: vine.number().optional(),
 })
+
+export const loginValidator = vine.create({
+  email: email(),
+  password: vine.string().minLength(1).maxLength(64),
+})

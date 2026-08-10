@@ -14,15 +14,9 @@ export default class extends BaseSchema {
         .inTable('craftsmen')
         .onDelete('CASCADE')
 
-      table
-        .enum('plan_type', ['free', 'paid'], { useNative: false })
-        .notNullable()
-        .defaultTo('free')
+      table.enum('plan_type', ['free', 'paid']).notNullable().defaultTo('free')
 
-      table
-        .enum('status', ['active', 'cancelled', 'past_due'], { useNative: false })
-        .notNullable()
-        .defaultTo('active')
+      table.enum('status', ['active', 'cancelled', 'past_due']).notNullable().defaultTo('active')
 
       table.date('period_start').notNullable()
       table.date('period_end').nullable()

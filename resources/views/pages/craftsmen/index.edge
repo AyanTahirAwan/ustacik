@@ -4,17 +4,18 @@
     <p>Browse craftsmen and their service listings.</p>
   </div>
 
-  <div class="page-placeholder">
-    <h2>Craftsman Listings — Placeholder</h2>
-    {{--
-      TODO: API integration
-      List craftsmen and their service prices from:
-        GET /api/catalog/prices (active entries, preloads craftsman, subService, region)
-        GET /api/search/services (searchable entries)
-      Expected response: { servicePriceCatalogs: [...] } or { data: [...] }
-      Group/display by craftsman (businessName, trustLevel, totalJobs).
-    --}}
-    <p>No listings loaded yet. This page will show craftsman service listings.</p>
-  </div>
+  <section aria-labelledby="craftsmen-heading">
+    <div class="section-header">
+      <div>
+        <h2 id="craftsmen-heading" class="section-heading">Local professionals</h2>
+        <p class="section-subheading">Review profiles and find the right person for your job.</p>
+      </div>
+      <a class="btn-back" href="/search">Filter services</a>
+    </div>
+    <div id="craftsmen-list" class="craftsmen-grid" aria-live="polite">
+      <div class="empty-state">
+        <p>Loading craftsmen…</p>
+      </div>
+    </div>
+  </section>
 @end
-

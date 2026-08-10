@@ -11,14 +11,9 @@ export default class extends BaseSchema {
       table.string('phone_normalised', 32).notNullable().unique()
       table.string('password_hash', 255).notNullable()
 
-      table
-        .enum('role', ['customer', 'craftsman', 'admin'], { useNative: false })
-        .notNullable()
+      table.enum('role', ['customer', 'craftsman', 'admin']).notNullable()
 
-      table
-        .enum('status', ['active', 'suspended'], { useNative: false })
-        .notNullable()
-        .defaultTo('active')
+      table.enum('status', ['active', 'suspended']).notNullable().defaultTo('active')
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

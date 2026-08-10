@@ -19,6 +19,13 @@
       @end
     </div>
 
+    <nav class="public-nav" aria-label="Primary navigation">
+      <a href="/categories">Categories</a>
+      <a href="/craftsmen">Craftsmen</a>
+      <a href="/regions">Regions</a>
+      <a href="/search">Search</a>
+    </nav>
+
     <div class="nav-actions">
       @if(auth.user)
         @!avatar({ initials: auth.user.initials })
@@ -26,7 +33,7 @@
           @!button({ text: 'Logout', class: 'btn-logout', type: 'submit' })
         @end
       @else
-        <nav>
+        <nav aria-label="Account navigation">
           @!link({ route: 'new_account.create', text: 'Signup', class: 'btn-link' })
           @!link({ route: 'session.create', text: 'Login', class: 'btn-link' })
         </nav>

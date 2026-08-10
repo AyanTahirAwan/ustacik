@@ -32,20 +32,13 @@ export default class extends BaseSchema {
         .onDelete('RESTRICT')
 
       table
-        .enum(
-          'reason_category',
-          ['price', 'workmanship', 'punctuality', 'communication', 'other'],
-          { useNative: false }
-        )
+        .enum('reason_category', ['price', 'workmanship', 'punctuality', 'communication', 'other'])
         .notNullable()
 
       table.text('customer_notes').notNullable()
       table.text('admin_resolution_notes').nullable()
 
-      table
-        .enum('status', ['OPEN', 'INVESTIGATING', 'CLOSED'], { useNative: false })
-        .notNullable()
-        .defaultTo('OPEN')
+      table.enum('status', ['OPEN', 'INVESTIGATING', 'CLOSED']).notNullable().defaultTo('OPEN')
 
       table.timestamp('created_at').notNullable()
       table.timestamp('resolved_at').nullable()

@@ -1,115 +1,103 @@
 @layout()
-
   <section class="hero">
-    <div class="container">
-      <h1>Search Services</h1>
-      <p>Find craftsmen and compare service prices.</p>
-    </div>
+    <h1>Search Services</h1>
+    <p>Find craftsmen and compare service prices.</p>
   </section>
 
-  <section class="container">
+  <section class="search-section">
+    <h2 class="section-heading">Find a Service</h2>
+    <p class="section-subheading">Search by category, service, region, or price.</p>
+
     <div class="card">
-
-      <h2 class="card-title">
-        Find a Service
-      </h2>
-
-      <p class="card-description">
-        Search by category, region, or price.
-      </p>
-
       @form({
-  method: 'GET',
-  url: '/search',
-  id: 'search-form'
-})
-
-        <div class="auth-field">
-          @field.root({ name: 'q' })
-            @!field.label({ text: 'Search' })
-            @!input.control({
-              type: 'text',
-              placeholder: 'Electrician, plumber...'
+        method: 'GET',
+        action: '/search',
+        id: 'search-form',
+      })
+        <div class="form-group">
+          @field.root({ name: 'categoryId' })
+            @!field.label({ text: 'Category', class: 'form-label' })
+            @!select.control({
+              id: 'category-select',
+              class: 'form-control',
+              options: [{ value: '', name: 'Loading categories...' }],
             })
             @!field.error()
           @end
         </div>
 
-        <div class="auth-field">
-  @field.root({ name: 'categoryId' })
-    @!field.label({ text: 'Category' })
+        <div class="form-group">
+          @field.root({ name: 'subServiceId' })
+            @!field.label({ text: 'Service', class: 'form-label' })
+            @!select.control({
+              id: 'sub-service-select',
+              class: 'form-control',
+              disabled: true,
+              options: [{ value: '', name: 'Choose a category first' }],
+            })
+            @!field.error()
+          @end
+        </div>
 
-   @!select.control({
-  id: 'category-select',
-  options: [
-    { value: '', name: 'Loading categories...' }
-  ]
-})
+        <div class="form-group">
+          @field.root({ name: 'regionId' })
+            @!field.label({ text: 'Region', class: 'form-label' })
+            @!select.control({
+              id: 'region-select',
+              class: 'form-control',
+              options: [{ value: '', name: 'Loading regions...' }],
+            })
+            @!field.error()
+          @end
+        </div>
 
-    @!field.error()
-  @end
-</div>
+        <div class="form-group">
+          @field.root({ name: 'minPrice' })
+            @!field.label({ text: 'Minimum Price', class: 'form-label' })
+            @!input.control({
+              class: 'form-control',
+              type: 'number',
+              placeholder: '0',
+              min: '0',
+              step: '1',
+            })
+            @!field.error()
+          @end
+        </div>
 
-<div class="auth-field">
-  @field.root({ name: 'regionId' })
-    @!field.label({ text: 'Region' })
+        <div class="form-group">
+          @field.root({ name: 'maxPrice' })
+            @!field.label({ text: 'Maximum Price', class: 'form-label' })
+            @!input.control({
+              class: 'form-control',
+              type: 'number',
+              placeholder: '1000',
+              min: '0',
+              step: '1',
+            })
+            @!field.error()
+          @end
+        </div>
 
-    @!select.control({
-  id: 'region-select',
-  options: [
-    { value: '', name: 'Loading regions...' }
-  ]
-})
-
-    @!field.error()
-  @end
-</div>
-
-<div class="auth-field">
-  @field.root({ name: 'minPrice' })
-    @!field.label({ text: 'Minimum Price' })
-
-    @!input.control({
-      type: 'number',
-      placeholder: '0'
-    })
-
-    @!field.error()
-  @end
-</div>
-
-<div class="auth-field">
-  @field.root({ name: 'maxPrice' })
-    @!field.label({ text: 'Maximum Price' })
-
-    @!input.control({
-      type: 'number',
-      placeholder: '1000'
-    })
-
-    @!field.error()
-  @end
-</div>
-
-        <div class="auth-actions">
+        <div class="search-actions">
+          <a href="/search" class="btn-back">Clear filters</a>
           @!button({
             text: 'Search',
             type: 'submit',
-            class: 'btn-primary'
+            class: 'btn-primary',
           })
         </div>
-
       @end
-
     </div>
   </section>
 
-  <section class="container">
+  <section class="search-section">
+    <h2 class="section-heading">Search Results</h2>
 
-  <h2 class="card-title">Search Results</h2>
-
-  <div id="search-results" class="card-grid"></div>
-
-</section>
-
+    <div id="search-results" class="results-grid" aria-live="polite">
+      <div class="empty-state">
+        <p>Use the filters above to find available services.</p>
+      </div>
+    </div>
+  </section>
 @end
