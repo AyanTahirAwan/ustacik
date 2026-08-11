@@ -427,9 +427,9 @@ test.group('Authorization and ownership', (group) => {
   test('returns an empty notification collection for an active customer', async ({ client }) => {
     const { user } = await createCustomerFixture('empty-notifications')
 
-    const response = await client.get('/notifications').loginAs(user).accept('json')
+    const response = await client.get('/api/notifications').loginAs(user).accept('json')
 
     response.assertStatus(200)
-    response.assertBody({ notifications: [] })
+    response.assertBody({ notifications: [], unreadCount: 0 })
   })
 })
