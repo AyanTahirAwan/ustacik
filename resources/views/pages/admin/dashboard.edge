@@ -1,21 +1,187 @@
-@dashboard_layout({ title: 'Admin Dashboard' })
-  <div class="page-placeholder">
-    <h2>Admin Dashboard — Placeholder</h2>
-    {{--
-      TODO: API integration
-      Admin overview. Quick links:
-        - /admin/categories       (Categories management)
-        - /admin/regions          (Regions management)
-        - /admin/sub-services     (Sub Services management)
-      Backend endpoints available (admin only):
-        GET/POST /api/admin/categories
-        GET/PATCH/DELETE /api/admin/categories/:id
-        GET/POST /api/admin/sub-services
-        GET/PATCH/DELETE /api/admin/sub-services/:id
-        GET/POST /api/admin/regions
-        GET/PATCH/DELETE /api/admin/regions/:id
-    --}}
-    <p>Admin dashboard overview goes here. This page is role-gated to admin.</p>
+@adminUserLayout({ title: 'Craftsmen Performance', active: 'dashboard' })
+  <div id="admin-dashboard" class="admin-dashboard" aria-busy="true">
+    <section class="admin-dashboard-heading" aria-labelledby="admin-dashboard-title">
+      <div>
+        <p class="admin-eyebrow">Platform analytics</p>
+        <h1 id="admin-dashboard-title">Craftsmen Performance</h1>
+        <p class="admin-heading-copy">
+          How craftsman participation, trust, and job activity are progressing across ustacik.
+        </p>
+      </div>
+
+      <div class="admin-range-control">
+        <label class="admin-visually-hidden" for="admin-date-range">Date range</label>
+        <select id="admin-date-range" name="dateRange">
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="year">This year</option>
+          <option value="all" selected>All time</option>
+        </select>
+        <p id="admin-cohort-note">Current platform snapshot</p>
+      </div>
+    </section>
+
+    <section id="admin-dashboard-loading" class="admin-state-card" aria-live="polite">
+      <span class="admin-loading-spinner" aria-hidden="true"></span>
+      <div>
+        <h2>Loading platform analytics</h2>
+        <p>Gathering the latest craftsman, job, and dispute data.</p>
+      </div>
+    </section>
+
+    <section
+      id="admin-dashboard-error"
+      class="admin-state-card admin-state-card-error"
+      role="alert"
+      hidden
+    >
+      <span class="admin-state-symbol" aria-hidden="true">!</span>
+      <div>
+        <h2>Dashboard data could not be loaded</h2>
+        <p>Please try again. Your existing admin tools are still available from the navigation.</p>
+      </div>
+      <button id="admin-dashboard-retry" class="admin-secondary-button" type="button">
+        Try again
+      </button>
+    </section>
+
+    <div id="admin-dashboard-content" hidden>
+      <section class="admin-kpi-grid" aria-label="Craftsman performance overview">
+        <article class="admin-kpi-card">
+          <p class="admin-kpi-label">Total craftsmen</p>
+          <strong id="kpi-total-craftsmen" class="admin-kpi-value">0</strong>
+          <span id="kpi-total-craftsmen-note" class="admin-kpi-delta admin-kpi-delta-up">
+            All registered craftsmen
+          </span>
+        </article>
+
+        <article class="admin-kpi-card">
+          <p class="admin-kpi-label">Approved tier</p>
+          <strong id="kpi-approved-tier" class="admin-kpi-value">0%</strong>
+          <span id="kpi-approved-tier-note" class="admin-kpi-delta admin-kpi-delta-up">
+            Current trust snapshot
+          </span>
+        </article>
+
+        <article class="admin-kpi-card">
+          <p class="admin-kpi-label">Avg. rating</p>
+          <strong class="admin-kpi-value">—</strong>
+          <span class="admin-kpi-delta">Aggregate rating unavailable</span>
+        </article>
+
+        <article class="admin-kpi-card">
+          <p class="admin-kpi-label">Jobs completed</p>
+          <strong id="kpi-jobs-completed" class="admin-kpi-value">0</strong>
+          <span class="admin-kpi-delta">All-time craftsman counters</span>
+        </article>
+
+        <article class="admin-kpi-card">
+          <p class="admin-kpi-label">Open disputes</p>
+          <strong id="kpi-open-disputes" class="admin-kpi-value">0</strong>
+          <span id="kpi-open-disputes-note" class="admin-kpi-delta">Currently open • all time</span>
+        </article>
+      </section>
+
+      <section class="admin-trust-panel" aria-labelledby="trust-distribution-title">
+        <div class="admin-trust-panel-heading">
+          <h2 id="trust-distribution-title">Trust level distribution</h2>
+          <span id="trust-distribution-summary">0 craftsmen</span>
+        </div>
+
+        <div
+          id="trust-distribution-bar"
+          class="admin-trust-bar"
+          role="img"
+          aria-label="No craftsman trust data available"
+        ></div>
+
+        <div id="trust-distribution-legend" class="admin-trust-legend"></div>
+
+        <p id="trust-distribution-empty" class="admin-inline-empty" hidden>
+          No craftsmen are available for this joined-date range.
+        </p>
+      </section>
+
+      <section class="admin-panel admin-craftsmen-panel" aria-labelledby="all-craftsmen-title">
+        <div class="admin-panel-heading">
+          <h2 id="all-craftsmen-title">All craftsmen</h2>
+
+          <form id="craftsmen-filters" class="admin-filter-bar" role="search">
+            <label class="admin-visually-hidden" for="craftsmen-search">Search craftsmen</label>
+            <input
+              id="craftsmen-search"
+              type="search"
+              placeholder="Search by name…"
+              autocomplete="off"
+            />
+
+            <label class="admin-visually-hidden" for="craftsmen-category">Category</label>
+            <select id="craftsmen-category"><option value="">All categories</option></select>
+
+            <label class="admin-visually-hidden" for="craftsmen-region">Region</label>
+            <select id="craftsmen-region" disabled><option>Region unavailable</option></select>
+
+            <label class="admin-visually-hidden" for="craftsmen-trust">Trust level</label>
+            <select id="craftsmen-trust">
+              <option value="">All trust levels</option>
+              <option value="0">Unverified</option>
+              <option value="1">Registered</option>
+              <option value="2">Verified</option>
+              <option value="3">Approved</option>
+            </select>
+          </form>
+
+          <p id="craftsmen-table-summary" class="admin-visually-hidden" aria-live="polite">
+            0 craftsmen
+          </p>
+        </div>
+
+        <p id="craftsmen-table-empty" class="admin-table-empty" hidden>
+          No craftsmen match the selected filters.
+        </p>
+
+        <div id="craftsmen-table-container" class="admin-table-container">
+          <table class="admin-craftsmen-table">
+            <thead>
+              <tr>
+                <th scope="col">Craftsman</th>
+                <th scope="col">Category</th>
+                <th scope="col">Region</th>
+                <th scope="col">Trust</th>
+                <th scope="col">Jobs done</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Price honesty</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody id="craftsmen-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="admin-bottom-grid">
+        <section class="admin-panel admin-category-panel" aria-labelledby="jobs-by-category-title">
+          <div class="admin-bottom-panel-heading">
+            <h2 id="jobs-by-category-title">Jobs completed by category</h2>
+            <p>Current completed status • all time</p>
+          </div>
+
+          <div id="jobs-by-category-list" class="admin-category-bars"></div>
+          <p id="jobs-by-category-empty" class="admin-inline-empty" hidden></p>
+        </section>
+
+        <section class="admin-panel admin-disputes-panel" aria-labelledby="recent-disputes-title">
+          <div class="admin-bottom-panel-heading">
+            <h2 id="recent-disputes-title">Recent disputes</h2>
+            <p id="recent-disputes-summary">Newest first</p>
+          </div>
+
+          <div id="recent-disputes-list" class="admin-disputes-list"></div>
+          <p id="recent-disputes-empty" class="admin-inline-empty" hidden>
+            No disputes were opened in this date range.
+          </p>
+        </section>
+      </div>
+    </div>
   </div>
 @end
-

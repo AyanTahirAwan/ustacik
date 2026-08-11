@@ -1,0 +1,610 @@
+.craftsman-dashboard {
+  --craftsman-dashboard-canvas: #f3ebe3;
+  --craftsman-dashboard-sidebar: #111111;
+  --craftsman-dashboard-white: #ffffff;
+  --craftsman-dashboard-black: #111111;
+  --craftsman-dashboard-grey: #555555;
+  --craftsman-dashboard-light: #e0e0e0;
+  --craftsman-dashboard-brown: #8a5239;
+  --craftsman-dashboard-rust: #c85a32;
+  --craftsman-dashboard-serif: Georgia, 'Times New Roman', serif;
+  --craftsman-dashboard-sans: Inter, 'Segoe UI', 'Helvetica Neue', sans-serif;
+
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: clip;
+  background: var(--craftsman-dashboard-canvas);
+  color: var(--craftsman-dashboard-grey);
+  font-family: var(--craftsman-dashboard-sans);
+  line-height: 1.5;
+}
+
+.craftsman-dashboard,
+.craftsman-dashboard * {
+  box-sizing: border-box;
+}
+
+.craftsman-dashboard a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.craftsman-dashboard button {
+  font: inherit;
+}
+
+.craftsman-dashboard-skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 50;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: var(--craftsman-dashboard-white);
+  color: var(--craftsman-dashboard-black);
+  transform: translateY(-160%);
+}
+
+.craftsman-dashboard-skip-link:focus {
+  transform: translateY(0);
+}
+
+.craftsman-dashboard-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  width: 260px;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--craftsman-dashboard-sidebar);
+  color: var(--craftsman-dashboard-light);
+}
+
+.craftsman-dashboard-brand {
+  display: block;
+  margin-bottom: 40px;
+  color: var(--craftsman-dashboard-canvas);
+  font-family: var(--craftsman-dashboard-serif);
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.craftsman-dashboard-brand span {
+  color: var(--craftsman-dashboard-rust);
+}
+
+.craftsman-dashboard-navigation {
+  flex: 1 0 auto;
+}
+
+.craftsman-dashboard-nav-item {
+  min-height: 54px;
+  padding: 15px 30px;
+  border-left: 4px solid transparent;
+  display: flex;
+  align-items: center;
+  color: var(--craftsman-dashboard-light);
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.craftsman-dashboard-nav-item:hover,
+.craftsman-dashboard-nav-item:focus-visible,
+.craftsman-dashboard-nav-item.is-active {
+  border-left-color: var(--craftsman-dashboard-rust);
+  outline: none;
+  background: rgb(255 255 255 / 5%);
+  color: var(--craftsman-dashboard-white);
+}
+
+.craftsman-dashboard-nav-item.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.craftsman-dashboard-nav-item.is-disabled:hover {
+  border-left-color: transparent;
+  background: transparent;
+  color: var(--craftsman-dashboard-light);
+}
+
+.craftsman-dashboard-verification {
+  margin: 30px 30px 0;
+  padding: 15px;
+  border: 1px solid var(--craftsman-dashboard-rust);
+  border-radius: 8px;
+  background: rgb(200 90 50 / 10%);
+  text-align: center;
+}
+
+.craftsman-dashboard-verification h2 {
+  margin: 0 0 5px;
+  color: var(--craftsman-dashboard-rust);
+  font-family: var(--craftsman-dashboard-sans);
+  font-size: 0.9rem;
+}
+
+.craftsman-dashboard-verification p {
+  margin: 0;
+  color: #aaaaaa;
+  font-size: 0.8rem;
+}
+
+.craftsman-dashboard-main {
+  width: calc(100% - 260px);
+  min-width: 0;
+  max-width: none;
+  justify-content: flex-start;
+  min-height: 100vh;
+  margin-left: 260px;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.craftsman-dashboard-header {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.craftsman-dashboard-header > div {
+  height: auto;
+  display: block;
+}
+
+.craftsman-dashboard-greeting h1 {
+  margin: 0 0 5px;
+  color: var(--craftsman-dashboard-black);
+  font-family: var(--craftsman-dashboard-sans);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.craftsman-dashboard-greeting p {
+  margin: 0;
+  color: var(--craftsman-dashboard-brown);
+  font-family: var(--craftsman-dashboard-serif);
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.craftsman-dashboard-account {
+  position: relative;
+  z-index: 15;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.craftsman-dashboard-profile {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 4px;
+}
+
+.craftsman-dashboard-profile:hover .craftsman-dashboard-profile-copy strong,
+.craftsman-dashboard-profile:focus-visible .craftsman-dashboard-profile-copy strong {
+  color: var(--craftsman-dashboard-rust);
+}
+
+.craftsman-dashboard-profile:focus-visible {
+  outline-color: var(--craftsman-dashboard-rust);
+}
+
+.craftsman-dashboard-account.is-open .craftsman-dashboard-profile {
+  outline-color: rgb(200 90 50 / 25%);
+}
+
+.craftsman-dashboard-profile-copy {
+  min-width: 0;
+  text-align: right;
+}
+
+.craftsman-dashboard-profile-copy strong,
+.craftsman-dashboard-profile-copy span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.craftsman-dashboard-profile-copy strong {
+  max-width: 230px;
+  color: var(--craftsman-dashboard-black);
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.craftsman-dashboard-profile-copy span {
+  max-width: 230px;
+  font-size: 0.8rem;
+}
+
+.craftsman-dashboard-avatar {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--craftsman-dashboard-rust);
+  color: var(--craftsman-dashboard-white);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.craftsman-dashboard-account-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: min(240px, calc(100vw - 40px));
+  padding: 8px;
+  border: 1px solid rgb(138 82 57 / 22%);
+  border-radius: 12px;
+  background: var(--craftsman-dashboard-white);
+  box-shadow: 0 18px 42px rgb(17 17 17 / 16%);
+}
+
+.craftsman-dashboard-account-dropdown[hidden] {
+  display: none;
+}
+
+.craftsman-dashboard-account-action {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 13px;
+  border: 0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  color: var(--craftsman-dashboard-black);
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.craftsman-dashboard-account-action:hover,
+.craftsman-dashboard-account-action:focus-visible {
+  outline: none;
+  background: var(--craftsman-dashboard-canvas);
+}
+
+.craftsman-dashboard-account-logout-form {
+  margin: 0;
+}
+
+.craftsman-dashboard-account-logout {
+  color: var(--craftsman-dashboard-rust);
+}
+
+.craftsman-dashboard-page-content {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+#craftsman-dashboard-page {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.craftsman-dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 25px;
+}
+
+.craftsman-dashboard-stat-card {
+  min-width: 0;
+  padding: 25px;
+  border-top: 4px solid var(--craftsman-dashboard-brown);
+  border-radius: 12px;
+  background: var(--craftsman-dashboard-white);
+  box-shadow: 0 4px 15px rgb(0 0 0 / 3%);
+}
+
+.craftsman-dashboard-stat-card.is-alert {
+  border-top-color: var(--craftsman-dashboard-rust);
+}
+
+.craftsman-dashboard-stat-title {
+  margin-bottom: 10px;
+  color: var(--craftsman-dashboard-grey);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.craftsman-dashboard-stat-value {
+  color: var(--craftsman-dashboard-black);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.craftsman-dashboard-stat-value[data-state='loading'] {
+  color: var(--craftsman-dashboard-grey);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.craftsman-dashboard-stat-value[data-state='unavailable'] {
+  color: var(--craftsman-dashboard-grey);
+}
+
+.craftsman-dashboard-stat-card.is-alert .craftsman-dashboard-stat-value {
+  color: var(--craftsman-dashboard-rust);
+}
+
+.craftsman-dashboard-section-header {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.craftsman-dashboard-section-header h2 {
+  margin: 0;
+  color: var(--craftsman-dashboard-brown);
+  font-family: var(--craftsman-dashboard-serif);
+  font-size: 1.5rem;
+}
+
+.craftsman-dashboard-button-small {
+  min-height: 38px;
+  padding: 8px 16px;
+  border: 1px solid var(--craftsman-dashboard-brown);
+  border-radius: 20px;
+  background: var(--craftsman-dashboard-white);
+  color: var(--craftsman-dashboard-brown);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.craftsman-dashboard-button-small:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.craftsman-dashboard-table-container {
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  background: var(--craftsman-dashboard-white);
+  box-shadow: 0 4px 15px rgb(0 0 0 / 3%);
+}
+
+.craftsman-dashboard-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.craftsman-dashboard-table th,
+.craftsman-dashboard-table td {
+  padding: 20px 25px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.craftsman-dashboard-table th {
+  background: #fafafa;
+  color: var(--craftsman-dashboard-grey);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.craftsman-dashboard-table td {
+  color: var(--craftsman-dashboard-black);
+  font-size: 0.95rem;
+}
+
+.craftsman-dashboard-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.craftsman-dashboard-empty-cell {
+  padding-block: 42px !important;
+  color: var(--craftsman-dashboard-grey) !important;
+  text-align: center;
+}
+
+.craftsman-dashboard-menu-toggle,
+.craftsman-dashboard-overlay {
+  display: none;
+}
+
+@media (min-width: 798px) and (max-width: 1279px) {
+  .craftsman-dashboard-sidebar {
+    width: 220px;
+  }
+
+  .craftsman-dashboard-nav-item {
+    padding-inline: 20px;
+  }
+
+  .craftsman-dashboard-verification {
+    margin-inline: 20px;
+  }
+
+  .craftsman-dashboard-main {
+    width: calc(100% - 220px);
+    margin-left: 220px;
+    padding: 32px;
+  }
+
+  .craftsman-dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 797px) {
+  .craftsman-dashboard.is-navigation-open {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .craftsman-dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    width: min(82vw, 300px);
+    max-width: 100%;
+    height: 100dvh;
+    padding: 28px 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(-102%);
+    transition: transform 0.25s ease;
+  }
+
+  .craftsman-dashboard.is-navigation-open .craftsman-dashboard-sidebar {
+    transform: translateX(0);
+  }
+
+  .craftsman-dashboard-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    visibility: hidden;
+    background: rgb(17 17 17 / 55%);
+    opacity: 0;
+    transition:
+      opacity 0.25s ease,
+      visibility 0.25s ease;
+  }
+
+  .craftsman-dashboard.is-navigation-open .craftsman-dashboard-overlay {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .craftsman-dashboard-menu-toggle {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 40;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    border: 0;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 5px;
+    background: var(--craftsman-dashboard-sidebar);
+    box-shadow: 0 4px 14px rgb(0 0 0 / 18%);
+    cursor: pointer;
+  }
+
+  .craftsman-dashboard-menu-toggle span {
+    height: 2px;
+    border-radius: 2px;
+    background: var(--craftsman-dashboard-white);
+  }
+
+  .craftsman-dashboard-main {
+    width: 100%;
+    margin-left: 0;
+    padding: 92px 20px 32px;
+    gap: 32px;
+  }
+
+  .craftsman-dashboard-header {
+    align-items: flex-start;
+  }
+
+  .craftsman-dashboard-profile-copy {
+    display: none;
+  }
+
+  .craftsman-dashboard-stats {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .craftsman-dashboard-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .craftsman-dashboard-button-small {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 420px) {
+  .craftsman-dashboard-greeting h1 {
+    font-size: 1.7rem;
+  }
+
+  .craftsman-dashboard-greeting p {
+    font-size: 1rem;
+  }
+
+  .craftsman-dashboard-avatar {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+
+  .craftsman-dashboard-stat-card {
+    padding: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craftsman-dashboard-sidebar,
+  .craftsman-dashboard-overlay,
+  .craftsman-dashboard-nav-item,
+  .craftsman-dashboard-profile-copy strong {
+    transition: none;
+  }
+}

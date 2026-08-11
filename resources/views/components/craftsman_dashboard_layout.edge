@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ $props.get('title') ?? 'Craftsman Dashboard' }} — UstaÇık</title>
+    @if($props.get('accountPage'))
+      @vite([
+        'resources/css/app.css',
+        'resources/css/craftsman-account.css',
+        'resources/css/craftsman-dashboard.css',
+        'resources/js/craftsman-dashboard.js',
+      ])
+    @else
+      @vite([
+        'resources/css/craftsman-dashboard.css',
+        'resources/js/craftsman-dashboard.js',
+      ])
+    @end
+    @stack('dumper')
+  </head>
+  <body class="craftsman-dashboard">
+    <a class="craftsman-dashboard-skip-link" href="#craftsman-dashboard-content">
+      Skip to dashboard content
+    </a>
+
+    <button
+      class="craftsman-dashboard-menu-toggle"
+      type="button"
+      aria-controls="craftsman-dashboard-sidebar"
+      aria-expanded="false"
+      aria-label="Open dashboard navigation"
+      data-craftsman-dashboard-menu-toggle
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+
+    <button
+      class="craftsman-dashboard-overlay"
+      type="button"
+      aria-label="Close dashboard navigation"
+      data-craftsman-dashboard-overlay
+    ></button>
+
+    <aside
+      id="craftsman-dashboard-sidebar"
+      class="craftsman-dashboard-sidebar"
+      aria-label="Craftsman dashboard navigation"
+      data-craftsman-dashboard-sidebar
+    >
+      <a class="craftsman-dashboard-brand" href="/">Usta<span>cik</span></a>
+
+      <nav class="craftsman-dashboard-navigation">
+        <a
+          class="craftsman-dashboard-nav-item {{ $props.get('active') === 'dashboard' ? 'is-active' : '' }}"
+          href="/craftsman"
+          aria-current="{{ $props.get('active') === 'dashboard' ? 'page' : 'false' }}"
+        >
+          Dashboard
+        </a>
+        <a
+          class="craftsman-dashboard-nav-item {{ $props.get('active') === 'profile' ? 'is-active' : '' }}"
+          href="/craftsman/profile"
+          aria-current="{{ $props.get('active') === 'profile' ? 'page' : 'false' }}"
+        >
+          My Profile
+        </a>
+        <a
+          class="craftsman-dashboard-nav-item {{ $props.get('active') === 'work-photos' ? 'is-active' : '' }}"
+          href="/craftsman/work-photos"
+          aria-current="{{ $props.get('active') === 'work-photos' ? 'page' : 'false' }}"
+        >
+          Work Photos
+        </a>
+        <span class="craftsman-dashboard-nav-item is-disabled" aria-disabled="true">
+          Job Requests
+        </span>
+        <a class="craftsman-dashboard-nav-item" href="/craftsman/service-prices">
+          My Services &amp; Catalog
+        </a>
+        <span class="craftsman-dashboard-nav-item is-disabled" aria-disabled="true">Reviews</span>
+        <span class="craftsman-dashboard-nav-item is-disabled" aria-disabled="true">Disputes</span>
+      </nav>
+
+      <div class="craftsman-dashboard-verification" data-craftsman-verification>
+        <h2 data-craftsman-verification-title>Craftsman status</h2>
+        <p data-craftsman-verification-copy>Loading your current account status...</p>
+      </div>
+    </aside>
+
+    <main id="craftsman-dashboard-content" class="craftsman-dashboard-main">
+      <header class="craftsman-dashboard-header">
+        <div class="craftsman-dashboard-greeting">
+          <h1>{{ $props.get('title') ?? 'Overview' }}</h1>
+          <p>Welcome back, Master Craftsman</p>
+        </div>
+
+        <div class="craftsman-dashboard-account" data-craftsman-account-menu>
+          <button
+            class="craftsman-dashboard-profile"
+            type="button"
+            aria-expanded="false"
+            aria-controls="craftsman-dashboard-account-dropdown"
+            aria-label="Open craftsman account menu"
+            data-craftsman-account-toggle
+          >
+            <span class="craftsman-dashboard-profile-copy">
+              <strong data-craftsman-profile-name>
+                {{ auth.user ? auth.user.email : 'Craftsman Account' }}
+              </strong>
+              <span data-craftsman-profile-category>Craftsman account</span>
+            </span>
+            <span
+              class="craftsman-dashboard-avatar"
+              data-craftsman-profile-avatar
+              aria-hidden="true"
+            >
+              {{ auth.user ? auth.user.initials : 'UC' }}
+            </span>
+          </button>
+
+          <div
+            id="craftsman-dashboard-account-dropdown"
+            class="craftsman-dashboard-account-dropdown"
+            role="group"
+            aria-label="Craftsman account actions"
+            data-craftsman-account-dropdown
+            hidden
+          >
+            @form({
+              route: 'session.destroy',
+              method: 'POST',
+              class: 'craftsman-dashboard-account-logout-form',
+            })
+              <button
+                class="craftsman-dashboard-account-action craftsman-dashboard-account-logout"
+                type="submit"
+              >
+                Logout
+              </button>
+            @end
+          </div>
+        </div>
+      </header>
+
+      <div class="craftsman-dashboard-page-content">{{{ await $slots.main() }}}</div>
+    </main>
+  </body>
+</html>

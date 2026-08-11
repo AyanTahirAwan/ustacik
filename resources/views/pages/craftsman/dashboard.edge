@@ -1,16 +1,87 @@
-@dashboard_layout({ title: 'Craftsman Dashboard' })
-  <div class="page-placeholder">
-    <h2>Craftsman Dashboard — Placeholder</h2>
-    {{--
-      TODO: API integration
-      Overview for the authenticated craftsman:
-        - GET /api/craftsman/service-prices/:id (single records)
-        - POST /api/craftsman/service-prices (create)
-      Show quick stats and links to:
-        - /craftsman/service-prices (My Service Prices)
-        - /craftsman/service-prices/create (Create Service Price)
-    --}}
-    <p>Dashboard overview goes here. This page is role-gated to craftsman and admin.</p>
-  </div>
-@end
+@craftsmanDashboardLayout({ title: 'Overview', active: 'dashboard' })
+  <div id="craftsman-dashboard-page" data-craftsman-id="{{ auth.user ? auth.user.id : '' }}">
+    <section class="craftsman-dashboard-stats" aria-label="Dashboard statistics">
+      <article class="craftsman-dashboard-stat-card">
+        <div class="craftsman-dashboard-stat-title">New Job Requests</div>
+        <div
+          class="craftsman-dashboard-stat-value"
+          data-dashboard-new-job-requests
+          data-state="loading"
+          aria-label="Loading new job requests"
+          aria-live="polite"
+        >
+          Loading…
+        </div>
+      </article>
 
+      <article class="craftsman-dashboard-stat-card">
+        <div class="craftsman-dashboard-stat-title">Active Jobs</div>
+        <div
+          class="craftsman-dashboard-stat-value"
+          data-dashboard-active-jobs
+          data-state="loading"
+          aria-label="Loading active jobs"
+          aria-live="polite"
+        >
+          Loading…
+        </div>
+      </article>
+
+      <article class="craftsman-dashboard-stat-card">
+        <div class="craftsman-dashboard-stat-title">Average Rating</div>
+        <div
+          class="craftsman-dashboard-stat-value"
+          data-dashboard-average-rating
+          data-state="loading"
+          aria-label="Loading average rating"
+          aria-live="polite"
+        >
+          Loading…
+        </div>
+      </article>
+
+      <article class="craftsman-dashboard-stat-card is-alert">
+        <div class="craftsman-dashboard-stat-title">Active Disputes</div>
+        <div
+          class="craftsman-dashboard-stat-value"
+          data-state="unavailable"
+          aria-label="Active disputes unavailable"
+        >
+          —
+        </div>
+      </article>
+    </section>
+
+    <section aria-labelledby="craftsman-dashboard-recent-jobs-title">
+      <div class="craftsman-dashboard-section-header">
+        <h2 id="craftsman-dashboard-recent-jobs-title">Recent Job Requests</h2>
+        <button class="craftsman-dashboard-button-small" type="button" disabled>
+          View All Requests
+        </button>
+      </div>
+
+      <div class="craftsman-dashboard-table-container">
+        <table class="craftsman-dashboard-table">
+          <thead>
+            <tr>
+              <th scope="col">Job ID</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Service Category</th>
+              <th scope="col">Date Requested</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="craftsman-dashboard-empty-cell" colspan="6">
+                Recent job request data is not connected on this page.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  @vite(['resources/js/craftsman-dashboard-page.js'])
+@end

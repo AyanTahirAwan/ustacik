@@ -1,8 +1,10 @@
-@craftsmanAccountLayout({ title: 'Work Photos', active: 'work-photos' })
+@craftsmanDashboardLayout({
+  title: 'Work Photos',
+  active: 'work-photos',
+  accountPage: true,
+})
   <div id="craftsman-work-photos-page">
-    <p id="craftsman-work-photos-loading" class="craftsman-page-loading">
-      Loading work photos...
-    </p>
+    <p id="craftsman-work-photos-loading" class="craftsman-page-loading">Loading work photos...</p>
 
     <div id="craftsman-work-photos-error" class="alert alert-destructive craftsman-message" hidden>
       <p id="craftsman-work-photos-error-message"></p>
@@ -15,14 +17,11 @@
     <div id="craftsman-work-photos-content" hidden>
       <section class="card craftsman-work-photo-form-card">
         <h2 class="card-title">Add Work Photo</h2>
-        <p class="card-description">
-          Add an image URL to your work portfolio.
-        </p>
-
+        <p class="card-description">Add an image URL to your work portfolio.</p>
         @form({
           action: '/api/craftsman/work-photos',
           method: 'POST',
-          id: 'craftsman-work-photo-form'
+          id: 'craftsman-work-photo-form',
         })
           <div class="craftsman-work-photo-form">
             <div class="form-group">
@@ -60,6 +59,5 @@
       </section>
     </div>
   </div>
-
   @vite(['resources/js/craftsman-work-photos.js'])
 @end

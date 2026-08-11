@@ -20,9 +20,14 @@ export default defineConfig({
         'resources/js/craftsman-profile.js',
         'resources/js/craftsman-work-photos.js',
         'resources/js/craftsman-subscription.js',
+        'resources/css/craftsman-dashboard.css',
+        'resources/js/craftsman-dashboard.js',
+        'resources/js/craftsman-dashboard-page.js',
         'resources/css/admin-users.css',
         'resources/js/admin-users.js',
         'resources/js/admin-user-detail.js',
+        'resources/css/admin-dashboard.css',
+        'resources/js/admin-dashboard.js',
       ],
 
       /**

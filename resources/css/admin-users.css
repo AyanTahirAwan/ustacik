@@ -1,65 +1,18 @@
 /* ==================================================
    ADMIN USER MANAGEMENT
    Structure follows the design-team Admin dashboard:
-   horizontal navigation, wide content panels, no sidebar.
+   horizontal navigation, wide content panels.
    ================================================== */
 
 .admin-management-shell {
-  min-height: calc(100vh - 72px);
-  padding: 28px 24px 64px;
-  background-color: var(--bg-canvas);
+  min-height: calc(100vh - 75px);
+  padding: 40px 32px 80px;
+  background: transparent;
 }
 
 .admin-management-frame {
-  width: min(100%, 1440px);
+  width: min(100%, 1320px);
   margin: 0 auto;
-}
-
-.admin-management-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-  width: 100%;
-  margin-bottom: 18px;
-  padding: 18px 24px;
-  border: 1px solid var(--gray-3);
-  border-radius: 10px;
-  background-color: var(--bg-white);
-}
-
-.admin-management-brand {
-  flex: 0 0 auto;
-  padding: 8px 12px;
-  border: 1px solid var(--gray-3);
-  background-color: rgba(138, 82, 57, 0.045);
-  font-size: 0.82rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.admin-management-nav {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.admin-management-nav a {
-  padding: 9px 15px;
-  border-radius: 20px;
-  color: var(--text-black);
-  font-size: 0.84rem;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.admin-management-nav a:hover,
-.admin-management-nav a.is-active {
-  background-color: var(--brand-brown);
-  color: var(--bg-white);
 }
 
 .admin-management-content {
@@ -356,18 +309,6 @@
 /* TABLET */
 
 @media (max-width: 999px) {
-  .admin-management-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .admin-management-nav {
-    width: 100%;
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: 3px;
-  }
-
   .admin-users-filter-bar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -387,17 +328,7 @@
 
 @media (max-width: 599px) {
   .admin-management-shell {
-    padding: 20px 16px 44px;
-  }
-
-  .admin-management-header {
-    padding: 18px;
-  }
-
-  .admin-management-nav {
-    margin-right: -18px;
-    margin-left: -18px;
-    padding: 0 18px 6px;
+    padding: 30px 20px 60px;
   }
 
   .admin-users-intro,
