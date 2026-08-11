@@ -1,0 +1,56 @@
+@layout()
+  <section id="request-service-page" class="customer-request-page" data-craftsman-id="{{ craftsmanId }}">
+    <a class="back-link" href="/craftsmen/{{ craftsmanId }}">← Back to Craftsman</a>
+
+    <div class="section-header">
+      <div>
+        <h1 class="section-heading">Request Service</h1>
+        <p class="section-subheading">Tell the craftsman what you need help with.</p>
+      </div>
+      <a class="btn-back" href="/customer/requests">My Requests</a>
+    </div>
+
+    <div id="request-service-loading" class="dashboard-message">Loading request form…</div>
+    <div id="request-service-error" class="dashboard-message dashboard-message-error" hidden></div>
+
+    <section id="request-service-content" class="customer-request-card" hidden>
+      <div class="customer-request-context">
+        <span>Requesting service from</span>
+        <h2 id="request-craftsman-name">Craftsman</h2>
+        <p id="request-craftsman-category"></p>
+      </div>
+
+      @form({ action: '/api/jobs', method: 'POST', id: 'request-service-form' })
+        <label for="request-region">
+          Region
+          <select id="request-region" name="regionId" class="form-control customer-request-control" required disabled>
+            <option value="">Loading regions…</option>
+          </select>
+        </label>
+
+        <label for="request-description">
+          Description
+          <textarea
+            id="request-description"
+            name="description"
+            class="form-control customer-request-control customer-request-description"
+            minlength="10"
+            maxlength="2000"
+            placeholder="Describe the work, location details, and anything the craftsman should know."
+            required
+            disabled
+          ></textarea>
+        </label>
+
+        <p id="request-service-form-error" class="dashboard-message dashboard-message-error" hidden></p>
+
+        <div class="customer-request-actions">
+          <button id="request-service-submit" class="btn-primary" type="submit" disabled>Send Request</button>
+          <a class="btn-back" href="/craftsmen/{{ craftsmanId }}">Cancel</a>
+        </div>
+      @end
+    </section>
+  </section>
+
+  @vite(['resources/js/request-service.js'])
+@end

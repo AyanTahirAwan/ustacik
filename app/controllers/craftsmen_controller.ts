@@ -1,4 +1,6 @@
 import Craftsman from '#models/craftsman'
+import JobRequest from '#models/job_request'
+import Review from '#models/review'
 import { updateCraftsmanValidator } from '#validators/craftsman'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -80,6 +82,65 @@ export default class CraftsmenController {
         totalJobs: craftsman.totalJobs,
         workPhotos: craftsman.workPhotos,
       },
+    })
+  }
+
+  async dashboard({ auth, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+
+    const craftsman = await Craftsman.query()
+      .where('user_id', user.id)
+      .preload('category')
+      .preload('workPhotos')
+      .preload('servicePriceCatalogs', (query) =>
+        query.preload('subService').preload('region').orderBy('id', 'asc')
+      )
+      .firstOrFail()
+
+    const jobs = await JobRequest.query()
+      .where('craftsman_id', user.id)
+      .preload('customer', (customers) => customers.select(['userId', 'fullName']))
+      .preload('category')
+      .preload('region')
+      .orderBy('created_at', 'desc')
+      .limit(20)
+
+    const reviews = await Review.query().where('craftsman_id', user.id)
+    const pendingJobs = await JobRequest.query()
+      .where('craftsman_id', user.id)
+      .where('status', 'pending')
+      .count('* as total')
+      .firstOrFail()
+
+    const stats = {
+      pending: Number(pendingJobs.$extras.total),
+      completed: jobs.filter((job) => job.status === 'completed').length,
+      active: jobs.filter((job) => ['accepted', 'in_progress'].includes(job.status)).length,
+      disputed: jobs.filter((job) => job.status === 'disputed').length,
+    }
+
+    return response.ok({
+      craftsman: {
+        userId: craftsman.userId,
+        businessName: craftsman.businessName,
+        category: craftsman.category,
+        bio: craftsman.bio,
+        trustLevel: craftsman.trustLevel,
+        trustLevelLabel: craftsman.trustLevelLabel,
+        totalJobs: craftsman.totalJobs,
+        workPhotos: craftsman.workPhotos,
+        servicePriceCatalogs: craftsman.servicePriceCatalogs,
+        phone: user.phoneNormalised,
+      },
+      jobs: jobs.map((job) => ({
+        status: job.status,
+        createdAt: job.createdAt,
+        customer: { fullName: job.customer.fullName },
+        category: { nameEn: job.category.nameEn, nameTr: job.category.nameTr },
+        region: { nameEn: job.region.nameEn, nameTr: job.region.nameTr },
+      })),
+      reviews,
+      stats,
     })
   }
 }

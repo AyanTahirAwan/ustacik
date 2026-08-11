@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ $props.get('title') ?? 'Dashboard' }} — UstaÇık</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @stack('dumper')
   </head>
   <body>
     @include('partials/header')
-    <div class="app-shell">
+    <div class="app-container dashboard-workspace">
       @include('partials/dashboard_sidebar')
       <main class="dashboard-main">
         @include('partials/flash_alerts')
@@ -21,4 +20,3 @@
     </div>
   </body>
 </html>
-

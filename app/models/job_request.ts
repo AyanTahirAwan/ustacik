@@ -7,6 +7,7 @@ import Category from '#models/category'
 import Region from '#models/region'
 import Review from '#models/review'
 import JobDispute from '#models/job_dispute'
+import type { TransactionClientContract } from '@adonisjs/lucid/types/database'
 
 export type JobStatus =
   | 'pending'
@@ -80,19 +81,28 @@ export default class JobRequest extends BaseModel {
   @hasMany(() => JobDispute, { foreignKey: 'jobId' })
   declare disputes: HasMany<typeof JobDispute>
 
-  
-  static async submit(data: {
-    requestId: string
-    customerId: number
-    craftsmanId: number
-    categoryId: number
-    regionId: number
-    description: string
-  }) {
-    const existing = await JobRequest.findBy('request_id', data.requestId)
-    if (existing) return existing
+  static async submit(
+    data: {
+      requestId: string
+      customerId: number
+      craftsmanId: number
+      categoryId: number
+      regionId: number
+      description: string
+    },
+    trx?: TransactionClientContract
+  ) {
+    const existing = await JobRequest.query({ client: trx })
+      .where('request_id', data.requestId)
+      .first()
+    if (existing) {
+      if (existing.customerId !== data.customerId) {
+        throw new Error('REQUEST_ID_OWNERSHIP_CONFLICT')
+      }
+      return existing
+    }
 
-    return JobRequest.create({ ...data, status: 'pending' })
+    return JobRequest.create({ ...data, status: 'pending' }, { client: trx })
   }
 
   canTransitionTo(next: JobStatus) {

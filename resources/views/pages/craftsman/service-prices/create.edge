@@ -1,24 +1,84 @@
-@dashboard_layout({ title: 'Create Service Price' })
-  <div class="page-placeholder">
-    <h2>Create Service Price — Placeholder</h2>
-    {{--
-      TODO: API integration
-      Create a price entry via:
-        POST /api/craftsman/service-prices
-      Request body:
-        subServiceId (number, required) — must exist in sub_services
-        regionId     (number, required) — must exist in regions
-        minPrice     (number, required) — >= 0
-        maxPrice     (number, required) — >= minPrice
-        currency     (string, required) — TRY | GBP | EUR | USD
-        isActive     (boolean, optional) — defaults true
-      NOTE: craftsmanId is NEVER sent. It is derived from the session.
-      Form needs category -> sub-service and region selectors:
-        GET /api/catalog/categories
-        GET /api/catalog/categories/:categoryId/sub-services
-        GET /api/catalog/regions
-    --}}
-    <p>The create service price form will go here.</p>
-  </div>
-@end
+@dashboardLayout({ title: 'Create Service Price' })
+  <section class="service-price-page">
+    <div class="service-price-toolbar">
+      <a class="btn-back" href="/craftsman/service-prices">Back to My Service Prices</a>
+    </div>
+    <div id="service-price-form-error" class="dashboard-message dashboard-message-error" hidden></div>
+    <div class="dashboard-panel service-price-form-card">
+      @form({ method: 'POST', action: '/api/craftsman/service-prices', id: 'service-price-form' })
+        <div class="service-price-form-grid">
+          <label>Category<select id="price-category" class="form-control" required><option value="">Loading categories...</option></select></label>
+          <label>Service<select id="price-sub-service" name="subServiceId" class="form-control" required disabled><option value="">Choose a category first</option></select></label>
+          <label>Region<select id="price-region" name="regionId" class="form-control" required><option value="">Loading regions...</option></select></label>
+          <label>Currency<select name="currency" class="form-control" required><option value="TRY">TRY</option><option value="GBP">GBP</option><option value="EUR">EUR</option><option value="USD">USD</option></select></label>
+          <label>Minimum Price<input name="minPrice" class="form-control" type="number" min="0" step="0.01" required /></label>
+          <label>Maximum Price<input name="maxPrice" class="form-control" type="number" min="0" step="0.01" required /></label>
+        </div>
+        <label class="service-price-checkbox"><input name="isActive" type="checkbox" value="true" checked /> Active listing</label>
+        <div class="service-price-actions"><a class="btn-back" href="/craftsman/service-prices">Cancel</a><button class="btn-primary" type="submit">Create Service Price</button></div>
+      @end
+    </div>
+  </section>
 
+  <script>
+      const form = document.getElementById('service-price-form')
+      const category = document.getElementById('price-category')
+      const service = document.getElementById('price-sub-service')
+      const region = document.getElementById('price-region')
+      const errorBox = document.getElementById('service-price-form-error')
+      const option = (value, label) => new Option(label, value)
+
+      const loadServices = async () => {
+        service.replaceChildren(option('', category.value ? 'Loading services...' : 'Choose a category first'))
+        service.disabled = true
+        if (!category.value) return
+        const response = await fetch(`/api/catalog/categories/${category.value}/sub-services`, { headers: { Accept: 'application/json' } })
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok) throw new Error(data.message || 'Unable to load services.')
+        service.replaceChildren(option('', 'Choose a service'))
+        data.data.forEach((item) => service.append(option(item.id, item.nameEn)))
+        service.disabled = false
+      }
+
+      const loadLookups = async () => {
+        try {
+          const [categoriesResponse, regionsResponse] = await Promise.all([
+            fetch('/api/catalog/categories', { headers: { Accept: 'application/json' } }),
+            fetch('/api/catalog/regions', { headers: { Accept: 'application/json' } }),
+          ])
+          const categories = await categoriesResponse.json()
+          const regions = await regionsResponse.json()
+          if (!categoriesResponse.ok || !regionsResponse.ok) throw new Error('Unable to load form options.')
+          category.replaceChildren(option('', 'Choose a category'))
+          categories.data.forEach((item) => category.append(option(item.id, item.nameEn)))
+          region.replaceChildren(option('', 'Choose a region'))
+          regions.data.forEach((item) => region.append(option(item.id, item.nameEn)))
+        } catch (failure) {
+          errorBox.textContent = failure.message || 'Unable to load form options.'
+          errorBox.hidden = false
+        }
+      }
+
+      category.addEventListener('change', () => loadServices().catch((failure) => {
+        errorBox.textContent = failure.message
+        errorBox.hidden = false
+      }))
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault()
+        errorBox.hidden = true
+        const submit = form.querySelector('button[type="submit"]')
+        submit.disabled = true
+        try {
+          const response = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.errors?.[0]?.message || data.message || 'Unable to create service price.')
+          window.location.assign('/craftsman/service-prices')
+        } catch (failure) {
+          errorBox.textContent = failure.message || 'Unable to create service price.'
+          errorBox.hidden = false
+          submit.disabled = false
+        }
+      })
+      loadLookups()
+  </script>
+@end

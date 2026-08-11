@@ -17,7 +17,11 @@ export default class SessionController {
     }
 
     await auth.use('web').login(user)
-    response.redirect().toRoute('home')
+    if (user.role === 'craftsman') {
+      return response.redirect('/craftsman')
+    }
+
+    return response.redirect().toRoute('home')
   }
 
   async destroy({ auth, response }: HttpContext) {

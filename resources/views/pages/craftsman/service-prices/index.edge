@@ -1,24 +1,73 @@
-@dashboard_layout({ title: 'My Service Prices' })
-  <div class="page-actions">
-    <a class="button" href="/craftsman/service-prices/create">+ Create Service Price</a>
-  </div>
+@dashboardLayout({ title: 'My Service Prices' })
+  <section class="service-price-page" data-service-price-index>
+    <div class="service-price-toolbar">
+      <a class="btn-back" href="/craftsman">Back to Dashboard</a>
+      <a class="btn-primary service-price-create" href="/craftsman/service-prices/create">Create Service Price</a>
+    </div>
 
-  <div class="page-placeholder">
-    <h2>My Service Prices — Placeholder</h2>
-    {{--
-      TODO: API integration
-      List the craftsman's own price entries. The backend exposes:
-        POST   /api/craftsman/service-prices
-        GET    /api/craftsman/service-prices/:id
-        PATCH  /api/craftsman/service-prices/:id
-        DELETE /api/craftsman/service-prices/:id
-        PATCH  /api/craftsman/service-prices/:id/toggle-active
-      NOTE: The backend has NO "list my prices" endpoint yet.
-      The craftsman dashboard will need a dedicated list route OR
-      reuse a filtered view of /api/catalog/prices or /api/search/services.
-      Do NOT invent an endpoint — coordinate with the backend when needed.
-    --}}
-    <p>Your service price entries will be listed here.</p>
-  </div>
+    <div id="service-price-error" class="dashboard-message dashboard-message-error" hidden></div>
+    <div id="service-price-loading" class="dashboard-message">Loading your service prices...</div>
+    <div id="service-price-empty" class="dashboard-empty service-price-empty" hidden>
+      <p>You have not created any service prices yet.</p>
+      <a class="action-link" href="/craftsman/service-prices/create">Create your first price</a>
+    </div>
+
+    <div id="service-price-table" class="dashboard-panel dashboard-table-wrap" hidden>
+      <table class="dashboard-table service-price-table">
+        <thead>
+          <tr><th>Service</th><th>Region</th><th>Minimum</th><th>Maximum</th><th>Currency</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody id="service-price-rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+      const escapePriceText = (value) => {
+        const node = document.createElement('div')
+        node.textContent = value ?? ''
+        return node.innerHTML
+      }
+
+      const loadServicePrices = async () => {
+        const loading = document.getElementById('service-price-loading')
+        const error = document.getElementById('service-price-error')
+        const empty = document.getElementById('service-price-empty')
+        const table = document.getElementById('service-price-table')
+        try {
+          const response = await fetch('/api/craftsman/dashboard', {
+            headers: { Accept: 'application/json' },
+            credentials: 'same-origin',
+          })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.message || 'Unable to load your service prices.')
+
+          const prices = data.craftsman?.servicePriceCatalogs || []
+          loading.hidden = true
+          if (!prices.length) {
+            empty.hidden = false
+            return
+          }
+
+          document.getElementById('service-price-rows').innerHTML = prices.map((price) => `
+            <tr>
+              <td>${escapePriceText(price.subService?.nameEn || 'Service')}</td>
+              <td>${escapePriceText(price.region?.nameEn || 'Region')}</td>
+              <td>${Number(price.minPrice).toFixed(2)}</td>
+              <td>${Number(price.maxPrice).toFixed(2)}</td>
+              <td>${escapePriceText(price.currency)}</td>
+              <td><span class="status-badge ${price.isActive ? 'status-active' : ''}">${price.isActive ? 'Active' : 'Inactive'}</span></td>
+              <td><a class="action-link" href="/craftsman/service-prices/${price.id}/edit">Edit</a></td>
+            </tr>
+          `).join('')
+          table.hidden = false
+        } catch (failure) {
+          loading.hidden = true
+          error.textContent = failure.message || 'Unable to load your service prices.'
+          error.hidden = false
+        }
+      }
+
+      loadServicePrices()
+  </script>
 @end
-

@@ -6,22 +6,20 @@
     </p>
   </section>
 
-  <div class="card-grid">
-    <div class="card">
-      <div>
-        <h2 class="card-title">Join the team</h2>
-        <p class="card-description">
-          Are you a qualified professional looking for work? Register your business and discover nearby local service opportunities.
-        </p>
+  <div class="card-grid {{ auth.user ? 'card-grid-single' : '' }}">
+    @if(!auth.user)
+      <div class="card">
+        <div>
+          <h2 class="card-title">Join the team</h2>
+          <p class="card-description">
+            Are you a qualified professional looking for work? Register your business and discover nearby local service opportunities.
+          </p>
+        </div>
+        <div class="action-container">
+          @!link({ href: '/signup?role=craftsman', text: 'Get Started →', class: 'btn-primary' })
+        </div>
       </div>
-      <div class="action-container">
-        @!link({
-          route: 'new_account.create',
-          text: 'Get Started →',
-          class: 'btn-primary',
-        })
-      </div>
-    </div>
+    @end
 
     <div class="card">
       <div>

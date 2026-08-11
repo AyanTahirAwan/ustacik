@@ -1,5 +1,6 @@
-<header>
-  <div>
+@let(currentPath = request.url())
+<header class="site-header" data-site-header>
+  <div class="site-header-inner">
     <div class="brand">
       @link({ route: 'home' })
         <svg
@@ -19,25 +20,193 @@
       @end
     </div>
 
-    <nav class="public-nav" aria-label="Primary navigation">
-      <a href="/categories">Categories</a>
-      <a href="/craftsmen">Craftsmen</a>
-      <a href="/regions">Regions</a>
-      <a href="/search">Search</a>
-    </nav>
+    <button
+      class="site-menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-header-navigation"
+      data-site-menu-toggle
+    >
+      <span>Menu</span>
+      <span aria-hidden="true">☰</span>
+    </button>
 
-    <div class="nav-actions">
-      @if(auth.user)
-        @!avatar({ initials: auth.user.initials })
-        @form({ route: 'session.destroy', method: 'POST' })
-          @!button({ text: 'Logout', class: 'btn-logout', type: 'submit' })
-        @end
-      @else
-        <nav aria-label="Account navigation">
-          @!link({ route: 'new_account.create', text: 'Signup', class: 'btn-link' })
-          @!link({ route: 'session.create', text: 'Login', class: 'btn-link' })
+    <div id="site-header-navigation" class="site-header-navigation">
+      @if(!auth.user || auth.user.role !== 'craftsman')
+        <nav class="public-nav" aria-label="Primary navigation">
+          <a
+            href="/categories"
+            class="{{ currentPath.startsWith('/categories') ? 'current' : '' }}"
+          >
+            Categories
+          </a>
+          <a href="/craftsmen" class="{{ currentPath.startsWith('/craftsmen') ? 'current' : '' }}">
+            Craftsmen
+          </a>
+          <a href="/regions" class="{{ currentPath.startsWith('/regions') ? 'current' : '' }}">
+            Regions
+          </a>
+          <a href="/search" class="{{ currentPath.startsWith('/search') ? 'current' : '' }}">
+            Search
+          </a>
         </nav>
       @end
+
+      <div class="nav-actions">
+        @if(auth.user)
+          @if(auth.user.role === 'craftsman')
+            <a
+              href="/craftsman"
+              class="header-primary-action {{ currentPath === '/craftsman' ? 'current' : '' }}"
+            >
+              Dashboard
+            </a>
+          @elseif(auth.user.role === 'customer')
+            <a
+              href="/customer/requests"
+              class="header-primary-action {{ currentPath.startsWith('/customer/requests') ? 'current' : '' }}"
+            >
+              My Requests
+            </a>
+          @end
+          @if(['customer', 'craftsman'].includes(auth.user.role))
+            <a
+              href="/notifications"
+              class="notification-nav-link {{ currentPath === '/notifications' ? 'current' : '' }}"
+            >
+              Notifications
+              <span class="notification-nav-count" data-notification-count hidden></span>
+            </a>
+            @if(auth.user.role === 'craftsman')
+              <details
+                class="user-menu marketplace-menu {{
+                  currentPath.startsWith('/categories') ||
+                  currentPath.startsWith('/craftsmen') ||
+                  currentPath.startsWith('/regions') ||
+                  currentPath.startsWith('/search')
+                    ? 'current'
+                    : ''
+                }}"
+                data-dropdown-menu
+              >
+                <summary
+                  class="user-menu-trigger marketplace-menu-trigger"
+                  aria-label="Open marketplace navigation"
+                  aria-expanded="false"
+                >
+                  <span>Browse Marketplace</span>
+                  <svg
+                    class="dropdown-chevron"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M3.5 5.75 8 10.25l4.5-4.5"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </summary>
+                <div class="user-menu-panel marketplace-menu-panel" role="menu">
+                  <a
+                    role="menuitem"
+                    href="/categories"
+                    class="{{ currentPath.startsWith('/categories') ? 'current' : '' }}"
+                    aria-current="{{ currentPath.startsWith('/categories') ? 'page' : 'false' }}"
+                  >
+                    Categories
+                  </a>
+                  <a
+                    role="menuitem"
+                    href="/craftsmen"
+                    class="{{ currentPath.startsWith('/craftsmen') ? 'current' : '' }}"
+                    aria-current="{{ currentPath.startsWith('/craftsmen') ? 'page' : 'false' }}"
+                  >
+                    Craftsmen
+                  </a>
+                  <a
+                    role="menuitem"
+                    href="/regions"
+                    class="{{ currentPath.startsWith('/regions') ? 'current' : '' }}"
+                    aria-current="{{ currentPath.startsWith('/regions') ? 'page' : 'false' }}"
+                  >
+                    Regions
+                  </a>
+                  <a
+                    role="menuitem"
+                    href="/search"
+                    class="{{ currentPath.startsWith('/search') ? 'current' : '' }}"
+                    aria-current="{{ currentPath.startsWith('/search') ? 'page' : 'false' }}"
+                  >
+                    Search
+                  </a>
+                </div>
+              </details>
+            @end
+
+            <details class="user-menu" data-user-menu data-dropdown-menu>
+              <summary class="user-menu-trigger" aria-label="Open user menu" aria-expanded="false">
+                @!avatar({ initials: auth.user.initials, class: 'user-menu-avatar' })
+                <svg
+                  class="dropdown-chevron"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M3.5 5.75 8 10.25l4.5-4.5"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </summary>
+              <div class="user-menu-panel" role="menu">
+                @if(auth.user.role === 'craftsman')
+                  <a role="menuitem" href="/craftsman/profile">Profile</a>
+                  <a role="menuitem" href="/craftsman/jobs">Jobs</a>
+                  <a role="menuitem" href="/craftsman/service-prices">Prices</a>
+                  <a role="menuitem" href="/craftsman/work-photos">Work Photos</a>
+                @end
+
+                <a role="menuitem" href="/account/settings">Account Settings</a>
+                <div class="user-menu-divider" role="separator"></div>
+                @form({ route: 'session.destroy', method: 'POST' })
+                  <button role="menuitem" type="submit">Logout</button>
+                @end
+              </div>
+            </details>
+          @else
+            @!avatar({ initials: auth.user.initials, class: 'user-menu-avatar' })
+            @form({ route: 'session.destroy', method: 'POST' })
+              @!button({ text: 'Logout', class: 'btn-logout', type: 'submit' })
+            @end
+          @end
+        @else
+          <nav class="guest-account-nav" aria-label="Account navigation">
+            @!link({
+              route: 'new_account.create',
+              text: 'Signup',
+              class: 'header-utility-link',
+            })
+            @!link({
+              route: 'session.create',
+              text: 'Login',
+              class: 'header-primary-action',
+            })
+          </nav>
+        @end
+      </div>
     </div>
   </div>
 </header>

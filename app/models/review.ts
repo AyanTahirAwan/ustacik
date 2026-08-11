@@ -5,6 +5,7 @@ import JobRequest from '#models/job_request'
 import Customer from '#models/customer'
 import Craftsman from '#models/craftsman'
 import ReviewHelpfulVote from '#models/review_helpful_vote'
+import type { TransactionClientContract } from '@adonisjs/lucid/types/database'
 
 export default class Review extends BaseModel {
   @column({ isPrimary: true })
@@ -56,16 +57,19 @@ export default class Review extends BaseModel {
     return (this.punctuality + this.workmanship + this.priceHonesty + this.communication) / 4
   }
 
-  static async submit(data: {
-    jobId: number
-    customerId: number
-    punctuality: number
-    workmanship: number
-    priceHonesty: number
-    communication: number
-    comment?: string
-  }) {
-    const job = await JobRequest.findOrFail(data.jobId)
+  static async submit(
+    data: {
+      jobId: number
+      customerId: number
+      punctuality: number
+      workmanship: number
+      priceHonesty: number
+      communication: number
+      comment?: string
+    },
+    trx?: TransactionClientContract
+  ) {
+    const job = await JobRequest.query({ client: trx }).where('id', data.jobId).firstOrFail()
 
     if (job.status !== 'completed') {
       throw new Error('Reviews can only be left on completed jobs')
@@ -74,21 +78,24 @@ export default class Review extends BaseModel {
       throw new Error('Only the customer on this job can review it')
     }
 
-    const existing = await Review.findBy('job_id', data.jobId)
+    const existing = await Review.query({ client: trx }).where('job_id', data.jobId).first()
     if (existing) {
       throw new Error('This job has already been reviewed')
     }
 
-    return Review.create({
-      jobId: job.id,
-      customerId: job.customerId,
-      craftsmanId: job.craftsmanId,
-      punctuality: data.punctuality,
-      workmanship: data.workmanship,
-      priceHonesty: data.priceHonesty,
-      communication: data.communication,
-      comment: data.comment ?? null,
-    })
+    return Review.create(
+      {
+        jobId: job.id,
+        customerId: job.customerId,
+        craftsmanId: job.craftsmanId,
+        punctuality: data.punctuality,
+        workmanship: data.workmanship,
+        priceHonesty: data.priceHonesty,
+        communication: data.communication,
+        comment: data.comment ?? null,
+      },
+      { client: trx }
+    )
   }
 
   async reply(craftsmanId: number, message: string) {

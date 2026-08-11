@@ -32,6 +32,9 @@ export default class UserNotification extends BaseModel {
   declare messageBody: string
 
   @column()
+  declare relatedJobId: number | null
+
+  @column()
   declare isRead: boolean
 
   @column.dateTime()

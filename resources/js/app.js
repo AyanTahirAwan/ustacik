@@ -29,6 +29,139 @@ async function fetchJson(url) {
   return payload
 }
 
+function initNavigation() {
+  const header = document.querySelector('[data-site-header]')
+  const menuToggle = document.querySelector('[data-site-menu-toggle]')
+  const userMenus = [...document.querySelectorAll('[data-dropdown-menu]')]
+
+  const closeUserMenus = (except = null) => {
+    userMenus.forEach((menu) => {
+      if (menu !== except) {
+        menu.open = false
+        menu.querySelector('summary')?.setAttribute('aria-expanded', 'false')
+      }
+    })
+  }
+
+  if (header && menuToggle) {
+    menuToggle.addEventListener('click', () => {
+      const open = header.toggleAttribute('data-menu-open')
+      menuToggle.setAttribute('aria-expanded', String(open))
+      if (!open) closeUserMenus()
+    })
+  }
+
+  userMenus.forEach((menu) => {
+    const trigger = menu.querySelector('summary')
+    const items = [...menu.querySelectorAll('[role="menuitem"]')]
+
+    menu.addEventListener('toggle', () => {
+      if (menu.open) closeUserMenus(menu)
+      trigger.setAttribute('aria-expanded', String(menu.open))
+    })
+
+    menu.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        menu.open = false
+        trigger.setAttribute('aria-expanded', 'false')
+        trigger.focus()
+        return
+      }
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return
+      event.preventDefault()
+      if (!menu.open) menu.open = true
+      const currentIndex = items.indexOf(document.activeElement)
+      const nextIndex =
+        event.key === 'Home'
+          ? 0
+          : event.key === 'End'
+            ? items.length - 1
+            : event.key === 'ArrowDown'
+              ? (currentIndex + 1 + items.length) % items.length
+              : (currentIndex - 1 + items.length) % items.length
+      items[nextIndex]?.focus()
+    })
+  })
+
+  document.addEventListener('click', (event) => {
+    userMenus.forEach((menu) => {
+      if (!menu.contains(event.target)) {
+        menu.open = false
+        menu.querySelector('summary')?.setAttribute('aria-expanded', 'false')
+      }
+    })
+  })
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return
+    closeUserMenus()
+    if (header?.hasAttribute('data-menu-open')) {
+      header.removeAttribute('data-menu-open')
+      menuToggle?.setAttribute('aria-expanded', 'false')
+      menuToggle?.focus()
+    }
+  })
+
+  const workspace = document.querySelector('.craftsman-workspace-menu')
+  if (workspace) {
+    const mobileWorkspace = window.matchMedia('(max-width: 768px)')
+    const trigger = workspace.querySelector('summary')
+    const items = [...workspace.querySelectorAll('.dashboard-nav a')]
+    const setWorkspaceOpen = (open) => {
+      workspace.open = open
+      trigger?.setAttribute('aria-expanded', String(open))
+    }
+    const syncWorkspace = (event) => {
+      setWorkspaceOpen(!event.matches)
+    }
+
+    workspace.addEventListener('toggle', () => {
+      trigger?.setAttribute('aria-expanded', String(workspace.open))
+    })
+
+    trigger?.addEventListener('click', (event) => {
+      if (!mobileWorkspace.matches) event.preventDefault()
+    })
+
+    workspace.addEventListener('keydown', (event) => {
+      if (!mobileWorkspace.matches) return
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopPropagation()
+        setWorkspaceOpen(false)
+        trigger?.focus()
+        return
+      }
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return
+      event.preventDefault()
+      if (!workspace.open) setWorkspaceOpen(true)
+      const currentIndex = items.indexOf(document.activeElement)
+      const nextIndex =
+        event.key === 'Home'
+          ? 0
+          : event.key === 'End'
+            ? items.length - 1
+            : event.key === 'ArrowDown'
+              ? currentIndex < 0
+                ? 0
+                : (currentIndex + 1) % items.length
+              : currentIndex < 0
+                ? items.length - 1
+                : (currentIndex - 1 + items.length) % items.length
+      items[nextIndex]?.focus()
+    })
+
+    document.addEventListener('click', (event) => {
+      if (mobileWorkspace.matches && !workspace.contains(event.target)) {
+        setWorkspaceOpen(false)
+      }
+    })
+
+    syncWorkspace(mobileWorkspace)
+    mobileWorkspace.addEventListener('change', syncWorkspace)
+  }
+}
+
 function clear(element) {
   element.replaceChildren()
 }
@@ -166,9 +299,12 @@ async function loadCraftsmenPage() {
       }
 
       const content = element('div', 'craftsman-content')
-      content.append(
-        element('h3', 'catalog-card-title', craftsman.businessName || 'Independent craftsman')
+      const heading = element(
+        'h3',
+        'craftsman-name',
+        craftsman.businessName || 'Independent craftsman'
       )
+      content.append(heading)
       const meta = element('div', 'craftsman-meta')
       if (craftsman.category?.nameEn)
         meta.append(element('span', 'status-badge', craftsman.category.nameEn))
@@ -180,10 +316,12 @@ async function loadCraftsmenPage() {
         )
       )
       content.append(meta)
-      content.append(
-        element('p', 'craftsman-bio', craftsman.bio || 'Profile details have not been added yet.')
-      )
-      content.append(element('p', 'jobs-completed', `${craftsman.totalJobs ?? 0} completed jobs`))
+      content.append(element('p', 'craftsman-bio', craftsman.bio || 'Profile details coming soon.'))
+      const stats = element('div', 'craftsman-stats')
+      stats.append(element('span', 'jobs-completed', `${craftsman.totalJobs ?? 0} completed jobs`))
+      const profileLink = element('a', 'card-link marketplace-card-action', 'View Profile →')
+      profileLink.href = `/craftsmen/${encodeURIComponent(craftsman.userId)}`
+      content.append(stats, profileLink)
       card.append(media, content)
       container.append(card)
     })
@@ -218,6 +356,7 @@ async function populateSubServices(categoryId, selectedValue = '') {
     clear(select)
     addOption(select, '', 'All services', selectedValue)
     data.forEach((service) => addOption(select, service.id, service.nameEn, selectedValue))
+    select.value = selectedValue || ''
     select.disabled = false
   } catch {
     clear(select)
@@ -249,6 +388,11 @@ function renderSearchResults(results) {
       details.append(element('dt', '', label), element('dd', '', value))
     })
     card.append(details)
+    if (result.craftsman?.userId) {
+      const profileLink = element('a', 'card-link marketplace-card-action', 'View Craftsman →')
+      profileLink.href = `/craftsmen/${encodeURIComponent(result.craftsman.userId)}`
+      card.append(profileLink)
+    }
     container.append(card)
   })
 }
@@ -258,25 +402,50 @@ async function initSearch() {
   if (!form) return
 
   const params = new URLSearchParams(window.location.search)
+  const selectedCategoryId = params.get('categoryId') || ''
+  const selectedSubServiceId = params.get('subServiceId') || ''
+  const selectedRegionId = params.get('regionId') || ''
   const categorySelect = document.getElementById('category-select')
+  const subServiceSelect = document.getElementById('sub-service-select')
   const regionSelect = document.getElementById('region-select')
   const results = document.getElementById('search-results')
+  const activeFilters = document.getElementById('active-filters')
+  const activeFilterValues = document.getElementById('active-filter-values')
+
+  const selectedLabel = (select) =>
+    select.value ? select.selectedOptions[0]?.textContent?.trim() : ''
+  const updateActiveFilters = () => {
+    const values = [
+      selectedLabel(categorySelect),
+      selectedLabel(subServiceSelect),
+      selectedLabel(regionSelect),
+    ].filter(Boolean)
+    const minPrice = form.elements.namedItem('minPrice')?.value
+    const maxPrice = form.elements.namedItem('maxPrice')?.value
+    if (minPrice && maxPrice) values.push(`${minPrice}–${maxPrice}`)
+    else if (minPrice) values.push(`From ${minPrice}`)
+    else if (maxPrice) values.push(`Up to ${maxPrice}`)
+
+    activeFilterValues.textContent = values.join(' · ')
+    activeFilters.hidden = values.length === 0
+  }
 
   try {
-    const [{ data: categories = [] }, { data: regions = [] }] = await Promise.all([
-      fetchJson('/api/catalog/categories'),
-      fetchJson('/api/catalog/regions'),
-    ])
+    const { data: categories = [] } = await fetchJson('/api/catalog/categories')
     clear(categorySelect)
-    addOption(categorySelect, '', 'All categories', params.get('categoryId'))
+    addOption(categorySelect, '', 'All categories', selectedCategoryId)
     categories.forEach((category) =>
-      addOption(categorySelect, category.id, category.nameEn, params.get('categoryId'))
+      addOption(categorySelect, category.id, category.nameEn, selectedCategoryId)
     )
+    categorySelect.value = selectedCategoryId
+
+    await populateSubServices(categorySelect.value, selectedSubServiceId)
+
+    const { data: regions = [] } = await fetchJson('/api/catalog/regions')
     clear(regionSelect)
-    addOption(regionSelect, '', 'All regions', params.get('regionId'))
-    regions.forEach((region) =>
-      addOption(regionSelect, region.id, region.nameEn, params.get('regionId'))
-    )
+    addOption(regionSelect, '', 'All regions', selectedRegionId)
+    regions.forEach((region) => addOption(regionSelect, region.id, region.nameEn, selectedRegionId))
+    regionSelect.value = selectedRegionId
   } catch (error) {
     showState(results, error.message || apiMessage, true)
   }
@@ -286,8 +455,9 @@ async function initSearch() {
     if (input && params.has(name)) input.value = params.get(name)
   }
 
-  await populateSubServices(params.get('categoryId'), params.get('subServiceId'))
-  categorySelect.addEventListener('change', () => populateSubServices(categorySelect.value))
+  categorySelect.addEventListener('change', () => populateSubServices(categorySelect.value, ''))
+  form.addEventListener('change', updateActiveFilters)
+  form.addEventListener('input', updateActiveFilters)
 
   async function submitSearch(updateUrl = true) {
     const query = new URLSearchParams(new FormData(form))
@@ -307,6 +477,7 @@ async function initSearch() {
     submitSearch()
   })
 
+  updateActiveFilters()
   if (params.size) await submitSearch(false)
 }
 
@@ -317,6 +488,9 @@ async function initSignup() {
   if (!roleSelect || !craftsmanFields || !categorySelect) return
 
   const businessInput = document.getElementById('businessName')
+  const requestedRole = new URLSearchParams(window.location.search).get('role')
+  if (requestedRole === 'customer' || requestedRole === 'craftsman')
+    roleSelect.value = requestedRole
 
   function updateVisibility() {
     const isCraftsman = roleSelect.value === 'craftsman'
@@ -342,10 +516,21 @@ async function initSignup() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initNavigation()
   loadCategoriesPage()
   loadCategoryDetail()
   loadCraftsmenPage()
   loadRegionsPage()
   initSearch()
   initSignup()
+
+  const notificationCount = document.querySelector('[data-notification-count]')
+  if (notificationCount) {
+    fetchJson('/api/notifications')
+      .then(({ unreadCount = 0 }) => {
+        notificationCount.textContent = String(unreadCount)
+        notificationCount.hidden = unreadCount === 0
+      })
+      .catch(() => {})
+  }
 })

@@ -1,0 +1,174 @@
+@dashboardLayout({ title: 'Work Photos' })
+  <section class="work-photos-page" data-work-photos>
+    <div class="work-photos-toolbar">
+      <a class="btn-back" href="/craftsman">Back to Dashboard</a>
+    </div>
+
+    <div id="work-photos-loading" class="dashboard-message">Loading your work photos...</div>
+    <div id="work-photos-error" class="dashboard-message dashboard-message-error" hidden></div>
+    <div id="work-photos-success" class="dashboard-message work-photos-success" hidden></div>
+
+    <section id="work-photos-content" hidden>
+      <article class="dashboard-panel work-photo-form-card">
+        <h2>Add Work Photo</h2>
+        <p class="dashboard-muted">
+          For now, photos are added using a link. Paste a direct link to a photo of your previous work.
+        </p>
+
+        @form({ action: '/api/craftsman/work-photos', method: 'POST', id: 'work-photo-form' })
+          <div class="work-photo-form-row">
+            <label for="work-photo-url">
+              Photo link
+              <input
+                id="work-photo-url"
+                name="imageUrl"
+                class="form-control"
+                type="url"
+                maxlength="500"
+                placeholder="https://example.com/my-work-photo.jpg"
+                required
+              />
+            </label>
+            <button id="work-photo-add" class="btn-primary" type="submit">Add Photo</button>
+          </div>
+        @end
+      </article>
+
+      <section class="dashboard-panel">
+        <div class="dashboard-panel-heading">
+          <div>
+            <h2>Portfolio</h2>
+            <p class="dashboard-muted">Your saved work photos.</p>
+          </div>
+        </div>
+        <div id="work-photos-empty" class="dashboard-empty" hidden>You have not added any work photos yet.</div>
+        <div id="work-photos-list" class="work-photos-grid"></div>
+      </section>
+    </section>
+  </section>
+
+  <script>
+    const workPhotosLoading = document.getElementById('work-photos-loading')
+    const workPhotosContent = document.getElementById('work-photos-content')
+    const workPhotosError = document.getElementById('work-photos-error')
+    const workPhotosSuccess = document.getElementById('work-photos-success')
+    const workPhotosEmpty = document.getElementById('work-photos-empty')
+    const workPhotosList = document.getElementById('work-photos-list')
+    const workPhotoForm = document.getElementById('work-photo-form')
+    const workPhotoUrl = document.getElementById('work-photo-url')
+    const workPhotoAdd = document.getElementById('work-photo-add')
+    const workPhotoCsrf = workPhotoForm.querySelector('input[name="_csrf"]')?.value
+    let workPhotos = []
+
+    const showWorkPhotoError = (message) => {
+      workPhotosError.textContent = message
+      workPhotosError.hidden = false
+      workPhotosSuccess.hidden = true
+    }
+
+    const showWorkPhotoSuccess = (message) => {
+      workPhotosSuccess.textContent = message
+      workPhotosSuccess.hidden = false
+      workPhotosError.hidden = true
+    }
+
+    const renderWorkPhotos = () => {
+      workPhotosList.replaceChildren()
+      workPhotosEmpty.hidden = workPhotos.length !== 0
+
+      workPhotos.forEach((workPhoto) => {
+        const card = document.createElement('article')
+        const image = document.createElement('img')
+        const url = document.createElement('p')
+        const remove = document.createElement('button')
+        card.className = 'work-photo-card'
+        image.className = 'work-photo-image'
+        image.src = workPhoto.imageUrl
+        image.alt = 'Craftsman work portfolio'
+        image.loading = 'lazy'
+        url.className = 'work-photo-url'
+        url.textContent = workPhoto.imageUrl
+        remove.className = 'service-price-delete work-photo-remove'
+        remove.type = 'button'
+        remove.textContent = 'Remove Photo'
+
+        remove.addEventListener('click', async () => {
+          if (!window.confirm('Remove this work photo?')) return
+          remove.disabled = true
+          remove.textContent = 'Removing...'
+          try {
+            const response = await fetch(`/api/craftsman/work-photos/${workPhoto.id}`, {
+              method: 'DELETE',
+              headers: { Accept: 'application/json', 'x-csrf-token': workPhotoCsrf },
+              credentials: 'same-origin',
+            })
+            if (!response.ok) throw new Error('Unable to remove the work photo.')
+            workPhotos = workPhotos.filter((photo) => photo.id !== workPhoto.id)
+            renderWorkPhotos()
+            showWorkPhotoSuccess('The work photo has been removed.')
+          } catch (failure) {
+            remove.disabled = false
+            remove.textContent = 'Remove Photo'
+            showWorkPhotoError(failure.message || 'Unable to remove the work photo.')
+          }
+        })
+
+        card.append(image, url, remove)
+        workPhotosList.appendChild(card)
+      })
+    }
+
+    const loadWorkPhotos = async () => {
+      try {
+        const response = await fetch('/api/craftsman/work-photos', {
+          headers: { Accept: 'application/json' },
+          credentials: 'same-origin',
+        })
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok || !Array.isArray(payload.workPhotos)) throw new Error('Unable to load your work photos.')
+        workPhotos = payload.workPhotos
+        renderWorkPhotos()
+        workPhotosLoading.hidden = true
+        workPhotosContent.hidden = false
+      } catch (failure) {
+        workPhotosLoading.hidden = true
+        showWorkPhotoError(failure.message || 'Unable to load your work photos.')
+      }
+    }
+
+    workPhotoForm.addEventListener('submit', async (event) => {
+      event.preventDefault()
+      workPhotosError.hidden = true
+      workPhotosSuccess.hidden = true
+      workPhotoAdd.disabled = true
+      workPhotoAdd.textContent = 'Adding...'
+      try {
+        const response = await fetch('/api/craftsman/work-photos', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'x-csrf-token': workPhotoCsrf,
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({ imageUrl: workPhotoUrl.value }),
+        })
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok || !payload.workPhoto) {
+          throw new Error(payload.errors?.[0]?.message || payload.message || 'Unable to add the work photo.')
+        }
+        workPhotos = [payload.workPhoto, ...workPhotos]
+        renderWorkPhotos()
+        workPhotoForm.reset()
+        showWorkPhotoSuccess('The work photo has been added successfully.')
+      } catch (failure) {
+        showWorkPhotoError(failure.message || 'Unable to add the work photo.')
+      } finally {
+        workPhotoAdd.disabled = false
+        workPhotoAdd.textContent = 'Add Photo'
+      }
+    })
+
+    loadWorkPhotos()
+  </script>
+@end
