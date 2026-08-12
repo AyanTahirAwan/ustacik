@@ -1,3 +1,5 @@
+import { confirmAction } from './confirmation-modal.js'
+
 document.addEventListener('DOMContentLoaded', async () => {
   const page = document.getElementById('craftsman-work-photos-page')
 
@@ -63,7 +65,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       removeButton.textContent = 'Remove Photo'
 
       removeButton.addEventListener('click', async () => {
-        const confirmed = window.confirm('Remove this work photo?')
+        const confirmed = await confirmAction({
+          title: 'Remove work photo?',
+          message: 'Remove this photo from your work portfolio? This action cannot be undone.',
+          confirmLabel: 'Remove Photo',
+          cancelLabel: 'Cancel',
+        })
 
         if (!confirmed) {
           return

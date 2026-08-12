@@ -1,64 +1,132 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ $props.get('title') ?? 'Customer Account' }} — UstaÇık</title>
-  @vite([
-    'resources/css/app.css',
-    'resources/css/customer-account.css',
-    'resources/js/app.js',
-  ])
-  @stack('dumper')
-</head>
-<body>
-  @include('partials/header')
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ $props.get('title') ?? 'Customer Account' }} — UstaÇık</title>
+    @vite([
+      'resources/css/app.css',
+      'resources/css/customer-account.css',
+      'resources/js/app.js',
+      'resources/js/customer-account.js',
+    ])
+    @stack('dumper')
+  </head>
+  <body class="customer-account">
+    <a class="customer-account-skip-link" href="#customer-account-content">
+      Skip to account content
+    </a>
 
-  <main class="customer-account-shell">
-    <section class="customer-account-frame">
-      @include('partials/flash_alerts')
+    <button
+      class="customer-account-menu-toggle"
+      type="button"
+      aria-controls="customer-account-sidebar"
+      aria-expanded="false"
+      aria-label="Open customer navigation"
+      data-customer-account-menu-toggle
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
 
-      <div class="customer-account-topbar">
+    <button
+      class="customer-account-overlay"
+      type="button"
+      aria-label="Close customer navigation"
+      data-customer-account-overlay
+    ></button>
+
+    <aside
+      id="customer-account-sidebar"
+      class="customer-account-sidebar"
+      aria-label="Customer account navigation"
+      data-customer-account-sidebar
+    >
+      <a class="customer-account-brand" href="/">Usta<span>cik</span></a>
+
+      <nav class="customer-account-navigation">
+        <a
+          class="customer-account-nav-item {{ $props.get('active') === 'profile' ? 'is-active' : '' }}"
+          href="/customer/profile"
+          aria-current="{{ $props.get('active') === 'profile' ? 'page' : 'false' }}"
+        >
+          My Profile
+        </a>
+        <a
+          class="customer-account-nav-item {{ $props.get('active') === 'addresses' ? 'is-active' : '' }}"
+          href="/customer/addresses"
+          aria-current="{{ $props.get('active') === 'addresses' ? 'page' : 'false' }}"
+        >
+          Addresses
+        </a>
+        <a
+          class="customer-account-nav-item {{ $props.get('active') === 'favorites' ? 'is-active' : '' }}"
+          href="/customer/favorites"
+          aria-current="{{ $props.get('active') === 'favorites' ? 'page' : 'false' }}"
+        >
+          Favorites
+        </a>
+        <a
+          class="customer-account-nav-item {{ $props.get('active') === 'notifications' ? 'is-active' : '' }}"
+          href="/customer/notifications"
+          aria-current="{{ $props.get('active') === 'notifications' ? 'page' : 'false' }}"
+        >
+          Notifications
+        </a>
+      </nav>
+    </aside>
+
+    <main id="customer-account-content" class="customer-account-shell">
+      <header class="customer-account-header">
         <div class="customer-account-heading">
           <p>Customer Account</p>
           <h1>{{ $props.get('title') ?? 'Customer Account' }}</h1>
         </div>
 
-        <nav class="customer-account-nav" aria-label="Customer account navigation">
-          <a
-            href="/customer/profile"
-            class="{{ $props.get('active') === 'profile' ? 'is-active' : '' }}"
+        <div class="customer-account-control" data-customer-account-control>
+          <button
+            class="customer-account-profile"
+            type="button"
+            aria-expanded="false"
+            aria-controls="customer-account-dropdown"
+            aria-label="Open customer account menu"
+            data-customer-account-toggle
           >
-            My Profile
-          </a>
+            <span class="customer-account-profile-copy">
+              <strong data-customer-account-name>
+                {{ auth.user ? auth.user.email : 'Customer Account' }}
+              </strong>
+              <span data-customer-account-email>Customer account</span>
+            </span>
+            <span class="customer-account-avatar" data-customer-account-avatar aria-hidden="true">
+              {{ auth.user ? auth.user.initials : 'UC' }}
+            </span>
+          </button>
 
-          <a
-            href="/customer/addresses"
-            class="{{ $props.get('active') === 'addresses' ? 'is-active' : '' }}"
+          <div
+            id="customer-account-dropdown"
+            class="customer-account-dropdown"
+            role="group"
+            aria-label="Customer account actions"
+            data-customer-account-dropdown
+            hidden
           >
-            My Addresses
-          </a>
+            @form({
+              route: 'session.destroy',
+              method: 'POST',
+              class: 'customer-account-logout-form',
+            })
+              <button class="customer-account-action customer-account-logout" type="submit">
+                Logout
+              </button>
+            @end
+          </div>
+        </div>
+      </header>
+      @include('partials/flash_alerts')
 
-          <a
-            href="/customer/favorites"
-            class="{{ $props.get('active') === 'favorites' ? 'is-active' : '' }}"
-          >
-            My Favorites
-          </a>
-
-          <a
-            href="/customer/notifications"
-            class="{{ $props.get('active') === 'notifications' ? 'is-active' : '' }}"
-          >
-            Notifications
-          </a>
-        </nav>
-      </div>
-
-      <div class="customer-account-content">
-        {{{ await $slots.main() }}}
-      </div>
-    </section>
-  </main>
-</body>
+      <div class="customer-account-content">{{{ await $slots.main() }}}</div>
+    </main>
+  </body>
 </html>

@@ -7,6 +7,7 @@ import testUtils from '@adonisjs/core/services/test_utils'
 import { test } from '@japa/runner'
 
 let fixtureSequence = 0
+type UserRole = 'customer' | 'craftsman' | 'admin'
 
 // Generate unique credentials for each authentication scenario.
 function nextIdentity(label: string) {
@@ -47,6 +48,27 @@ async function createCustomerFixture({
   })
 
   return { user, customer, password }
+}
+
+async function createRoleFixture({
+  label,
+  role,
+  password = 'KnownPassword123!',
+}: {
+  label: string
+  role: UserRole
+  password?: string
+}) {
+  const identity = nextIdentity(label)
+  const user = await User.create({
+    email: identity.email,
+    phoneNormalised: identity.phone,
+    passwordHash: password,
+    role,
+    status: 'active',
+  })
+
+  return { user, password }
 }
 
 test.group('Authentication', (group) => {
@@ -161,10 +183,60 @@ test.group('Authentication', (group) => {
     })
 
     response.assertStatus(302)
-    response.assertHeader('location', '/')
+    response.assertHeader('location', '/customer/profile')
     response.assertCookie('adonis-session')
     response.assertSession('auth_web', user.id)
   })
+
+  test('redirects an active craftsman to the craftsman landing page', async ({ client }) => {
+    const { user, password } = await createRoleFixture({
+      label: 'successful-craftsman-login',
+      role: 'craftsman',
+    })
+
+    const response = await client.post('/login').withCsrfToken().redirects(0).json({
+      email: user.email,
+      password,
+    })
+
+    response.assertStatus(302)
+    response.assertHeader('location', '/craftsman')
+    response.assertSession('auth_web', user.id)
+  })
+
+  test('redirects an active admin to the admin landing page', async ({ client }) => {
+    const { user, password } = await createRoleFixture({
+      label: 'successful-admin-login',
+      role: 'admin',
+    })
+
+    const response = await client.post('/login').withCsrfToken().redirects(0).json({
+      email: user.email,
+      password,
+    })
+
+    response.assertStatus(302)
+    response.assertHeader('location', '/admin')
+    response.assertSession('auth_web', user.id)
+  })
+
+  for (const { role, path } of [
+    { role: 'customer', path: '/customer/profile' },
+    { role: 'craftsman', path: '/craftsman' },
+    { role: 'admin', path: '/admin' },
+  ] as const) {
+    test(`redirects an authenticated ${role} away from the login page`, async ({ client }) => {
+      const { user } = await createRoleFixture({
+        label: `authenticated-${role}-guest-route`,
+        role,
+      })
+
+      const response = await client.get('/login').loginAs(user).redirects(0)
+
+      response.assertStatus(302)
+      response.assertHeader('location', path)
+    })
+  }
 
   test('rejects an invalid password', async ({ client }) => {
     const { user } = await createCustomerFixture({ label: 'invalid-login' })

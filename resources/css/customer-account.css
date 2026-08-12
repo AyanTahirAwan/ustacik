@@ -34,6 +34,12 @@
   min-width: 0;
 }
 
+.customer-profile-field select.form-control {
+  height: 48px;
+  padding: 0 44px 0 16px;
+  line-height: normal;
+}
+
 .customer-profile-field-full {
   grid-column: 1 / -1;
 }
@@ -105,112 +111,407 @@
 .customer-profile-actions [hidden] {
   display: none !important;
 }
-/* CUSTOMER ACCOUNT LAYOUT */
+/* CUSTOMER ACCOUNT SHELL */
+.customer-account {
+  --customer-account-canvas: #f3ebe3;
+  --customer-account-sidebar: #111111;
+  --customer-account-white: #ffffff;
+  --customer-account-black: #111111;
+  --customer-account-grey: #555555;
+  --customer-account-light: #e0e0e0;
+  --customer-account-brown: #8a5239;
+  --customer-account-rust: #c85a32;
+
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: clip;
+  background: var(--customer-account-canvas);
+}
+
+.customer-account-skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 50;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: var(--customer-account-white);
+  color: var(--customer-account-black);
+  transform: translateY(-160%);
+}
+
+.customer-account-skip-link:focus {
+  transform: translateY(0);
+}
+
+.customer-account-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  width: 260px;
+  height: 100dvh;
+  padding: 30px 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--customer-account-sidebar);
+  color: var(--customer-account-light);
+}
+
+.customer-account-brand {
+  display: block;
+  margin-bottom: 40px;
+  color: var(--customer-account-canvas);
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.customer-account-brand span {
+  color: var(--customer-account-rust);
+}
+
+.customer-account-navigation {
+  display: block;
+}
+
+.customer-account-nav-item {
+  min-height: 54px;
+  padding: 15px 30px;
+  border-left: 4px solid transparent;
+  display: flex;
+  align-items: center;
+  color: var(--customer-account-light);
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.customer-account-nav-item:hover,
+.customer-account-nav-item:focus-visible,
+.customer-account-nav-item.is-active {
+  border-left-color: var(--customer-account-rust);
+  outline: none;
+  background: rgb(255 255 255 / 5%);
+  color: var(--customer-account-white);
+}
+
 .customer-account-shell {
-  min-height: calc(100vh - 64px);
-  padding: 32px 0 64px;
-  background-color: var(--bg-template);
+  width: calc(100% - 260px);
+  min-width: 0;
+  max-width: none;
+  min-height: 100vh;
+  margin: 0 0 0 260px;
+  padding: 40px 50px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 40px;
+  background: var(--customer-account-canvas);
 }
 
-.customer-account-frame {
-  width: min(1200px, calc(100% - 64px));
-  margin: 0 auto;
-}
-
-.customer-account-topbar {
+.customer-account-header {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 32px;
-  padding: 20px 24px;
-  background-color: var(--bg-white);
-  border: 1px solid var(--gray-3);
-  border-radius: 12px;
+  gap: 32px;
+}
+
+.customer-account-header > div {
+  height: auto;
+  display: block;
 }
 
 .customer-account-heading p {
-  margin: 0 0 4px;
-  color: var(--text-grey);
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  margin: 0 0 5px;
+  color: var(--customer-account-brown);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
 }
 
 .customer-account-heading h1 {
   margin: 0;
+  color: var(--customer-account-black);
+  font-family: var(--font-sans);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-.customer-account-nav {
+.customer-account-control {
+  position: relative;
+  z-index: 15;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.customer-account-profile {
+  width: auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  align-items: center;
+  gap: 15px;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 4px;
 }
 
-.customer-account-nav a {
-  display: inline-flex;
-  min-height: 44px;
+.customer-account-profile:hover {
+  background: transparent;
+}
+
+.customer-account-profile:hover .customer-account-profile-copy strong,
+.customer-account-profile:focus-visible .customer-account-profile-copy strong {
+  color: var(--customer-account-rust);
+}
+
+.customer-account-profile:focus-visible {
+  outline-color: var(--customer-account-rust);
+}
+
+.customer-account-control.is-open .customer-account-profile {
+  outline-color: rgb(200 90 50 / 25%);
+}
+
+.customer-account-profile-copy {
+  min-width: 0;
+  text-align: right;
+}
+
+.customer-account-profile-copy strong,
+.customer-account-profile-copy span {
+  display: block;
+  max-width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.customer-account-profile-copy strong {
+  color: var(--customer-account-black);
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.customer-account-profile-copy span {
+  font-size: 0.8rem;
+}
+
+.customer-account-avatar {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 18px;
-  border: 1px solid var(--brand-brown);
-  border-radius: 999px;
-  color: var(--brand-brown);
+  background: var(--customer-account-rust);
+  color: var(--customer-account-white);
+  font-size: 1.2rem;
   font-weight: 700;
-  text-decoration: none;
 }
 
-.customer-account-nav a:hover,
-.customer-account-nav a:focus-visible,
-.customer-account-nav a.is-active {
-  background-color: var(--brand-brown);
-  color: var(--bg-white);
+.customer-account-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: min(240px, calc(100vw - 40px));
+  padding: 8px;
+  border: 1px solid rgb(138 82 57 / 22%);
+  border-radius: 12px;
+  background: var(--customer-account-white);
+  box-shadow: 0 18px 42px rgb(17 17 17 / 16%);
+}
+
+.customer-account-dropdown[hidden] {
+  display: none;
+}
+
+.customer-account-action {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 13px;
+  border: 0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  color: var(--customer-account-rust);
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.customer-account-action:hover,
+.customer-account-action:focus-visible {
+  outline: none;
+  background: var(--customer-account-canvas);
+}
+
+.customer-account-logout-form {
+  margin: 0;
 }
 
 .customer-account-content {
-  width: min(1080px, 100%);
-  margin: 0 auto;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
 }
 
-@media (max-width: 1279px) {
-  .customer-account-frame {
-    width: min(740px, calc(100% - 48px));
-  }
-
-  .customer-account-content {
-    width: min(676px, 100%);
-  }
+.customer-account .alert {
+  min-width: 0;
 }
 
-@media (max-width: 799px) {
+.customer-account-menu-toggle,
+.customer-account-overlay {
+  display: none;
+}
+
+@media (min-width: 798px) and (max-width: 1279px) {
+  .customer-account-sidebar {
+    width: 220px;
+  }
+
+  .customer-account-nav-item {
+    padding-inline: 20px;
+  }
+
   .customer-account-shell {
-    padding: 16px 0 40px;
+    width: calc(100% - 220px);
+    margin-left: 220px;
+    padding: 32px;
   }
+}
 
-  .customer-account-frame {
-    width: min(343px, calc(100% - 32px));
-  }
-
-  .customer-account-topbar {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 16px;
-    padding: 16px;
-  }
-
-  .customer-account-nav {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .customer-account-nav a {
+@media (max-width: 797px) {
+  .customer-account.is-navigation-open {
+    position: fixed;
     width: 100%;
+    overflow: hidden;
   }
 
-  .customer-account-content {
-    width: min(311px, 100%);
+  .customer-account-sidebar {
+    z-index: 30;
+    width: min(82vw, 300px);
+    max-width: 100%;
+    padding: 28px 0;
+    transform: translateX(-102%);
+    transition: transform 0.25s ease;
+  }
+
+  .customer-account.is-navigation-open .customer-account-sidebar {
+    transform: translateX(0);
+  }
+
+  .customer-account-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    display: block;
+    visibility: hidden;
+    background: rgb(17 17 17 / 55%);
+    opacity: 0;
+    cursor: pointer;
+    transition:
+      opacity 0.25s ease,
+      visibility 0.25s ease;
+  }
+
+  .customer-account.is-navigation-open .customer-account-overlay {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .customer-account-overlay:hover,
+  .customer-account-overlay:focus-visible {
+    background: rgb(17 17 17 / 55%);
+  }
+
+  .customer-account-menu-toggle {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 40;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    border: 0;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 5px;
+    background: var(--customer-account-sidebar);
+    box-shadow: 0 4px 14px rgb(0 0 0 / 18%);
+    cursor: pointer;
+  }
+
+  .customer-account-menu-toggle span {
+    height: 2px;
+    border-radius: 2px;
+    background: var(--customer-account-white);
+  }
+
+  .customer-account-menu-toggle:hover,
+  .customer-account-menu-toggle:focus-visible {
+    background: var(--customer-account-sidebar);
+  }
+
+  .customer-account-shell {
+    width: 100%;
+    margin-left: 0;
+    padding: 92px 20px 40px;
+    gap: 32px;
+  }
+
+  .customer-account-header {
+    align-items: flex-start;
+  }
+
+  .customer-account-profile-copy {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .customer-account-heading h1 {
+    font-size: 1.7rem;
+  }
+
+  .customer-account-avatar {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .customer-account-sidebar,
+  .customer-account-overlay,
+  .customer-account-nav-item,
+  .customer-account-profile-copy strong {
+    transition: none;
   }
 }
 
@@ -513,7 +814,7 @@
 
 .customer-favorites-list {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: 18px;
 }
 

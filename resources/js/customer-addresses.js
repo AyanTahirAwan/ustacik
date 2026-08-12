@@ -1,3 +1,5 @@
+import { confirmAction } from './confirmation-modal.js'
+
 async function loadCustomerAddresses() {
   const page = document.getElementById('customer-addresses-page')
 
@@ -125,7 +127,7 @@ async function loadCustomerAddresses() {
         address.street
       )
       const actions = document.createElement('div')
-      const editButton = createTextElement('button', 'btn-back', 'Edit')
+      const editButton = createTextElement('button', 'btn-primary', 'Edit')
       const deleteButton = createTextElement(
         'button',
         'customer-address-delete',
@@ -170,9 +172,12 @@ async function loadCustomerAddresses() {
       })
 
       deleteButton.addEventListener('click', async () => {
-        const confirmed = window.confirm(
-          `Delete the address "${address.label}"?`
-        )
+        const confirmed = await confirmAction({
+          title: 'Delete address?',
+          message: `Delete "${address.label}"? This action cannot be undone.`,
+          confirmLabel: 'Delete Address',
+          cancelLabel: 'Cancel',
+        })
 
         if (!confirmed) {
           return

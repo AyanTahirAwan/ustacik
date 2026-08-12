@@ -1,3 +1,5 @@
+import { confirmAction } from './confirmation-modal.js'
+
 async function loadCustomerFavorites() {
   const page = document.getElementById('customer-favorites-page')
 
@@ -151,9 +153,12 @@ async function loadCustomerFavorites() {
       removeButton.type = 'button'
 
       removeButton.addEventListener('click', async () => {
-        const confirmed = window.confirm(
-          `Remove "${craftsman?.businessName ?? `Craftsman #${favorite.craftsmanId}`}" from your favorites?`
-        )
+        const confirmed = await confirmAction({
+          title: 'Remove from favorites?',
+          message: `Remove "${craftsman?.businessName ?? `Craftsman #${favorite.craftsmanId}`}" from your saved craftsmen?`,
+          confirmLabel: 'Remove',
+          cancelLabel: 'Cancel',
+        })
 
         if (!confirmed) {
           return

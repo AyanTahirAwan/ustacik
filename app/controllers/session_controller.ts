@@ -1,4 +1,5 @@
 import User from '#models/user'
+import { getRoleLandingPath } from '#services/role_landing_service'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SessionController {
@@ -16,7 +17,7 @@ export default class SessionController {
     }
 
     await auth.use('web').login(user)
-    response.redirect().toRoute('home')
+    return response.redirect(getRoleLandingPath(user.role))
   }
 
   async destroy({ auth, response }: HttpContext) {

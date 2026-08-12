@@ -1,3 +1,5 @@
+import { confirmAction } from './confirmation-modal.js'
+
 document.addEventListener('DOMContentLoaded', () => {
   const page = document.getElementById('admin-user-detail-page')
 
@@ -211,9 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return
     }
 
-    const confirmed = window.confirm(
-      `Suspend "${getDisplayName(currentUser)}"?`
-    )
+    const displayName = getDisplayName(currentUser)
+    const confirmed = await confirmAction({
+      title: 'Suspend user?',
+      message: `Suspend "${displayName}"? The account will no longer be able to access the application while suspended.`,
+      confirmLabel: 'Suspend User',
+      cancelLabel: 'Cancel',
+    })
 
     if (!confirmed) {
       return

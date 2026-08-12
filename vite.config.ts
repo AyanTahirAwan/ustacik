@@ -12,6 +12,7 @@ export default defineConfig({
         'resources/css/app.css',
         'resources/css/customer-account.css',
         'resources/js/app.js',
+        'resources/js/customer-account.js',
         'resources/js/customer-profile.js',
         'resources/js/customer-addresses.js',
         'resources/js/customer-favorites.js',
