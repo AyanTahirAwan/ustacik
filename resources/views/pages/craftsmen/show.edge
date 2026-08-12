@@ -1,0 +1,145 @@
+@layout()
+
+<section class="container craftsman-detail-page">
+
+  <a href="/craftsmen" class="btn-back craftsman-detail-back">
+    ← Back to craftsmen
+  </a>
+
+  <div
+  id="craftsman-detail"
+  data-craftsman-id="{{ craftsmanId }}"
+>
+
+   
+
+<article id="craftsman-detail-content">
+      
+
+      <div class="craftsman-detail-layout">
+
+  <!-- Left column -->
+  <div class="craftsman-detail-left">
+
+    <!-- Completed Jobs -->
+    <section class="card craftsman-detail-card craftsman-detail-jobs-card">
+
+      <h2>Completed jobs</h2>
+
+<p id="craftsman-detail-completed-jobs">0 Jobs</p>
+
+    </section>
+
+
+    <!-- Price Ranges -->
+    <section class="card craftsman-detail-card craftsman-detail-price-card">
+
+      <h2>Price ranges</h2>
+
+      <p>
+        Hourly Rate: $35 - $50 / hr
+      </p>
+
+      <p>
+        Call-out Fee: $20
+      </p>
+
+      <p>
+        Estimate: Free upfront quote
+      </p>
+
+    </section>
+
+  </div>
+
+
+  <!-- Right column -->
+  <div class="craftsman-detail-right">
+
+    <!-- About -->
+    <section class="card craftsman-detail-card craftsman-detail-about-card">
+
+      <h2>About:</h2>
+
+      <p id="craftsman-detail-bio"></p>
+
+    </section>
+
+
+    <!-- Ratings -->
+    <div class="craftsman-detail-rating-grid">
+
+      <div class="craftsman-detail-rating-card">
+
+        <span>Quality</span>
+
+        <strong id="craftsman-detail-quality">
+          4.9
+        </strong>
+
+      </div>
+
+
+      <div class="craftsman-detail-rating-card">
+
+        <span>Punctuality</span>
+
+        <strong id="craftsman-detail-punctuality">
+          5.0
+        </strong>
+
+      </div>
+
+
+      <div class="craftsman-detail-rating-card">
+
+        <span>Pricing</span>
+
+        <strong id="craftsman-detail-pricing">
+          4.8
+        </strong>
+
+      </div>
+
+
+      <div class="craftsman-detail-rating-card">
+
+        <span>Safety</span>
+
+        <strong id="craftsman-detail-safety">
+          5.0
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- Contact -->
+<div class="craftsman-detail-contact">
+
+  <a
+  id="craftsman-detail-whatsapp"
+  href="#"
+  class="btn-primary craftsman-detail-whatsapp"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  Contact Via Whatsapp
+</a>
+
+</div>
+
+    </article>
+
+  </div>
+
+</section>
+
+@vite(['resources/js/craftsman-detail.ts'])
+@end

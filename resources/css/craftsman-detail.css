@@ -1,0 +1,312 @@
+/* Craftsman Detail Page */
+
+.craftsman-detail-page {
+  padding: 32px 0 64px;
+}
+
+.craftsman-detail-back {
+  display: inline-flex;
+  margin-bottom: 24px;
+  text-decoration: none;
+}
+
+.craftsman-detail-state {
+  padding: 40px;
+  text-align: center;
+}
+
+.craftsman-detail-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.craftsman-detail-identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.craftsman-detail-avatar {
+  width: 76px;
+  height: 76px;
+  flex: 0 0 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  background: #f0f4f8;
+  color: #1f2937;
+}
+
+.craftsman-detail-eyebrow,
+.craftsman-detail-section-kicker {
+  margin: 0 0 6px;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  color: #6b7280;
+}
+
+.craftsman-detail-hero h1 {
+  margin: 0;
+
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.craftsman-detail-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 10px;
+
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.craftsman-detail-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: #e8f5ee;
+  color: #237a4b;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.craftsman-detail-actions {
+  flex-shrink: 0;
+}
+
+.craftsman-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.craftsman-detail-main,
+.craftsman-detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.craftsman-detail-section {
+  padding: 28px;
+}
+
+.craftsman-detail-section-header {
+  margin-bottom: 20px;
+}
+
+.craftsman-detail-section-header .card-title {
+  margin: 0;
+}
+
+.craftsman-detail-bio {
+  margin: 0;
+
+  color: #4b5563;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.craftsman-detail-muted {
+  margin: 0;
+
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Rating */
+
+.craftsman-detail-rating {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+
+  margin-top: 12px;
+}
+
+.craftsman-detail-rating strong {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.craftsman-detail-rating span {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.craftsman-detail-rating-bar {
+  width: 100%;
+  height: 8px;
+
+  margin-top: 16px;
+
+  overflow: hidden;
+  border-radius: 999px;
+
+  background: #e5e7eb;
+}
+
+.craftsman-detail-rating-bar span {
+  display: block;
+
+  width: 0;
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #f5b942;
+
+  transition: width 0.3s ease;
+}
+
+/* Reviews */
+
+.craftsman-detail-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  margin-top: 16px;
+}
+
+.craftsman-detail-review {
+  padding-bottom: 16px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.craftsman-detail-review:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.craftsman-detail-review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 8px;
+}
+
+.craftsman-detail-review-header strong {
+  font-size: 14px;
+}
+
+.craftsman-detail-review-header span {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.craftsman-detail-review p {
+  margin: 0;
+
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Portfolio */
+
+.craftsman-detail-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.craftsman-detail-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+
+  overflow: hidden;
+  border-radius: 12px;
+
+  background: #f3f4f6;
+}
+
+.craftsman-detail-photo img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .craftsman-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .craftsman-detail-sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .craftsman-detail-page {
+    padding: 20px 0 40px;
+  }
+
+  .craftsman-detail-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .craftsman-detail-actions {
+    width: 100%;
+  }
+
+  .craftsman-detail-actions .btn-back {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .craftsman-detail-identity {
+    align-items: flex-start;
+  }
+
+  .craftsman-detail-hero h1 {
+    font-size: 24px;
+  }
+
+  .craftsman-detail-section {
+    padding: 20px;
+  }
+
+  .craftsman-detail-sidebar {
+    display: flex;
+  }
+
+  .craftsman-detail-photo-grid {
+    grid-template-columns: 1fr;
+  }
+}

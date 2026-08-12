@@ -63,23 +63,26 @@ export default class CraftsmenController {
   }
 
   async showPublic({ params, response }: HttpContext) {
-    const craftsman = await Craftsman.query()
-      .where('user_id', params.id)
-      .preload('category')
-      .preload('workPhotos')
-      .firstOrFail()
+  const craftsman = await Craftsman.query()
+    .where('user_id', params.id)
+    .preload('category')
+    .preload('workPhotos')
+    .preload('user')
 
-    return response.ok({
-      craftsman: {
-        userId: craftsman.userId,
-        businessName: craftsman.businessName,
-        category: craftsman.category,
-        bio: craftsman.bio,
-        trustLevel: craftsman.trustLevel,
-        trustLevelLabel: craftsman.trustLevelLabel,
-        totalJobs: craftsman.totalJobs,
-        workPhotos: craftsman.workPhotos,
-      },
-    })
-  }
+  .firstOrFail()
+
+  return response.ok({
+    craftsman: {
+      userId: craftsman.userId,
+      businessName: craftsman.businessName,
+      category: craftsman.category,
+      bio: craftsman.bio,
+      trustLevel: craftsman.trustLevel,
+      trustLevelLabel: craftsman.trustLevelLabel,
+      totalJobs: craftsman.totalJobs,
+      phoneNormalised: craftsman.user.phoneNormalised,
+      workPhotos: craftsman.workPhotos,
+    },
+  })
+}
 }

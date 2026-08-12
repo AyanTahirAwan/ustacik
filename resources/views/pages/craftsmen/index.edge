@@ -1,20 +1,18 @@
 @layout()
-  <div class="hero">
-    <h1>Craftsman Listings</h1>
-    <p>Browse craftsmen and their service listings.</p>
+
+<section class="container craftsmen-page">
+
+  <div class="craftsmen-hero">
+    <h1>Craftsmen</h1>
+
+    <p>
+      Find trusted professionals for your home and business needs.
+    </p>
   </div>
 
-  <div class="page-placeholder">
-    <h2>Craftsman Listings — Placeholder</h2>
-    {{--
-      TODO: API integration
-      List craftsmen and their service prices from:
-        GET /api/catalog/prices (active entries, preloads craftsman, subService, region)
-        GET /api/search/services (searchable entries)
-      Expected response: { servicePriceCatalogs: [...] } or { data: [...] }
-      Group/display by craftsman (businessName, trustLevel, totalJobs).
-    --}}
-    <p>No listings loaded yet. This page will show craftsman service listings.</p>
-  </div>
+  <div id="craftsmen-list"></div>
+
+</section>
+
+@vite(['resources/js/craftsmen-page.ts'])
 @end
-
