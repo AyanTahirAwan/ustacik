@@ -23,6 +23,8 @@ const JobRequestsController = () => import('#controllers/job_requests_controller
 const ReviewsController = () => import('#controllers/reviews_controller')
 const JobDisputesController = () => import('#controllers/job_disputes_controller')
 
+
+
 router.on('/').render('pages/home').as('home')
 
 router
@@ -57,6 +59,12 @@ router.get('categories/:categoryId', ({ params, view }) =>
 router.get('regions', ({ view }) => view.render('pages/regions/index'))
 router.get('search', ({ view }) => view.render('pages/search/index'))
 router.get('craftsmen', ({ view }) => view.render('pages/craftsmen/index'))
+
+router.get('craftsmen/:id', ({ params, view }) =>
+  view.render('pages/craftsmen/show', {
+    craftsmanId: params.id,
+  })
+)
 
 router
   .group(() => {

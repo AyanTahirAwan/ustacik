@@ -1,20 +1,92 @@
 @layout()
-  <div class="hero">
-    <h1>Craftsman Listings</h1>
-    <p>Browse craftsmen and their service listings.</p>
-  </div>
 
-  <div class="page-placeholder">
-    <h2>Craftsman Listings — Placeholder</h2>
-    {{--
-      TODO: API integration
-      List craftsmen and their service prices from:
-        GET /api/catalog/prices (active entries, preloads craftsman, subService, region)
-        GET /api/search/services (searchable entries)
-      Expected response: { servicePriceCatalogs: [...] } or { data: [...] }
-      Group/display by craftsman (businessName, trustLevel, totalJobs).
-    --}}
-    <p>No listings loaded yet. This page will show craftsman service listings.</p>
-  </div>
+<section class="craftsmen-page">
+
+  <!-- Page header -->
+  <header class="craftsmen-header">
+
+    <h1>
+      Featured Job Listings
+    </h1>
+
+    <a href="/" class="btn-back craftsmen-main-menu">
+      Back to Main Menu
+    </a>
+
+  </header>
+
+
+  <!-- Listings -->
+  <section class="craftsmen-listings">
+
+    <!-- Category filter -->
+    <div class="craftsmen-filters">
+
+      <div class="craftsmen-filter-category">
+
+        <label for="craftsmen-category">
+          Category
+        </label>
+
+        <select id="craftsmen-category">
+          <option value="">
+            All categories
+          </option>
+        </select>
+
+      </div>
+
+      <button
+        type="button"
+        id="craftsmen-clear-filters"
+        class="btn-back craftsmen-clear-filter"
+      >
+        Clear filter
+      </button>
+
+    </div>
+
+
+    <!-- Loading -->
+    <div
+      id="craftsmen-loading"
+      class="craftsmen-state"
+    >
+      Loading craftsmen...
+    </div>
+
+
+    <!-- Error -->
+    <div
+      id="craftsmen-error"
+      class="craftsmen-state craftsmen-state-error"
+      hidden
+    >
+      Unable to load craftsmen. Please try again.
+    </div>
+
+
+    <!-- Empty -->
+    <div
+      id="craftsmen-empty"
+      class="craftsmen-state"
+      hidden
+    >
+      No craftsmen match this category.
+    </div>
+
+
+    <!-- Cards -->
+    <div
+      id="craftsmen-list"
+      class="craftsmen-grid"
+    ></div>
+
+  </section>
+
+</section>
+
+
+
+@vite(['resources/js/craftsmen-page.ts'])
 @end
-

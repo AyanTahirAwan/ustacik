@@ -7,19 +7,438 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class AdminVerificationLogSchema extends BaseModel {
+  static $columns = ['backgroundCheckNotes', 'clearanceLevelGranted', 'departmentCode', 'logId', 'supervisorId'] as const
+  $columns = AdminVerificationLogSchema.$columns
+  @column()
+  declare backgroundCheckNotes: string | null
+  @column()
+  declare clearanceLevelGranted: number
+  @column()
+  declare departmentCode: string | null
+  @column({ isPrimary: true })
+  declare logId: number
+  @column()
+  declare supervisorId: number | null
+}
+
+export class AdminSchema extends BaseModel {
+  static $columns = ['clearanceLvl', 'createdAt', 'department', 'fullName', 'userId'] as const
+  $columns = AdminSchema.$columns
+  @column()
+  declare clearanceLvl: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare department: string | null
+  @column()
+  declare fullName: string
+  @column({ isPrimary: true })
+  declare userId: number
+}
+
+export class CategorySchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'nameEn', 'nameTr'] as const
+  $columns = CategorySchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare nameEn: string
+  @column()
+  declare nameTr: string
+}
+
+export class CraftsmanVerificationLogSchema extends BaseModel {
+  static $columns = ['bizRegDocUrl', 'guaranteeDocUrl', 'idCardVerified', 'logId', 'pastCustomer1Called', 'pastCustomer2Called', 'trustTierGranted', 'verbalConsentAudited'] as const
+  $columns = CraftsmanVerificationLogSchema.$columns
+  @column()
+  declare bizRegDocUrl: string | null
+  @column()
+  declare guaranteeDocUrl: string | null
+  @column()
+  declare idCardVerified: boolean
+  @column({ isPrimary: true })
+  declare logId: number
+  @column()
+  declare pastCustomer1Called: boolean
+  @column()
+  declare pastCustomer2Called: boolean
+  @column()
+  declare trustTierGranted: number
+  @column()
+  declare verbalConsentAudited: boolean
+}
+
+export class CraftsmanSchema extends BaseModel {
+  static $columns = ['bio', 'bizRegNo', 'businessName', 'categoryId', 'createdAt', 'totalJobs', 'trustLevel', 'userId', 'verbalConsent'] as const
+  $columns = CraftsmanSchema.$columns
+  @column()
+  declare bio: string | null
+  @column()
+  declare bizRegNo: string | null
+  @column()
+  declare businessName: string
+  @column()
+  declare categoryId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare totalJobs: number
+  @column()
+  declare trustLevel: number
+  @column({ isPrimary: true })
+  declare userId: number
+  @column()
+  declare verbalConsent: boolean
+}
+
+export class CustomerAddressSchema extends BaseModel {
+  static $columns = ['createdAt', 'customerId', 'id', 'isDefault', 'label', 'landmark', 'regionId', 'street'] as const
+  $columns = CustomerAddressSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isDefault: boolean
+  @column()
+  declare label: string
+  @column()
+  declare landmark: string | null
+  @column()
+  declare regionId: number
+  @column()
+  declare street: string
+}
+
+export class CustomerFavoriteSchema extends BaseModel {
+  static $columns = ['craftsmanId', 'createdAt', 'customerId', 'id'] as const
+  $columns = CustomerFavoriteSchema.$columns
+  @column()
+  declare craftsmanId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column({ isPrimary: true })
+  declare id: number
+}
+
+export class CustomerVerificationLogSchema extends BaseModel {
+  static $columns = ['emailVerified', 'ipAddress', 'logId', 'phoneOtpVerified', 'whatsappReachable'] as const
+  $columns = CustomerVerificationLogSchema.$columns
+  @column()
+  declare emailVerified: boolean
+  @column()
+  declare ipAddress: string | null
+  @column({ isPrimary: true })
+  declare logId: number
+  @column()
+  declare phoneOtpVerified: boolean
+  @column()
+  declare whatsappReachable: boolean
+}
+
+export class CustomerSchema extends BaseModel {
+  static $columns = ['createdAt', 'defaultRegionId', 'fullName', 'language', 'smsOptIn', 'userId'] as const
+  $columns = CustomerSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare defaultRegionId: number | null
+  @column()
+  declare fullName: string
+  @column()
+  declare language: string
+  @column()
+  declare smsOptIn: boolean
+  @column({ isPrimary: true })
+  declare userId: number
+}
+
+export class JobDisputeSchema extends BaseModel {
+  static $columns = ['adminResolutionNotes', 'craftsmanId', 'createdAt', 'customerId', 'customerNotes', 'id', 'jobId', 'reasonCategory', 'resolvedAt', 'status'] as const
+  $columns = JobDisputeSchema.$columns
+  @column()
+  declare adminResolutionNotes: string | null
+  @column()
+  declare craftsmanId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column()
+  declare customerNotes: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare jobId: number
+  @column()
+  declare reasonCategory: string
+  @column.dateTime()
+  declare resolvedAt: DateTime | null
+  @column()
+  declare status: string
+}
+
+export class JobRequestSchema extends BaseModel {
+  static $columns = ['categoryId', 'craftsmanId', 'createdAt', 'customerId', 'description', 'id', 'regionId', 'requestId', 'status', 'updatedAt'] as const
+  $columns = JobRequestSchema.$columns
+  @column()
+  declare categoryId: number
+  @column()
+  declare craftsmanId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column()
+  declare description: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare regionId: number
+  @column()
+  declare requestId: string
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class PasswordRecoveryRequestSchema extends BaseModel {
+  static $columns = ['createdAt', 'expiryDate', 'id', 'recoveredAt', 'shortcode', 'userId'] as const
+  $columns = PasswordRecoveryRequestSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column.dateTime()
+  declare expiryDate: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column.dateTime()
+  declare recoveredAt: DateTime | null
+  @column()
+  declare shortcode: string
+  @column()
+  declare userId: number
+}
+
+export class RefreshTokenSchema extends BaseModel {
+  static $columns = ['createdAt', 'expiresAt', 'id', 'revoked', 'tokenHash', 'userId'] as const
+  $columns = RefreshTokenSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column.dateTime()
+  declare expiresAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare revoked: boolean
+  @column()
+  declare tokenHash: string
+  @column()
+  declare userId: number
+}
+
+export class RegionSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'nameEn', 'nameTr'] as const
+  $columns = RegionSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare nameEn: string
+  @column()
+  declare nameTr: string
+}
+
+export class ReviewHelpfulVoteSchema extends BaseModel {
+  static $columns = ['createdAt', 'customerId', 'id', 'reviewId'] as const
+  $columns = ReviewHelpfulVoteSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare reviewId: number
+}
+
+export class ReviewSchema extends BaseModel {
+  static $columns = ['comment', 'communication', 'craftsmanId', 'craftsmanReply', 'createdAt', 'customerId', 'id', 'jobId', 'priceHonesty', 'punctuality', 'workmanship'] as const
+  $columns = ReviewSchema.$columns
+  @column()
+  declare comment: string | null
+  @column()
+  declare communication: number
+  @column()
+  declare craftsmanId: number
+  @column()
+  declare craftsmanReply: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare jobId: number
+  @column()
+  declare priceHonesty: number
+  @column()
+  declare punctuality: number
+  @column()
+  declare workmanship: number
+}
+
+export class ServicePriceCatalogSchema extends BaseModel {
+  static $columns = ['craftsmanId', 'createdAt', 'currency', 'id', 'isActive', 'maxPrice', 'minPrice', 'regionId', 'subServiceId', 'updatedAt'] as const
+  $columns = ServicePriceCatalogSchema.$columns
+  @column()
+  declare craftsmanId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare currency: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isActive: boolean
+  @column()
+  declare maxPrice: number
+  @column()
+  declare minPrice: number
+  @column()
+  declare regionId: number
+  @column()
+  declare subServiceId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class SubServiceSchema extends BaseModel {
+  static $columns = ['categoryId', 'createdAt', 'id', 'nameEn', 'nameTr'] as const
+  $columns = SubServiceSchema.$columns
+  @column()
+  declare categoryId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare nameEn: string
+  @column()
+  declare nameTr: string
+}
+
+export class SubscriptionSchema extends BaseModel {
+  static $columns = ['craftsmanId', 'createdAt', 'id', 'monthlyFee', 'periodEnd', 'periodStart', 'planType', 'status'] as const
+  $columns = SubscriptionSchema.$columns
+  @column()
+  declare craftsmanId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare monthlyFee: number
+  @column.date()
+  declare periodEnd: DateTime | null
+  @column.date()
+  declare periodStart: DateTime
+  @column()
+  declare planType: string
+  @column()
+  declare status: string
+}
+
+export class UserConsentLogSchema extends BaseModel {
+  static $columns = ['acceptedAt', 'agreementType', 'id', 'ip', 'termsVersion', 'userId'] as const
+  $columns = UserConsentLogSchema.$columns
+  @column.dateTime()
+  declare acceptedAt: DateTime
+  @column()
+  declare agreementType: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare ip: string
+  @column()
+  declare termsVersion: string
+  @column()
+  declare userId: number
+}
+
+export class UserNotificationSchema extends BaseModel {
+  static $columns = ['id', 'isRead', 'messageBody', 'sentAt', 'title', 'type', 'userId'] as const
+  $columns = UserNotificationSchema.$columns
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isRead: boolean
+  @column()
+  declare messageBody: string
+  @column.dateTime()
+  declare sentAt: DateTime
+  @column()
+  declare title: string
+  @column()
+  declare type: string
+  @column()
+  declare userId: number
+}
+
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'updatedAt'] as const
+  static $columns = ['createdAt', 'email', 'id', 'passwordHash', 'phoneNormalised', 'role', 'status', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
   declare email: string
-  @column()
-  declare fullName: string | null
   @column({ isPrimary: true })
   declare id: number
-  @column({ serializeAs: null })
-  declare password: string
+  @column()
+  declare passwordHash: string
+  @column()
+  declare phoneNormalised: string
+  @column()
+  declare role: string
+  @column()
+  declare status: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+}
+
+export class VerificationLogSchema extends BaseModel {
+  static $columns = ['checkedById', 'id', 'status', 'targetUserId', 'verifiedAt'] as const
+  $columns = VerificationLogSchema.$columns
+  @column()
+  declare checkedById: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare status: string
+  @column()
+  declare targetUserId: number
+  @column.dateTime()
+  declare verifiedAt: DateTime
+}
+
+export class WorkPhotoSchema extends BaseModel {
+  static $columns = ['craftsmanId', 'createdAt', 'id', 'imageUrl'] as const
+  $columns = WorkPhotoSchema.$columns
+  @column()
+  declare craftsmanId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare imageUrl: string
 }

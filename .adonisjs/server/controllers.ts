@@ -4,6 +4,25 @@
  */
 
 export const controllers = {
+  Catalog: () => import('#controllers/catalog_controller'),
+  Categories: () => import('#controllers/categories_controller'),
+  Craftsmen: () => import('#controllers/craftsmen_controller'),
+  CustomerAddresses: () => import('#controllers/customer_addresses_controller'),
+  CustomerFavorites: () => import('#controllers/customer_favorites_controller'),
+  Customers: () => import('#controllers/customers_controller'),
+  JobDisputes: () => import('#controllers/job_disputes_controller'),
+  JobRequests: () => import('#controllers/job_requests_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
+  PasswordRecoveryRequests: () => import('#controllers/password_recovery_requests_controller'),
+  RefreshTokens: () => import('#controllers/refresh_tokens_controller'),
+  Regions: () => import('#controllers/regions_controller'),
+  Reviews: () => import('#controllers/reviews_controller'),
+  ServicePriceCatalogs: () => import('#controllers/service_price_catalogs_controller'),
   Session: () => import('#controllers/session_controller'),
+  SubServices: () => import('#controllers/sub_services_controller'),
+  Subscriptions: () => import('#controllers/subscriptions_controller'),
+  UserNotifications: () => import('#controllers/user_notifications_controller'),
+  Users: () => import('#controllers/users_controller'),
+  VerificationLogs: () => import('#controllers/verification_logs_controller'),
+  WorkPhotos: () => import('#controllers/work_photos_controller'),
 }

@@ -1,0 +1,120 @@
+/* =========================================================
+   Craftsmen Listings
+   ========================================================= */
+
+.craftsmen-page {
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+
+.craftsmen-page .hero {
+  margin-bottom: 32px;
+}
+
+.craftsmen-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* =========================================================
+   Craftsman Card
+   ========================================================= */
+
+.craftsman-list-card {
+  display: block;
+  padding: 28px;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.craftsman-list-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.craftsman-list-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.craftsman-list-card h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.craftsman-list-card-category {
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.craftsman-list-card-trust {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.craftsman-list-card-description {
+  margin: 20px 0;
+  line-height: 1.6;
+}
+
+.craftsman-list-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 18px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   Tablet
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .craftsmen-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .craftsmen-page {
+    padding-top: 16px;
+    padding-bottom: 32px;
+  }
+
+  .craftsmen-grid {
+    gap: 16px;
+  }
+
+  .craftsman-list-card {
+    padding: 20px;
+  }
+
+  .craftsman-list-card-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .craftsman-list-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
