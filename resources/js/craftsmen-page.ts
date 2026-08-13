@@ -1,141 +1,313 @@
 import '../css/app.css'
 
+type Category = {
+  id: number
+  nameEn?: string
+  nameTr?: string
+}
+
 type Craftsman = {
   userId: number
   businessName?: string
+
   category?: {
     id: number
     nameEn?: string
     nameTr?: string
   }
+
   bio?: string
   trustLevel?: number
   trustLevelLabel?: string
   totalJobs?: number
-  workPhotos?: unknown[]
+
+  prices?: CraftsmanPrice[]
+}
+
+type CraftsmenResponse = {
+  craftsmen: Craftsman[]
+}
+
+type CategoriesResponse = {
+  data: Category[]
+}
+
+type CraftsmanPrice = {
+  minPrice: number
+  maxPrice: number
+  currency: 'TRY' | 'GBP' | 'EUR' | 'USD'
 }
 
 const list = document.querySelector<HTMLElement>('#craftsmen-list')
+const loading = document.querySelector<HTMLElement>('#craftsmen-loading')
+const error = document.querySelector<HTMLElement>('#craftsmen-error')
+const empty = document.querySelector<HTMLElement>('#craftsmen-empty')
+
+const categorySelect =
+  document.querySelector<HTMLSelectElement>('#craftsmen-category')
+
+const clearButton =
+  document.querySelector<HTMLButtonElement>('#craftsmen-clear-filters')
+
+if (
+  !list ||
+  !loading ||
+  !error ||
+  !empty ||
+  !categorySelect ||
+  !clearButton
+) {
+  throw new Error('Craftsmen page elements are missing')
+}
 
 
+function setLoading(value: boolean) {
+  loading.hidden = !value
+}
 
-if (!list) {
-  throw new Error('Craftsmen list not found')
+
+function setError(value: boolean) {
+  error.hidden = !value
+}
+
+
+function setEmpty(value: boolean) {
+  empty.hidden = !value
+}
+
+
+function formatJobs(totalJobs: number | undefined) {
+  return `${totalJobs ?? 0} Jobs`
+}
+
+
+function getCategoryName(category?: Craftsman['category']) {
+  if (!category) {
+    return 'General Services'
+  }
+
+  return (
+    category.nameEn ||
+    category.nameTr ||
+    'General Services'
+  )
+}
+
+
+function formatPrice(
+  amount: number,
+  currency: CraftsmanPrice['currency']
+) {
+  return `${currency} ${amount}`
+}
+
+
+function getPriceRange(craftsman: Craftsman) {
+  const prices = craftsman.prices ?? []
+
+  if (prices.length === 0) {
+    return 'Price available on request'
+  }
+
+  const minPrice = Math.min(
+    ...prices.map((price) => price.minPrice)
+  )
+
+  const maxPrice = Math.max(
+    ...prices.map((price) => price.maxPrice)
+  )
+
+  const currency = prices[0].currency
+
+  if (minPrice === maxPrice) {
+    return formatPrice(minPrice, currency)
+  }
+
+  return `${formatPrice(minPrice, currency)} - ${formatPrice(
+    maxPrice,
+    currency
+  )}`
+}
+
+
+function escapeHtml(value: string) {
+  const div = document.createElement('div')
+
+  div.textContent = value
+
+  return div.innerHTML
 }
 
 
 function renderCraftsmen(craftsmen: Craftsman[]) {
+  list.innerHTML = ''
 
-  if (!craftsmen.length) {
-    list.innerHTML = `
-      <div class="card craftsmen-state">
-        <h2>No craftsmen found</h2>
-        <p>There are currently no craftsmen available.</p>
-      </div>
-    `
+  setEmpty(craftsmen.length === 0)
 
-    return
-  }
-
-  for (const craftsman of craftsmen) {
+  craftsmen.forEach((craftsman) => {
     const card = document.createElement('a')
 
-    card.href = `/craftsmen/${craftsman.userId}`
+    card.className = 'craftsman-listing-card'
 
-    card.className = 'craftsman-card'
+    card.href =
+      `/craftsmen/${encodeURIComponent(craftsman.userId)}`
 
-    const name =
+    const businessName =
       craftsman.businessName ||
-      'Craftsman'
+      'Local Craftsman'
 
-    const category =
-      craftsman.category?.nameEn ||
-      craftsman.category?.nameTr ||
-      'Professional service'
+    const categoryName =
+      getCategoryName(craftsman.category)
 
     const bio =
       craftsman.bio ||
-      'Professional services available in North Cyprus.'
-
-    const jobs =
-      craftsman.totalJobs ?? 0
-
-    const trust =
-      craftsman.trustLevelLabel ||
-      'registered'
+      'Experienced professional available for services across North Cyprus.'
 
     card.innerHTML = `
-      <div class="craftsman-card-top">
+      <div class="craftsman-listing-content">
 
-        <div class="craftsman-card-avatar">
-          ${name.slice(0, 2).toUpperCase()}
-        </div>
+        <h2>
+          ${escapeHtml(businessName)}
+        </h2>
 
-        <div class="craftsman-card-heading">
+        <ul class="craftsman-listing-meta">
 
-          <h2>${name}</h2>
+          <li>
+            ${escapeHtml(categoryName)}
+          </li>
 
-          <span class="craftsman-card-category">
-            ${category}
-          </span>
+          <li>
+            ${escapeHtml(formatJobs(craftsman.totalJobs))}
+          </li>
 
-        </div>
+          <li>
+  ${escapeHtml(getPriceRange(craftsman))}
+</li>
 
-      </div>
+        </ul>
 
-      <p class="craftsman-card-bio">
-        ${bio}
-      </p>
+        <p class="craftsman-listing-description">
+          ${escapeHtml(bio)}
+        </p>
 
-      <div class="craftsman-card-meta">
-
-        <span>
-          ${jobs} completed jobs
-        </span>
-
-        <span>
-          ${trust}
-        </span>
-
-      </div>
-
-      <div class="craftsman-card-action">
-        View profile →
       </div>
     `
 
     list.appendChild(card)
-  }
+  })
 }
+
+
+async function loadCategories() {
+  const response = await fetch(
+    '/api/catalog/categories',
+    {
+      headers: {
+        Accept: 'application/json',
+      },
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      `Categories request failed: ${response.status}`
+    )
+  }
+
+  const data =
+    await response.json() as CategoriesResponse
+
+  categorySelect.innerHTML = `
+    <option value="">
+      All categories
+    </option>
+  `
+
+data.data.forEach((category) => {    const option = document.createElement('option')
+
+    option.value = String(category.id)
+
+    option.textContent =
+      category.nameEn ||
+      category.nameTr ||
+      `Category ${category.id}`
+
+    categorySelect.appendChild(option)
+  })
+}
+
 
 async function loadCraftsmen() {
   try {
-    const response = await fetch(
-      '/api/craftsmen',
-      {
-        headers: {
-          Accept: 'application/json',
-        },
-      }
-    )
+    setLoading(true)
+    setError(false)
+    setEmpty(false)
 
-    if (!response.ok) {
-      throw new Error(
-        `Craftsmen request failed: ${response.status}`
-      )
+    const categoryId = categorySelect.value
+
+    const params = new URLSearchParams()
+
+    if (categoryId) {
+      params.set('categoryId', categoryId)
     }
 
-    const data = await response.json()
+    const queryString = params.toString()
 
-    const craftsmen = Array.isArray(data.craftsmen)
-      ? data.craftsmen
-      : []
+    const url = queryString
+      ? `/api/craftsmen?${queryString}`
+      : '/api/craftsmen'
 
-    renderCraftsmen(craftsmen)
+    console.log('CATEGORY ID:', categoryId)
+    console.log('REQUEST URL:', url)
 
-  } catch (err) {
-  console.error('Failed to load craftsmen:', err)
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Craftsmen request failed: ${response.status}`)
+    }
+
+    const data = await response.json() as CraftsmenResponse
+
+    renderCraftsmen(data.craftsmen)
+  } catch (requestError) {
+    console.error('Failed to load craftsmen:', requestError)
+
+    list.innerHTML = ''
+    setError(true)
+  } finally {
+    setLoading(false)
+  }
 }
+
+
+categorySelect.addEventListener('change', () => {
+  loadCraftsmen()
+})
+
+
+clearButton.addEventListener('click', () => {
+  categorySelect.value = ''
+
+  loadCraftsmen()
+})
+
+
+async function init() {
+  try {
+    await loadCategories()
+  } catch (requestError) {
+    console.error(
+      'Failed to load categories:',
+      requestError
+    )
+  }
+
+  await loadCraftsmen()
 }
 
-loadCraftsmen()
+
+init()

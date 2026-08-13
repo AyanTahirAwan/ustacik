@@ -1232,265 +1232,452 @@ button:hover {
 
 }
 /* =========================================================
-   Craftsmen Listing Page
+   CRAFTSMEN LISTING PAGE
    ========================================================= */
 
 .craftsmen-page {
-  padding-top: 24px;
-  padding-bottom: 48px;
+  width: 100%;
 }
 
 
-/* =========================================================
-   Page Header
-   ========================================================= */
+/* ---------------------------------------------------------
+   HEADER
+   --------------------------------------------------------- */
 
-.craftsmen-hero {
-  margin-bottom: 32px;
-}
+.craftsmen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-.craftsmen-hero h1 {
-  margin: 0 0 12px;
-  font-size: 42px;
-  line-height: 1.15;
-}
-
-.craftsmen-hero p {
-  margin: 0;
-  max-width: 700px;
-  font-size: 18px;
-  line-height: 1.6;
-}
-
-
-/* =========================================================
-   Craftsmen Grid
-   ========================================================= */
-
-#craftsmen-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
-  align-items: stretch;
+
+  margin-bottom: 28px;
 }
 
 
-/* =========================================================
-   Craftsman Card
-   ========================================================= */
+.craftsmen-header h1 {
+  margin: 0;
 
-.craftsman-card {
-  display: flex;
-  flex-direction: column;
+  color: var(--brand-brown, #8a5239);
 
-  min-height: 300px;
-  padding: 28px;
-
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-
-  text-decoration: none;
-  color: inherit;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.craftsman-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}
-
-
-/* =========================================================
-   Card Header
-   ========================================================= */
-
-.craftsman-card-top {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 24px;
-}
-
-
-/* =========================================================
-   Avatar
-   ========================================================= */
-
-.craftsman-card-avatar {
-  width: 76px;
-  height: 76px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-  background: #f3f4f6;
-
-  font-size: 22px;
+  font-size: 2rem;
   font-weight: 700;
 }
 
 
-/* =========================================================
-   Card Heading
-   ========================================================= */
+/* ---------------------------------------------------------
+   BACK BUTTON
+   --------------------------------------------------------- */
 
-.craftsman-card-heading {
-  min-width: 0;
+.craftsmen-page .btn-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: transparent;
+
+  color: var(--brand-brown, #8a5239);
+
+  border: 2px solid var(--brand-brown, #8a5239);
+
+  padding: 10px 24px;
+
+  font-size: 1.1rem;
+  font-weight: bold;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  text-decoration: none;
+
+  transition: all 0.2s ease;
 }
 
-.craftsman-card-heading h2 {
-  margin: 0 0 8px;
 
-  font-size: 25px;
-  line-height: 1.2;
+.craftsmen-page .btn-back:hover {
+  background-color: var(--brand-brown, #8a5239);
+
+  color: #ffffff;
 }
 
-.craftsman-card-category {
+
+/* ---------------------------------------------------------
+   LISTINGS
+   --------------------------------------------------------- */
+
+/*
+ * No white background here.
+ * The page uses the existing Ustacik page background.
+ */
+
+.craftsmen-listings {
+  width: 100%;
+}
+
+
+/* ---------------------------------------------------------
+   CATEGORY FILTER
+   --------------------------------------------------------- */
+
+.craftsmen-filters {
+  display: flex;
+  align-items: flex-end;
+
+  gap: 16px;
+
+  margin-bottom: 30px;
+}
+
+
+.craftsmen-filter-category {
+  width: 220px;
+}
+
+
+.craftsmen-filters label {
   display: block;
 
-  font-size: 16px;
+  margin-bottom: 7px;
+
+  color: var(--brand-brown, #8a5239);
+
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+
+.craftsmen-filters select {
+  width: 100%;
+  height: 42px;
+
+  padding: 0 12px;
+
+  background-color: var(--bg-white, #ffffff);
+
+  color: #333333;
+
+  border: 2px solid rgba(138, 82, 57, 0.25);
+
+  border-radius: 8px;
+
+  font-size: 0.9rem;
+
+  cursor: pointer;
+}
+
+
+.craftsmen-filters select:focus {
+  outline: none;
+
+  border-color: var(--brand-brown, #8a5239);
+
+  box-shadow:
+    0 0 0 3px rgba(138, 82, 57, 0.1);
+}
+
+
+.craftsmen-clear-filter {
+  height: 42px;
+}
+
+
+/* ---------------------------------------------------------
+   CARD GRID
+   --------------------------------------------------------- */
+
+.craftsmen-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  column-gap: 42px;
+  row-gap: 22px;
+}
+
+
+/* ---------------------------------------------------------
+   CRAFTSMAN CARD
+   --------------------------------------------------------- */
+
+.craftsman-listing-card {
+  /*
+   * Requested Ustacik card design.
+   */
+
+  background-color: var(--bg-white, #ffffff);
+
+  border: 2px solid rgba(138, 82, 57, 0.2);
+
+  border-top: 6px solid var(--brand-brown, #8a5239);
+
+  border-radius: 12px;
+
+  /*
+   * Compact sizing to match the reference.
+   */
+  min-height: 145px;
+
+  padding: 22px 24px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  color: #333333;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.craftsman-listing-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+
+.craftsman-listing-card:focus-visible {
+  outline: 3px solid rgba(138, 82, 57, 0.3);
+
+  outline-offset: 3px;
+}
+
+
+/* ---------------------------------------------------------
+   CARD CONTENT
+   --------------------------------------------------------- */
+
+.craftsman-listing-content {
+  width: 100%;
+}
+
+
+/* ---------------------------------------------------------
+   CARD TITLE
+   --------------------------------------------------------- */
+
+.craftsman-listing-card h2 {
+  margin: 0 0 7px;
+
+  color: var(--brand-brown, #8a5239);
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+
+/* ---------------------------------------------------------
+   CARD META
+   --------------------------------------------------------- */
+
+.craftsman-listing-meta {
+  margin: 0 0 8px;
+
+  padding-left: 18px;
+
+  color: #333333;
+
+  font-size: 11px;
+
   line-height: 1.4;
 }
 
 
-/* =========================================================
-   Description
-   ========================================================= */
+.craftsman-listing-meta li {
+  margin: 0;
+}
 
-.craftsman-card-bio {
+
+/* ---------------------------------------------------------
+   CARD DESCRIPTION
+   --------------------------------------------------------- */
+
+.craftsman-listing-description {
+  max-width: 100%;
+
   margin: 0;
 
-  font-size: 17px;
-  line-height: 1.7;
+  color: #444444;
 
-  flex: 1;
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+
+/* ---------------------------------------------------------
+   STATES
+   --------------------------------------------------------- */
+
+.craftsmen-state {
+  padding: 35px 20px;
+
+  text-align: center;
+
+  color: var(--brand-brown, #8a5239);
+
+  font-size: 13px;
+}
+
+
+.craftsmen-state-error {
+  color: #8b0000;
 }
 
 
 /* =========================================================
-   Metadata
+   TABLET
+   800px - 1279px
    ========================================================= */
 
-.craftsman-card-meta {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+@media (max-width: 1279px) {
 
-  margin-top: 24px;
-  padding-top: 18px;
-
-  border-top: 1px solid #e5e7eb;
-
-  font-size: 15px;
-}
+  .craftsmen-header h1 {
+    font-size: 1.7rem;
+  }
 
 
-/* =========================================================
-   View Profile
-   ========================================================= */
-
-.craftsman-card-action {
-  margin-top: 22px;
-
-  font-size: 17px;
-  font-weight: 600;
-}
-
-
-
-/* =========================================================
-   Tablet
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-  #craftsmen-list {
+  .craftsmen-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+
+    column-gap: 32px;
+
+    row-gap: 20px;
   }
 
-  .craftsman-card {
-    padding: 22px;
-    min-height: 280px;
+
+  .craftsman-listing-card {
+    min-height: 140px;
+
+    padding: 20px 21px;
   }
 
-  .craftsman-card-heading h2 {
-    font-size: 22px;
-  }
 
-  .craftsman-card-avatar {
-    width: 64px;
-    height: 64px;
+  .craftsman-listing-card h2 {
+    font-size: 14px;
   }
 
 }
 
 
 /* =========================================================
-   Mobile
+   MOBILE
+   1px - 799px
    ========================================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 799px) {
 
-  .craftsmen-page {
-    padding-top: 16px;
-    padding-bottom: 32px;
+  .craftsmen-header {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 12px;
+
+    margin-bottom: 22px;
   }
 
-  .craftsmen-hero {
-    margin-bottom: 20px;
+
+  .craftsmen-header h1 {
+    font-size: 1.35rem;
   }
 
-  .craftsmen-hero h1 {
-    font-size: 34px;
+
+  .craftsmen-main-menu {
+    align-self: flex-start;
   }
 
-  .craftsmen-hero p {
-    font-size: 16px;
+
+  .craftsmen-page .btn-back {
+    padding: 8px 14px;
+
+    font-size: 0.85rem;
   }
 
-  #craftsmen-list {
+
+  .craftsmen-filters {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 10px;
+
+    margin-bottom: 22px;
+  }
+
+
+  .craftsmen-filter-category {
+    width: 100%;
+  }
+
+
+  .craftsmen-filters select {
+    height: 38px;
+
+    font-size: 0.85rem;
+  }
+
+
+  .craftsmen-clear-filter {
+    align-self: flex-start;
+
+    height: 38px;
+  }
+
+
+  /*
+   * Mobile becomes one column,
+   * matching the reference architecture.
+   */
+
+  .craftsmen-grid {
     grid-template-columns: 1fr;
+
     gap: 16px;
   }
 
-  .craftsman-card {
-    min-height: auto;
-    padding: 20px;
+
+  .craftsman-listing-card {
+    min-height: 118px;
+
+    padding: 15px 16px;
+
+    border-top-width: 5px;
+
+    border-radius: 9px;
   }
 
-  .craftsman-card-top {
-    gap: 14px;
-    margin-bottom: 20px;
+
+  .craftsman-listing-card h2 {
+    margin-bottom: 5px;
+
+    font-size: 12px;
   }
 
-  .craftsman-card-avatar {
-    width: 60px;
-    height: 60px;
-    font-size: 18px;
+
+  .craftsman-listing-meta {
+    margin-bottom: 5px;
+
+    font-size: 8.5px;
+
+    line-height: 1.35;
   }
 
-  .craftsman-card-heading h2 {
-    font-size: 21px;
-  }
 
-  .craftsman-card-bio {
-    font-size: 16px;
-  }
+  .craftsman-listing-description {
+    font-size: 8px;
 
-  .craftsman-card-meta {
-    margin-top: 20px;
-    padding-top: 16px;
-    gap: 14px;
+    line-height: 1.35;
   }
 
 }
