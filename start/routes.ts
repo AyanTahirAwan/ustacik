@@ -22,6 +22,7 @@ const VerificationLogsController = () => import('#controllers/verification_logs_
 const JobRequestsController = () => import('#controllers/job_requests_controller')
 const ReviewsController = () => import('#controllers/reviews_controller')
 const JobDisputesController = () => import('#controllers/job_disputes_controller')
+const AccountController = () => import('#controllers/account_controller')
 
 
 
@@ -36,10 +37,7 @@ router
     router.post('login', [controllers.Session, 'store'])
 
     router.post('api/password-recovery', [PasswordRecoveryRequestsController, 'store'])
-    router.patch('api/password-recovery/:shortcode', [
-      PasswordRecoveryRequestsController,
-      'update',
-    ])
+    router.patch('api/password-recovery/:shortcode', [PasswordRecoveryRequestsController, 'update'])
   })
   .use(middleware.guest())
 
@@ -59,6 +57,9 @@ router.get('categories/:categoryId', ({ params, view }) =>
 router.get('regions', ({ view }) => view.render('pages/regions/index'))
 router.get('search', ({ view }) => view.render('pages/search/index'))
 router.get('craftsmen', ({ view }) => view.render('pages/craftsmen/index'))
+router.get('craftsmen/:id', ({ params, view }) =>
+  view.render('pages/craftsmen/show', { craftsmanId: params.id })
+)
 
 router.get('craftsmen/:id', ({ params, view }) =>
   view.render('pages/craftsmen/show', {
@@ -77,6 +78,7 @@ router
     router.get('api/jobs/:id', [JobRequestsController, 'show'])
 
     router.get('api/notifications', [UserNotificationsController, 'index'])
+    router.patch('api/notifications/read-all', [UserNotificationsController, 'markAllRead'])
     router.patch('api/notifications/:id/read', [UserNotificationsController, 'markRead'])
   })
   .use(middleware.auth())
@@ -100,9 +102,16 @@ router
 
     router.post('api/jobs', [JobRequestsController, 'store'])
     router.patch('api/jobs/:id', [JobRequestsController, 'update'])
+    router.get('api/jobs/:id/contact', [JobRequestsController, 'contact'])
 
     router.post('api/reviews', [ReviewsController, 'store'])
     router.post('api/reviews/:id/helpful', [ReviewsController, 'markHelpful'])
+
+    router.get('craftsmen/:id/request', ({ params, view }) =>
+      view.render('pages/customer/request-service', { craftsmanId: params.id })
+    )
+    router.get('customer/requests', ({ view }) => view.render('pages/customer/requests'))
+    router.get('customer/requests/:jobId/review', [ReviewsController, 'create'])
   })
   .use(middleware.auth())
   .use(middleware.role({ roles: ['customer'] }))
@@ -126,6 +135,10 @@ router
     router.get('craftsman/profile', ({ view }) => view.render('pages/craftsman/profile'))
     router.get('craftsman/work-photos', ({ view }) => view.render('pages/craftsman/work-photos'))
     router.get('craftsman/subscription', ({ view }) => view.render('pages/craftsman/subscription'))
+    router.get('notifications', ({ view }) => view.render('pages/notifications/index'))
+    router.get('account/settings', ({ view }) => view.render('pages/account/settings'))
+    router.patch('api/account/password', [AccountController, 'updatePassword'])
+
     router.get('api/craftsman/profile', [CraftsmenController, 'showOwn'])
     router.patch('api/craftsman/profile', [CraftsmenController, 'updateOwn'])
     router.get('api/craftsman/work-photos', [WorkPhotosController, 'index'])
@@ -133,6 +146,7 @@ router
     router.delete('api/craftsman/work-photos/:id', [WorkPhotosController, 'destroy'])
     router.get('api/craftsman/subscription', [SubscriptionsController, 'show'])
     router.get('api/craftsman/verification-logs', [VerificationLogsController, 'own'])
+    router.get('api/craftsman/dashboard', [CraftsmenController, 'dashboard'])
 
     router.post('api/craftsman/service-prices', [ServicePriceCatalogsController, 'store'])
     router.get('api/craftsman/service-prices/:id', [ServicePriceCatalogsController, 'show'])
@@ -151,6 +165,9 @@ router
     router.patch('api/reviews/:id/reply', [ReviewsController, 'reply'])
 
     router.get('craftsman', ({ view }) => view.render('pages/craftsman/dashboard'))
+    router.get('craftsman/profile', ({ view }) => view.render('pages/craftsman/profile'))
+    router.get('craftsman/jobs', ({ view }) => view.render('pages/craftsman/jobs'))
+    router.get('craftsman/work-photos', ({ view }) => view.render('pages/craftsman/work-photos'))
     router.get('craftsman/service-prices', ({ view }) =>
       view.render('pages/craftsman/service-prices/index')
     )

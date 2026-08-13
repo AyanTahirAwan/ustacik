@@ -1,6 +1,5 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
-
 export default class extends BaseSchema {
   protected tableName = 'user_notifications'
 
@@ -17,20 +16,16 @@ export default class extends BaseSchema {
         .onDelete('CASCADE')
 
       table
-        .enum(
-          'type',
-          [
-            'job_request_received',
-            'job_accepted',
-            'job_declined',
-            'job_completed',
-            'review_received',
-            'verification_approved',
-            'dispute_opened',
-            'system',
-          ],
-          { useNative: false }
-        )
+        .enum('type', [
+          'job_request_received',
+          'job_accepted',
+          'job_declined',
+          'job_completed',
+          'review_received',
+          'verification_approved',
+          'dispute_opened',
+          'system',
+        ])
         .notNullable()
 
       table.string('title', 160).notNullable()

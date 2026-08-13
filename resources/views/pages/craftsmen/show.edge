@@ -1,145 +1,88 @@
 @layout()
+  <section
+    id="public-craftsman-profile"
+    class="public-craftsman-profile"
+    data-craftsman-id="{{ craftsmanId }}"
+    data-user-role="{{ auth.user ? auth.user.role : 'guest' }}"
+  >
+    <a class="back-link" href="/craftsmen">← Back to Craftsmen</a>
 
-<section class="container craftsman-detail-page">
-
-  <a href="/craftsmen" class="btn-back craftsman-detail-back">
-    ← Back to craftsmen
-  </a>
-
-  <div
-  id="craftsman-detail"
-  data-craftsman-id="{{ craftsmanId }}"
->
-
-   
-
-<article id="craftsman-detail-content">
-      
-
-      <div class="craftsman-detail-layout">
-
-  <!-- Left column -->
-  <div class="craftsman-detail-left">
-
-    <!-- Completed Jobs -->
-    <section class="card craftsman-detail-card craftsman-detail-jobs-card">
-
-      <h2>Completed jobs</h2>
-
-<p id="craftsman-detail-completed-jobs">0 Jobs</p>
-
-    </section>
-
-
-    <!-- Price Ranges -->
-    <section class="card craftsman-detail-card craftsman-detail-price-card">
-
-      <h2>Price ranges</h2>
-
-      <p>
-        Hourly Rate: $35 - $50 / hr
-      </p>
-
-      <p>
-        Call-out Fee: $20
-      </p>
-
-      <p>
-        Estimate: Free upfront quote
-      </p>
-
-    </section>
-
-  </div>
-
-
-  <!-- Right column -->
-  <div class="craftsman-detail-right">
-
-    <!-- About -->
-    <section class="card craftsman-detail-card craftsman-detail-about-card">
-
-      <h2>About:</h2>
-
-      <p id="craftsman-detail-bio"></p>
-
-    </section>
-
-
-    <!-- Ratings -->
-    <div class="craftsman-detail-rating-grid">
-
-      <div class="craftsman-detail-rating-card">
-
-        <span>Quality</span>
-
-        <strong id="craftsman-detail-quality">
-          4.9
-        </strong>
-
-      </div>
-
-
-      <div class="craftsman-detail-rating-card">
-
-        <span>Punctuality</span>
-
-        <strong id="craftsman-detail-punctuality">
-          5.0
-        </strong>
-
-      </div>
-
-
-      <div class="craftsman-detail-rating-card">
-
-        <span>Pricing</span>
-
-        <strong id="craftsman-detail-pricing">
-          4.8
-        </strong>
-
-      </div>
-
-
-      <div class="craftsman-detail-rating-card">
-
-        <span>Safety</span>
-
-        <strong id="craftsman-detail-safety">
-          5.0
-        </strong>
-
-      </div>
-
+    <div id="public-profile-loading" class="empty-state">
+      <p>Loading craftsman profile…</p>
+    </div>
+    <div id="public-profile-error" class="empty-state error-state" hidden>
+      <p>We could not load this craftsman profile.</p>
+      <a class="card-link" href="/craftsmen">Browse other craftsmen →</a>
     </div>
 
-  </div>
+    <div id="public-profile-content" hidden>
+      <section class="public-profile-summary" aria-labelledby="public-profile-name">
+        <div>
+          <p class="public-profile-kicker">Craftsman Profile</p>
+          <h1 id="public-profile-name">Craftsman</h1>
+          <div id="public-profile-meta" class="craftsman-meta"></div>
+          <p id="public-profile-bio" class="public-profile-bio"></p>
+        </div>
+        <aside class="public-profile-next-action" aria-labelledby="public-profile-next-heading">
+          <h2 id="public-profile-next-heading">Need this service?</h2>
+          <p id="public-profile-next-copy"></p>
+          <div id="public-profile-next-cta"></div>
+        </aside>
+      </section>
 
-</div>
+      <section class="public-profile-facts" aria-label="Craftsman information">
+        <article>
+          <span>Trust status</span>
+          <strong id="public-profile-trust">Unverified</strong>
+        </article>
+        <article>
+          <span>Completed jobs</span>
+          <strong id="public-profile-jobs">0</strong>
+        </article>
+        <article>
+          <span>Review count</span>
+          <strong id="public-profile-review-count">0</strong>
+        </article>
+        <article>
+          <span>Average rating</span>
+          <strong id="public-profile-average">Not available</strong>
+        </article>
+      </section>
 
+      <section class="public-profile-section" aria-labelledby="public-profile-services-heading">
+        <div class="section-header">
+          <div>
+            <h2 id="public-profile-services-heading" class="section-heading">Services and pricing</h2>
+            <p class="section-subheading">Available public service information for this craftsman.</p>
+          </div>
+        </div>
+        <div class="public-profile-service-card">
+          <p><strong>Category:</strong> <span id="public-profile-category">Not specified</span></p>
+          <p class="public-profile-muted">Craftsman-specific service prices and regions are not publicly available yet.</p>
+        </div>
+      </section>
 
+      <section class="public-profile-section" aria-labelledby="public-profile-work-heading">
+        <div class="section-header">
+          <div>
+            <h2 id="public-profile-work-heading" class="section-heading">Previous work</h2>
+            <p class="section-subheading">Photos shared by this craftsman.</p>
+          </div>
+        </div>
+        <div id="public-profile-photos" class="public-profile-photo-grid"></div>
+      </section>
 
-<!-- Contact -->
-<div class="craftsman-detail-contact">
+      <section class="public-profile-section" aria-labelledby="public-profile-reviews-heading">
+        <div class="section-header">
+          <div>
+            <h2 id="public-profile-reviews-heading" class="section-heading">Customer reviews</h2>
+            <p id="public-profile-review-summary" class="section-subheading">Loading reviews…</p>
+          </div>
+        </div>
+        <div id="public-profile-reviews" class="public-profile-review-list"></div>
+      </section>
+    </div>
+  </section>
 
-  <a
-  id="craftsman-detail-whatsapp"
-  href="#"
-  class="btn-primary craftsman-detail-whatsapp"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Contact Via Whatsapp
-</a>
-
-</div>
-
-    </article>
-
-  </div>
-
-</section>
-
-@vite(['resources/js/craftsman-detail.ts'])
+  @vite(['resources/js/public-craftsman-profile.js'])
 @end

@@ -1,87 +1,278 @@
-@craftsmanDashboardLayout({ title: 'Overview', active: 'dashboard' })
-  <div id="craftsman-dashboard-page" data-craftsman-id="{{ auth.user ? auth.user.id : '' }}">
-    <section class="craftsman-dashboard-stats" aria-label="Dashboard statistics">
-      <article class="craftsman-dashboard-stat-card">
-        <div class="craftsman-dashboard-stat-title">New Job Requests</div>
-        <div
-          class="craftsman-dashboard-stat-value"
-          data-dashboard-new-job-requests
-          data-state="loading"
-          aria-label="Loading new job requests"
-          aria-live="polite"
-        >
-          Loading…
-        </div>
-      </article>
+@dashboardLayout({ title: 'Craftsman Dashboard' })
+  <section class="craftsman-dashboard" data-dashboard>
+    <div class="dashboard-intro">
+      <div>
+        <p class="dashboard-kicker">Overview</p>
+        <h2 id="dashboard-welcome">Welcome back</h2>
+        <p id="dashboard-business" class="dashboard-subtitle">Loading your craftsman profile...</p>
+      </div>
+      <span id="dashboard-trust" class="trust-badge">Loading</span>
+    </div>
 
-      <article class="craftsman-dashboard-stat-card">
-        <div class="craftsman-dashboard-stat-title">Active Jobs</div>
-        <div
-          class="craftsman-dashboard-stat-value"
-          data-dashboard-active-jobs
-          data-state="loading"
-          aria-label="Loading active jobs"
-          aria-live="polite"
-        >
-          Loading…
-        </div>
-      </article>
+    <div id="dashboard-error" class="dashboard-message dashboard-message-error" hidden></div>
+    <div id="dashboard-loading" class="dashboard-message">Loading dashboard data...</div>
 
-      <article class="craftsman-dashboard-stat-card">
-        <div class="craftsman-dashboard-stat-title">Average Rating</div>
-        <div
-          class="craftsman-dashboard-stat-value"
-          data-dashboard-average-rating
-          data-state="loading"
-          aria-label="Loading average rating"
-          aria-live="polite"
-        >
-          Loading…
-        </div>
-      </article>
-
-      <article class="craftsman-dashboard-stat-card is-alert">
-        <div class="craftsman-dashboard-stat-title">Active Disputes</div>
-        <div
-          class="craftsman-dashboard-stat-value"
-          data-state="unavailable"
-          aria-label="Active disputes unavailable"
-        >
-          —
-        </div>
-      </article>
-    </section>
-
-    <section aria-labelledby="craftsman-dashboard-recent-jobs-title">
-      <div class="craftsman-dashboard-section-header">
-        <h2 id="craftsman-dashboard-recent-jobs-title">Recent Job Requests</h2>
-        <button class="craftsman-dashboard-button-small" type="button" disabled>
-          View All Requests
-        </button>
+    <div id="dashboard-content" hidden>
+      <div class="dashboard-stats">
+        <article class="dashboard-stat">
+          <span>Pending requests</span><strong id="stat-pending">0</strong>
+        </article>
+        <article class="dashboard-stat">
+          <span>Completed jobs</span><strong id="stat-completed">0</strong>
+        </article>
+        <article class="dashboard-stat">
+          <span>Active jobs</span><strong id="stat-active">0</strong>
+        </article>
+        <article class="dashboard-stat">
+          <span>Average rating</span><strong id="stat-rating">—</strong>
+        </article>
+        <article class="dashboard-stat dashboard-stat-alert">
+          <span>Disputes</span><strong id="stat-disputes">0</strong>
+        </article>
       </div>
 
-      <div class="craftsman-dashboard-table-container">
-        <table class="craftsman-dashboard-table">
-          <thead>
-            <tr>
-              <th scope="col">Job ID</th>
-              <th scope="col">Customer</th>
-              <th scope="col">Service Category</th>
-              <th scope="col">Date Requested</th>
-              <th scope="col">Status</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="craftsman-dashboard-empty-cell" colspan="6">
-                Recent job request data is not connected on this page.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="dashboard-profile-grid">
+        <article class="dashboard-panel dashboard-about">
+          <div class="dashboard-panel-heading">
+            <h3>About</h3>
+            <a href="/craftsman/service-prices" class="action-link">Manage prices</a>
+          </div>
+          <p id="dashboard-about-text">No description provided.</p>
+        </article>
+        <article class="dashboard-panel">
+          <h3>Price ranges</h3>
+          <div id="dashboard-prices" class="dashboard-price-list">
+            <p class="dashboard-muted">No active price entries.</p>
+          </div>
+        </article>
       </div>
-    </section>
-  </div>
-  @vite(['resources/js/craftsman-dashboard-page.js'])
+
+      <section class="dashboard-panel">
+        <div class="dashboard-panel-heading">
+          <h3>Recent job requests</h3>
+          <div class="dashboard-heading-actions">
+            <span id="dashboard-job-count" class="dashboard-muted"></span>
+            <a href="/craftsman/jobs" class="action-link">Manage requests</a>
+          </div>
+        </div>
+        <div class="dashboard-table-wrap">
+          <table class="dashboard-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Category</th>
+                <th>Region</th>
+                <th>Date requested</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-jobs"></tbody>
+          </table>
+        </div>
+        <div id="dashboard-jobs-empty" class="dashboard-empty" hidden>No job requests yet.</div>
+      </section>
+
+      <section class="dashboard-panel">
+        <div class="dashboard-panel-heading">
+          <h3>Ratings</h3>
+          <span id="dashboard-review-count" class="dashboard-muted"></span>
+        </div>
+        <div id="dashboard-scores" class="dashboard-score-grid"></div>
+      </section>
+
+      <section class="dashboard-panel">
+        <div class="dashboard-panel-heading">
+          <h3>Previous work</h3>
+          <a href="/craftsman/work-photos" class="action-link">Manage photos</a>
+        </div>
+        <div id="dashboard-photos" class="dashboard-photo-grid"></div>
+        <div id="dashboard-photos-empty" class="dashboard-empty" hidden>
+          No work photos uploaded yet.
+        </div>
+      </section>
+
+      <div class="dashboard-contact-row">
+        <div>
+          <h3>Need a customer to contact you?</h3>
+          <p>Use WhatsApp with the phone number saved to your account.</p>
+        </div>
+        <a
+          id="dashboard-whatsapp"
+          class="dashboard-whatsapp"
+          href="#"
+          target="_blank"
+          rel="noopener"
+          hidden
+        >
+          Contact via WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const loading = document.getElementById('dashboard-loading')
+    const content = document.getElementById('dashboard-content')
+    const errorBox = document.getElementById('dashboard-error')
+
+    const escapeHtml = (value) => {
+      const div = document.createElement('div')
+      div.textContent = value ?? ''
+      return div.innerHTML
+    }
+
+    const formatDate = (value) => {
+      if (!value) return '—'
+      const date = new Date(value)
+      return Number.isNaN(date.getTime())
+        ? '—'
+        : date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+    }
+
+    const statusClass = (status) => {
+      if (status === 'pending') return 'status-pending'
+      if (status === 'accepted' || status === 'in_progress' || status === 'completed') return 'status-active'
+      if (status === 'disputed') return 'status-dispute'
+      return ''
+    }
+
+    const statusLabel = (status) => (status || '').replaceAll('_', ' ')
+
+    const average = (reviews) => {
+      if (!reviews.length) return null
+      const total = reviews.reduce(
+        (sum, review) =>
+          sum +
+          Number(review.punctuality) +
+          Number(review.workmanship) +
+          Number(review.priceHonesty) +
+          Number(review.communication),
+        0,
+      )
+      return total / (reviews.length * 4)
+    }
+
+    const renderPrices = (prices) => {
+      const container = document.getElementById('dashboard-prices')
+      if (!prices.length) {
+        container.innerHTML = '<p class="dashboard-muted">No active price entries.</p>'
+        return
+      }
+      container.innerHTML = prices
+        .slice(0, 4)
+        .map(
+          (price) => `
+            <div class="dashboard-price-item">
+              <strong>${escapeHtml(price.subService?.nameEn || price.subService?.name || 'Service')}</strong>
+              <span>${Number(price.minPrice).toFixed(0)} - ${Number(price.maxPrice).toFixed(0)} ${escapeHtml(price.currency || '')}</span>
+            </div>`,
+        )
+        .join('')
+    }
+
+    const renderJobs = (jobs) => {
+      const tbody = document.getElementById('dashboard-jobs')
+      const empty = document.getElementById('dashboard-jobs-empty')
+      document.getElementById('dashboard-job-count').textContent = `${jobs.length} recent request${jobs.length === 1 ? '' : 's'}`
+      if (!jobs.length) {
+        tbody.innerHTML = ''
+        empty.hidden = false
+        return
+      }
+      empty.hidden = true
+      tbody.innerHTML = jobs
+        .slice(0, 8)
+        .map(
+          (job) => `
+            <tr>
+              <td>${escapeHtml(job.customer?.fullName || 'Customer')}</td>
+              <td>${escapeHtml(job.category?.nameEn || job.category?.name || '—')}</td>
+              <td>${escapeHtml(job.region?.nameEn || job.region?.name || '—')}</td>
+              <td>${formatDate(job.createdAt)}</td>
+              <td><span class="status-badge ${statusClass(job.status)}">${escapeHtml(statusLabel(job.status))}</span></td>
+              <td><a class="action-link" href="/craftsman/jobs">Manage</a></td>
+            </tr>`,
+        )
+        .join('')
+    }
+
+    const renderScores = (reviews) => {
+      const container = document.getElementById('dashboard-scores')
+      const labels = [
+        ['Quality', 'workmanship'],
+        ['Punctuality', 'punctuality'],
+        ['Pricing', 'priceHonesty'],
+        ['Communication', 'communication'],
+      ]
+      if (!reviews.length) {
+        container.innerHTML = '<p class="dashboard-muted">No customer ratings yet.</p>'
+        return
+      }
+      container.innerHTML = labels
+        .map(([label, key]) => {
+          const score = reviews.reduce((sum, review) => sum + Number(review[key]), 0) / reviews.length
+          return `<div class="dashboard-score-card"><span>${label}</span><strong>${score.toFixed(1)}</strong></div>`
+        })
+        .join('')
+    }
+
+    const renderPhotos = (photos) => {
+      const container = document.getElementById('dashboard-photos')
+      const empty = document.getElementById('dashboard-photos-empty')
+      if (!photos.length) {
+        container.innerHTML = ''
+        empty.hidden = false
+        return
+      }
+      empty.hidden = true
+      container.innerHTML = photos
+        .slice(0, 6)
+        .map((photo) => `<img class="dashboard-work-photo" src="${escapeHtml(photo.imageUrl)}" alt="Previous work">`)
+        .join('')
+    }
+
+    const loadDashboard = async () => {
+      try {
+        const response = await fetch('/api/craftsman/dashboard', {
+          headers: { Accept: 'application/json' },
+          credentials: 'same-origin',
+        })
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok) throw new Error(data.message || 'Unable to load dashboard.')
+
+        const { craftsman, jobs, reviews, stats } = data
+        const rating = average(reviews)
+        document.getElementById('dashboard-welcome').textContent = `Welcome back${craftsman.businessName ? `, ${craftsman.businessName}` : ''}`
+        document.getElementById('dashboard-business').textContent = craftsman.category?.nameEn || 'Craftsman'
+        document.getElementById('dashboard-trust').textContent = craftsman.trustLevelLabel || 'Unverified'
+        document.getElementById('stat-pending').textContent = stats.pending
+        document.getElementById('stat-completed').textContent = stats.completed
+        document.getElementById('stat-active').textContent = stats.active
+        document.getElementById('stat-disputes').textContent = stats.disputed
+        document.getElementById('stat-rating').textContent = rating === null ? '—' : `${rating.toFixed(1)}/5`
+        document.getElementById('dashboard-about-text').textContent = craftsman.bio || 'No description provided.'
+        document.getElementById('dashboard-review-count').textContent = `${reviews.length} review${reviews.length === 1 ? '' : 's'}`
+        renderPrices(craftsman.servicePriceCatalogs || [])
+        renderJobs(jobs || [])
+        renderScores(reviews || [])
+        renderPhotos(craftsman.workPhotos || [])
+
+        const phone = (craftsman.phone || '').replace(/[^\d]/g, '')
+        if (phone) {
+          const whatsapp = document.getElementById('dashboard-whatsapp')
+          whatsapp.href = `https://wa.me/${phone}`
+          whatsapp.hidden = false
+        }
+        loading.hidden = true
+        content.hidden = false
+      } catch (error) {
+        loading.hidden = true
+        errorBox.textContent = error.message || 'Unable to load dashboard.'
+        errorBox.hidden = false
+      }
+    }
+
+    loadDashboard()
+  </script>
 @end

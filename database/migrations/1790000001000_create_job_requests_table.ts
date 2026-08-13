@@ -5,7 +5,6 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-
       table.increments('id').notNullable()
 
       table.string('request_id', 255).notNullable().unique()
@@ -45,20 +44,16 @@ export default class extends BaseSchema {
       table.text('description').notNullable()
 
       table
-        .enum(
-          'status',
-          [
-            'pending',
-            'accepted',
-            'declined',
-            'in_progress',
-            'completed',
-            'disputed', 
-            'cancelled',
-            'expired',
-          ],
-          { useNative: false }
-        )
+        .enum('status', [
+          'pending',
+          'accepted',
+          'declined',
+          'in_progress',
+          'completed',
+          'disputed',
+          'cancelled',
+          'expired',
+        ])
         .notNullable()
         .defaultTo('pending')
 

@@ -1,133 +1,107 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const page = document.getElementById('craftsman-profile-page')
-
-  if (!page) {
-    return
-  }
+  if (!page) return
 
   const loading = document.getElementById('craftsman-profile-loading')
   const content = document.getElementById('craftsman-profile-content')
   const error = document.getElementById('craftsman-profile-error')
-  const errorMessage = document.getElementById('craftsman-profile-error-message')
   const success = document.getElementById('craftsman-profile-success')
-  const successMessage = document.getElementById('craftsman-profile-success-message')
 
   const form = document.getElementById('craftsman-profile-form')
-  const csrfInput = form.querySelector('input[name="_csrf"]')
+  const csrf = form.querySelector('input[name="_csrf"]')?.value
 
   const businessName = document.getElementById('craftsman-business-name')
   const category = document.getElementById('craftsman-category')
   const registrationNumber = document.getElementById('craftsman-registration-number')
-  const totalJobs = document.getElementById('craftsman-total-jobs')
   const bio = document.getElementById('craftsman-bio')
-  const verbalConsent = document.getElementById('craftsman-verbal-consent')
-  const trustBadge = document.getElementById('craftsman-profile-trust-badge')
-
-  const editButton = document.getElementById('craftsman-profile-edit')
   const saveButton = document.getElementById('craftsman-profile-save')
-  const cancelButton = document.getElementById('craftsman-profile-cancel')
+  const resetButton = document.getElementById('craftsman-profile-reset')
 
+  const controls = [businessName, category, registrationNumber, bio]
   let savedCraftsman = null
 
-  function hideMessages() {
+  const clearMessages = () => {
     error.hidden = true
     success.hidden = true
   }
 
-  function showError(message) {
-    errorMessage.textContent = message
+  const showError = (message) => {
+    error.textContent = message
     error.hidden = false
     success.hidden = true
   }
 
-  function showSuccess(message) {
-    successMessage.textContent = message
+  const showSuccess = (message) => {
+    success.textContent = message
     success.hidden = false
     error.hidden = true
   }
 
-  function getCategoryName(craftsman) {
-    return craftsman.category?.nameEn ?? craftsman.category?.nameTr ?? 'Unavailable'
-  }
-
-  function applyCraftsman(craftsman) {
+  const applyCraftsman = (craftsman) => {
     businessName.value = craftsman.businessName ?? ''
-    category.value = getCategoryName(craftsman)
+    category.value = String(craftsman.categoryId ?? craftsman.category?.id ?? '')
     registrationNumber.value = craftsman.bizRegNo ?? ''
-    totalJobs.value = String(craftsman.totalJobs ?? 0)
     bio.value = craftsman.bio ?? ''
-    verbalConsent.checked = Boolean(craftsman.verbalConsent)
-
-    trustBadge.textContent = craftsman.trustLevelLabel ?? 'unverified'
   }
 
-  function setEditing(isEditing) {
-    businessName.readOnly = !isEditing
-    registrationNumber.readOnly = !isEditing
-    bio.readOnly = !isEditing
-    verbalConsent.disabled = !isEditing
-
-    editButton.hidden = isEditing
-    saveButton.hidden = !isEditing
-    cancelButton.hidden = !isEditing
+  const setBusy = (isBusy) => {
+    controls.forEach((control) => {
+      control.disabled = isBusy
+    })
+    saveButton.disabled = isBusy
+    resetButton.disabled = isBusy
   }
 
-  try {
+  const fetchProfile = async () => {
     const response = await fetch('/api/craftsman/profile', {
-      headers: {
-        Accept: 'application/json',
-      },
+      headers: { Accept: 'application/json' },
       credentials: 'same-origin',
     })
 
-    if (!response.ok) {
-      throw new Error('Profile request failed')
+    const payload = await response.json().catch(() => ({}))
+    if (!response.ok || !payload.craftsman) {
+      throw new Error('Unable to load your profile.')
     }
 
-    const { craftsman } = await response.json()
+    return payload.craftsman
+  }
 
-    if (!craftsman) {
-      throw new Error('Craftsman profile is missing')
+  try {
+    const [craftsman, categoriesResponse] = await Promise.all([
+      fetchProfile(),
+      fetch('/api/catalog/categories', { headers: { Accept: 'application/json' } }),
+    ])
+
+    const categoriesPayload = await categoriesResponse.json().catch(() => ({}))
+    if (!categoriesResponse.ok || !Array.isArray(categoriesPayload.data)) {
+      throw new Error('Unable to load categories.')
     }
+
+    category.replaceChildren(new Option('Choose a category', ''))
+    categoriesPayload.data.forEach((item) => category.append(new Option(item.nameEn, item.id)))
 
     savedCraftsman = craftsman
     applyCraftsman(savedCraftsman)
-    setEditing(false)
-
+    setBusy(false)
     loading.hidden = true
     content.hidden = false
-  } catch (loadError) {
-    console.error('Failed to load craftsman profile', loadError)
+  } catch (failure) {
     loading.hidden = true
-    showError('Unable to load your profile. Please try again.')
+    showError(failure.message || 'Unable to load your profile.')
   }
 
-  editButton.addEventListener('click', () => {
-    hideMessages()
-    setEditing(true)
-    businessName.focus()
-  })
-
-  cancelButton.addEventListener('click', () => {
-    if (savedCraftsman) {
-      applyCraftsman(savedCraftsman)
-    }
-
-    hideMessages()
-    setEditing(false)
+  resetButton.addEventListener('click', () => {
+    if (savedCraftsman) applyCraftsman(savedCraftsman)
+    clearMessages()
   })
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault()
-    hideMessages()
+    clearMessages()
+    if (!form.reportValidity()) return
+    if (!csrf) return showError('Unable to save your profile. Please refresh the page and try again.')
 
-    if (!csrfInput?.value) {
-      showError('Unable to save your profile. Please refresh the page and try again.')
-      return
-    }
-
-    saveButton.disabled = true
-    cancelButton.disabled = true
+    setBusy(true)
     saveButton.textContent = 'Saving...'
 
     try {
@@ -136,40 +110,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          'x-csrf-token': csrfInput.value,
+          'x-csrf-token': csrf,
         },
         credentials: 'same-origin',
         body: JSON.stringify({
           businessName: businessName.value,
-          bio: bio.value.trim() === '' ? null : bio.value,
-          bizRegNo:
-            registrationNumber.value.trim() === ''
-              ? null
-              : registrationNumber.value,
-          verbalConsent: verbalConsent.checked,
+          categoryId: Number(category.value),
+          bio: bio.value.trim() ? bio.value : null,
+          bizRegNo: registrationNumber.value.trim() ? registrationNumber.value : null,
         }),
       })
 
-      if (!response.ok) {
-        throw new Error('Profile update failed')
+      const payload = await response.json().catch(() => ({}))
+      if (!response.ok || !payload.craftsman) {
+        throw new Error(payload.errors?.[0]?.message || payload.message || 'Unable to save your profile.')
       }
 
-      const { craftsman } = await response.json()
-
-      if (!craftsman) {
-        throw new Error('Updated profile is missing')
-      }
-
-      savedCraftsman = craftsman
+      savedCraftsman = await fetchProfile()
       applyCraftsman(savedCraftsman)
-      setEditing(false)
       showSuccess('Your profile has been updated successfully.')
-    } catch (saveError) {
-      console.error('Failed to update craftsman profile', saveError)
-      showError('Unable to save your profile. Please check your details and try again.')
+    } catch (failure) {
+      showError(failure.message || 'Unable to save your profile.')
     } finally {
-      saveButton.disabled = false
-      cancelButton.disabled = false
+      setBusy(false)
       saveButton.textContent = 'Save Changes'
     }
   })

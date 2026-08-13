@@ -50,9 +50,7 @@ export default class extends BaseSchema {
         .onDelete('RESTRICT')
 
       table.string('terms_version', 32).notNullable()
-      table
-        .enum('agreement_type', ['TOS', 'WAIVER'], { useNative: false })
-        .notNullable()
+      table.enum('agreement_type', ['TOS', 'WAIVER']).notNullable()
       table.string('ip', 45).notNullable()
       table.timestamp('accepted_at').notNullable()
     })

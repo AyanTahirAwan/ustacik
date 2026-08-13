@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Account Settings — UstaÇık</title>
+    @vite([
+      'resources/css/app.css',
+      'resources/js/app.js',
+      'resources/js/account-settings.js',
+    ])
+  </head>
+  <body>
+    @include('partials/header')
+    <main>
+      <div
+        class="app-container account-settings-page"
+        id="account-settings-page"
+        data-role="{{ auth.user.role }}"
+      >
+        @include('partials/flash_alerts')
+
+        <header class="account-settings-heading">
+          <p class="dashboard-kicker">Your account</p>
+          <h1>Account Settings</h1>
+          <p>Manage your private preferences, contact information, and account security.</p>
+        </header>
+
+        <div
+          id="account-settings-error"
+          class="dashboard-message dashboard-message-error"
+          role="alert"
+          hidden
+        ></div>
+        <div
+          id="account-settings-success"
+          class="dashboard-message account-settings-success"
+          role="status"
+          hidden
+        ></div>
+
+        <div class="account-settings-stack">
+          <section
+            class="dashboard-panel account-settings-section"
+            aria-labelledby="personal-information-heading"
+          >
+            <div class="account-settings-section-heading">
+              <div>
+                <h2 id="personal-information-heading">Personal Information</h2>
+                <p>Details and preferences associated with your account.</p>
+              </div>
+            </div>
+            @if(auth.user.role === 'customer')
+              @form({
+                action: '/api/customer/profile',
+                method: 'POST',
+                id: 'account-settings-form',
+              })
+                <div class="account-settings-form-grid">
+                  <label
+                    class="account-settings-field account-settings-field-wide"
+                    for="account-settings-name"
+                  >
+                    <span>Name</span>
+                    <input
+                      id="account-settings-name"
+                      name="fullName"
+                      class="form-control"
+                      type="text"
+                      minlength="2"
+                      maxlength="160"
+                      required
+                      disabled
+                    />
+                    <small>Your name is shown to craftsmen handling your requests.</small>
+                  </label>
+                  <label class="account-settings-field" for="account-settings-region">
+                    <span>Default Region</span>
+                    <select
+                      id="account-settings-region"
+                      name="defaultRegionId"
+                      class="form-control"
+                      disabled
+                    >
+                      <option value="">No default region</option>
+                    </select>
+                  </label>
+                  <label class="account-settings-field" for="account-settings-language">
+                    <span>Preferred Language</span>
+                    <select
+                      id="account-settings-language"
+                      name="language"
+                      class="form-control"
+                      disabled
+                    >
+                      <option value="en">English</option>
+                      <option value="tr">Türkçe</option>
+                    </select>
+                  </label>
+                  <label
+                    class="account-settings-toggle account-settings-field-wide"
+                    for="account-settings-sms-opt-in"
+                  >
+                    <span>
+                      <strong>SMS Notifications</strong>
+                      <small>Receive account and service updates by text message.</small>
+                    </span>
+                    <input
+                      id="account-settings-sms-opt-in"
+                      name="smsOptIn"
+                      type="checkbox"
+                      disabled
+                    />
+                  </label>
+                </div>
+
+                <div class="account-settings-action-bar">
+                  <p id="account-settings-dirty-note" aria-live="polite">No unsaved changes</p>
+                  <div>
+                    <button id="account-settings-reset" class="btn-back" type="button" disabled>
+                      Reset
+                    </button>
+                    <button id="account-settings-save" class="btn-primary" type="submit" disabled>
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              @end
+            @else
+              <div class="account-settings-identity-note">
+                <div class="account-settings-icon" aria-hidden="true">BI</div>
+                <div>
+                  <h3>Personal account details</h3>
+                  <p>Craftsman accounts currently use business identity for public presentation.</p>
+                  <a class="action-link" href="/craftsman/profile">Manage Business Profile →</a>
+                </div>
+              </div>
+            @end
+          </section>
+
+          <section
+            class="dashboard-panel account-settings-section"
+            aria-labelledby="contact-heading"
+          >
+            <div class="account-settings-section-heading">
+              <div>
+                <h2 id="contact-heading">Contact & Verification</h2>
+                <p>Contact changes are protected to prevent account takeover.</p>
+              </div>
+            </div>
+
+            <div class="account-settings-rows">
+              <article class="account-settings-row">
+                <div>
+                  <p class="account-settings-value-label">Email</p>
+                  <strong>{{ auth.user.email }}</strong>
+                  <span class="account-settings-protection">
+                    Change protection: Verification required
+                  </span>
+                </div>
+                <button
+                  class="btn-back account-settings-secondary-action"
+                  type="button"
+                  data-unavailable-action="email"
+                >
+                  Change Email
+                </button>
+              </article>
+
+              <article class="account-settings-row">
+                <div>
+                  <p class="account-settings-value-label">Phone Number</p>
+                  <strong id="account-settings-phone" data-phone="{{ auth.user.phoneNormalised }}">
+                    {{ auth.user.phoneNormalised }}
+                  </strong>
+                  <span class="account-settings-protection">
+                    Change protection: Verification required
+                  </span>
+                </div>
+                <button
+                  class="btn-back account-settings-secondary-action"
+                  type="button"
+                  data-unavailable-action="phone"
+                >
+                  Change Phone
+                </button>
+              </article>
+            </div>
+
+            <div
+              id="account-settings-contact-notice"
+              class="account-settings-notice"
+              role="status"
+              hidden
+            ></div>
+          </section>
+
+          <section
+            class="dashboard-panel account-settings-section"
+            aria-labelledby="security-heading"
+          >
+            <div class="account-settings-section-heading">
+              <div>
+                <h2 id="security-heading">Security</h2>
+                <p>Controls that protect access to your account.</p>
+              </div>
+            </div>
+
+            <div class="account-settings-security-row">
+              <div>
+                <h3>Password</h3>
+                <p>Protect your account with a strong, unique password.</p>
+              </div>
+              <button
+                id="account-settings-password-open"
+                class="btn-back account-settings-secondary-action"
+                type="button"
+                aria-controls="account-settings-password-panel"
+                aria-expanded="false"
+              >
+                Change Password
+              </button>
+            </div>
+            <div
+              id="account-settings-password-panel"
+              class="account-settings-password-panel"
+              hidden
+            >
+              @form({
+                action: '/api/account/password',
+                method: 'POST',
+                id: 'account-settings-password-form',
+              })
+                <div
+                  id="account-settings-password-error"
+                  class="dashboard-message dashboard-message-error"
+                  role="alert"
+                  hidden
+                ></div>
+                <div
+                  id="account-settings-password-success"
+                  class="dashboard-message account-settings-success"
+                  role="status"
+                  hidden
+                ></div>
+
+                <div class="account-settings-password-grid">
+                  <label class="account-settings-field" for="account-settings-current-password">
+                    <span>Current Password</span>
+                    <input
+                      id="account-settings-current-password"
+                      name="currentPassword"
+                      class="form-control"
+                      type="password"
+                      autocomplete="current-password"
+                      maxlength="64"
+                      required
+                    />
+                  </label>
+                  <label class="account-settings-field" for="account-settings-new-password">
+                    <span>New Password</span>
+                    <input
+                      id="account-settings-new-password"
+                      name="newPassword"
+                      class="form-control"
+                      type="password"
+                      autocomplete="new-password"
+                      minlength="8"
+                      maxlength="64"
+                      required
+                    />
+                    <small>Use between 8 and 64 characters.</small>
+                  </label>
+                  <label
+                    class="account-settings-field"
+                    for="account-settings-new-password-confirmation"
+                  >
+                    <span>Confirm New Password</span>
+                    <input
+                      id="account-settings-new-password-confirmation"
+                      name="newPasswordConfirmation"
+                      class="form-control"
+                      type="password"
+                      autocomplete="new-password"
+                      minlength="8"
+                      maxlength="64"
+                      required
+                    />
+                  </label>
+                </div>
+
+                <label
+                  class="account-settings-password-visibility"
+                  for="account-settings-show-passwords"
+                >
+                  <input id="account-settings-show-passwords" type="checkbox" />
+
+                  Show passwords
+
+                </label>
+
+                <div class="account-settings-password-actions">
+                  <button id="account-settings-password-cancel" class="btn-back" type="button">
+                    Cancel
+                  </button>
+                  <button id="account-settings-password-submit" class="btn-primary" type="submit">
+                    Update Password
+                  </button>
+                </div>
+              @end
+            </div>
+          </section>
+
+          <section
+            class="dashboard-panel account-settings-section"
+            aria-labelledby="account-information-heading"
+          >
+            <div class="account-settings-section-heading">
+              <div>
+                <h2 id="account-information-heading">Account Information</h2>
+                <p>System-managed details for your UstaÇık account.</p>
+              </div>
+            </div>
+
+            <dl class="account-settings-system-list">
+              <div>
+                <dt>Account Type</dt>
+                <dd>{{ auth.user.role === 'customer' ? 'Customer' : 'Craftsman' }}</dd>
+              </div>
+            </dl>
+            <p class="account-settings-help">Account type is managed by the system.</p>
+          </section>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

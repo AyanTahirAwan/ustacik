@@ -1,5 +1,6 @@
 import User from '#models/user'
 import { getRoleLandingPath } from '#services/role_landing_service'
+import { loginValidator } from '#validators/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SessionController {
@@ -8,7 +9,7 @@ export default class SessionController {
   }
 
   async store({ request, auth, response }: HttpContext) {
-    const { email, password } = request.all()
+    const { email, password } = await request.validateUsing(loginValidator)
     const user = await User.verifyCredentials(email, password)
     if (user.status === 'suspended') {
       return response.forbidden({

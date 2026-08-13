@@ -1,0 +1,20 @@
+@dashboardLayout({ title: 'Job Requests' })
+  <section id="craftsman-jobs-page" class="craftsman-jobs-page">
+    <div class="section-header craftsman-jobs-header">
+      <div>
+        <p class="section-subheading">Review service requests assigned to your business.</p>
+      </div>
+      <a class="btn-back" href="/craftsman">Back to Dashboard</a>
+    </div>
+
+    @form({ action: '/api/jobs/0/accept', method: 'POST', id: 'craftsman-jobs-form' })
+      <div id="craftsman-jobs-success" class="dashboard-message craftsman-jobs-success" role="status" hidden></div>
+      <div id="craftsman-jobs-loading" class="dashboard-message">Loading job requests…</div>
+      <div id="craftsman-jobs-error" class="dashboard-message dashboard-message-error" role="alert" hidden></div>
+      <div id="craftsman-jobs-summary" class="craftsman-jobs-summary" hidden></div>
+      <div id="craftsman-jobs-list" class="craftsman-jobs-list" hidden></div>
+    @end
+  </section>
+
+  @vite(['resources/js/craftsman-jobs.js'])
+@end

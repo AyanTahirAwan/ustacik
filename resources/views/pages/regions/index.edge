@@ -4,15 +4,13 @@
     <p>Browse all service regions.</p>
   </div>
 
-  <div class="page-placeholder">
-    <h2>Region List — Placeholder</h2>
-    {{--
-      TODO: API integration
-      Fetch and list regions from:
-        GET /api/catalog/regions
-      Expected response: { data: [{ id, nameEn, nameTr, createdAt }] }
-    --}}
-    <p>No regions loaded yet. This page will list service regions.</p>
-  </div>
+  <section aria-labelledby="regions-heading">
+    <h2 id="regions-heading" class="section-heading">Find help nearby</h2>
+    <p class="section-subheading">Choose a region to see matching services.</p>
+    <div id="regions-list" class="catalog-grid" aria-live="polite">
+      <div class="empty-state">
+        <p>Loading regions…</p>
+      </div>
+    </div>
+  </section>
 @end
-

@@ -1,92 +1,16 @@
 @layout()
-
-<section class="craftsmen-page">
-
-  <!-- Page header -->
-  <header class="craftsmen-header">
-
-    <h1>
-      Featured Job Listings
-    </h1>
-
-    <a href="/" class="btn-back craftsmen-main-menu">
-      Back to Main Menu
-    </a>
-
-  </header>
-
-
-  <!-- Listings -->
-  <section class="craftsmen-listings">
-
-    <!-- Category filter -->
-    <div class="craftsmen-filters">
-
-      <div class="craftsmen-filter-category">
-
-        <label for="craftsmen-category">
-          Category
-        </label>
-
-        <select id="craftsmen-category">
-          <option value="">
-            All categories
-          </option>
-        </select>
-
+  <section aria-labelledby="craftsmen-heading">
+    <div class="section-header">
+      <div>
+        <h2 id="craftsmen-heading" class="section-heading">Local professionals</h2>
+        <p class="section-subheading">Review profiles and find the right person for your job.</p>
       </div>
-
-      <button
-        type="button"
-        id="craftsmen-clear-filters"
-        class="btn-back craftsmen-clear-filter"
-      >
-        Clear filter
-      </button>
-
+      <a class="btn-back" href="/search">Filter services</a>
     </div>
-
-
-    <!-- Loading -->
-    <div
-      id="craftsmen-loading"
-      class="craftsmen-state"
-    >
-      Loading craftsmen...
+    <div id="craftsmen-list" class="craftsmen-grid" aria-live="polite">
+      <div class="empty-state">
+        <p>Loading craftsmen…</p>
+      </div>
     </div>
-
-
-    <!-- Error -->
-    <div
-      id="craftsmen-error"
-      class="craftsmen-state craftsmen-state-error"
-      hidden
-    >
-      Unable to load craftsmen. Please try again.
-    </div>
-
-
-    <!-- Empty -->
-    <div
-      id="craftsmen-empty"
-      class="craftsmen-state"
-      hidden
-    >
-      No craftsmen match this category.
-    </div>
-
-
-    <!-- Cards -->
-    <div
-      id="craftsmen-list"
-      class="craftsmen-grid"
-    ></div>
-
   </section>
-
-</section>
-
-
-
-@vite(['resources/js/craftsmen-page.ts'])
 @end

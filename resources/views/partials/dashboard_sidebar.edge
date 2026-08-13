@@ -1,20 +1,76 @@
-<aside class="dashboard-sidebar">
-  <nav class="dashboard-nav">
-    @if(auth.user && auth.user.role === 'admin')
+@let(currentPath = request.url())
+@if(auth.user && auth.user.role === 'craftsman')
+  <details class="dashboard-sidebar craftsman-workspace-menu" open>
+    <summary aria-expanded="true">
+      <span>Craftsman Workspace</span>
+      <svg
+        class="dropdown-chevron"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M3.5 5.75 8 10.25l4.5-4.5"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </summary>
+    <nav class="dashboard-nav" aria-label="Craftsman workspace">
+      <a
+        href="/craftsman"
+        class="{{ currentPath === '/craftsman' ? 'current' : '' }}"
+        aria-current="{{ currentPath === '/craftsman' ? 'page' : 'false' }}"
+      >
+        Dashboard
+      </a>
+      <a
+        href="/craftsman/jobs"
+        class="{{ currentPath.startsWith('/craftsman/jobs') ? 'current' : '' }}"
+        aria-current="{{ currentPath.startsWith('/craftsman/jobs') ? 'page' : 'false' }}"
+      >
+        Jobs
+      </a>
+      <a
+        href="/craftsman/service-prices"
+        class="{{ currentPath.startsWith('/craftsman/service-prices') ? 'current' : '' }}"
+        aria-current="{{
+          currentPath.startsWith('/craftsman/service-prices')
+            ? 'page'
+            : 'false'
+        }}"
+      >
+        Prices
+      </a>
+      <a
+        href="/craftsman/work-photos"
+        class="{{ currentPath.startsWith('/craftsman/work-photos') ? 'current' : '' }}"
+        aria-current="{{ currentPath.startsWith('/craftsman/work-photos') ? 'page' : 'false' }}"
+      >
+        Work Photos
+      </a>
+      <a
+        href="/craftsman/profile"
+        class="{{ currentPath.startsWith('/craftsman/profile') ? 'current' : '' }}"
+        aria-current="{{ currentPath.startsWith('/craftsman/profile') ? 'page' : 'false' }}"
+      >
+        Profile
+      </a>
+    </nav>
+  </details>
+@elseif(auth.user && auth.user.role === 'admin')
+  <aside class="dashboard-sidebar">
+    <nav class="dashboard-nav" aria-label="Admin workspace">
       <p class="nav-group-label">Admin</p>
       <a href="/admin">Dashboard</a>
       <a href="/admin/categories">Categories</a>
       <a href="/admin/regions">Regions</a>
       <a href="/admin/sub-services">Sub Services</a>
-    @elseif(auth.user && auth.user.role === 'craftsman')
-      <p class="nav-group-label">Craftsman</p>
-      <a href="/craftsman">Dashboard</a>
-      <a href="/craftsman/service-prices">My Service Prices</a>
-    @else
-      <p class="nav-group-label">Account</p>
-      <a href="/login">Login</a>
-      <a href="/signup">Signup</a>
-    @end
-  </nav>
-</aside>
-
+    </nav>
+  </aside>
+@end

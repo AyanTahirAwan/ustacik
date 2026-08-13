@@ -1,0 +1,36 @@
+@layout()
+  <section id="notifications-page" class="notifications-page">
+    <div class="section-header notifications-header">
+      <div>
+        <h1 class="section-heading">Notifications</h1>
+        <p class="section-subheading">Important updates about your service requests and reviews.</p>
+      </div>
+      <span id="notifications-unread-count" class="notifications-unread-count" hidden></span>
+    </div>
+    @form({
+      action: '/api/notifications/read-all',
+      method: 'PATCH',
+      id: 'notifications-csrf-form',
+    })
+    @end
+
+    <div id="notifications-loading" class="dashboard-message">Loading notifications…</div>
+    <div
+      id="notifications-error"
+      class="dashboard-message dashboard-message-error"
+      role="alert"
+      hidden
+    ></div>
+
+    <div id="notifications-content" hidden>
+      <div class="notifications-toolbar">
+        <button id="notifications-read-all" class="btn-back" type="button" hidden>
+          Mark All as Read
+        </button>
+      </div>
+      <p id="notifications-empty" class="notifications-empty" hidden>No notifications yet.</p>
+      <div id="notifications-list" class="notifications-list" aria-live="polite"></div>
+    </div>
+  </section>
+  @vite(['resources/js/notifications.js'])
+@end

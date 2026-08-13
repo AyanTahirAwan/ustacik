@@ -1,117 +1,53 @@
-@craftsmanDashboardLayout({ title: 'My Profile', active: 'profile', accountPage: true })
-  <div id="craftsman-profile-page">
-    <p id="craftsman-profile-loading" class="craftsman-page-loading">
-      Loading profile...
-    </p>
-
-    <div id="craftsman-profile-error" class="alert alert-destructive craftsman-message" hidden>
-      <p id="craftsman-profile-error-message"></p>
+@dashboardLayout({ title: 'Profile' })
+  <section id="craftsman-profile-page" class="craftsman-profile-page">
+    <div class="craftsman-profile-toolbar">
+      <a class="btn-back" href="/craftsman">Back to Dashboard</a>
     </div>
 
-    <div id="craftsman-profile-success" class="alert alert-success craftsman-message" hidden>
-      <p id="craftsman-profile-success-message"></p>
-    </div>
+    <div id="craftsman-profile-loading" class="dashboard-message">Loading your profile...</div>
+    <div id="craftsman-profile-error" class="dashboard-message dashboard-message-error" hidden></div>
+    <div id="craftsman-profile-success" class="dashboard-message craftsman-profile-success" hidden></div>
 
-    <section id="craftsman-profile-content" class="card craftsman-profile-card" hidden>
-      <div class="craftsman-section-header">
+    <section id="craftsman-profile-content" class="dashboard-panel craftsman-profile-card" hidden>
+      <div class="dashboard-panel-heading">
         <div>
-          <h2 class="card-title">Profile Details</h2>
-          <p class="card-description">
-            View and update your craftsman business information.
-          </p>
+          <h2>Profile Details</h2>
+          <p class="dashboard-muted">View and update your business information.</p>
         </div>
-
-        <span id="craftsman-profile-trust-badge" class="craftsman-trust-badge"></span>
       </div>
 
-      @form({
-        action: '/api/craftsman/profile',
-        method: 'POST',
-        id: 'craftsman-profile-form'
-      })
+      @form({ action: '/api/craftsman/profile', method: 'POST', id: 'craftsman-profile-form' })
         <div class="craftsman-profile-fields">
-          <div class="form-group">
-            <label class="form-label" for="craftsman-business-name">Business Name</label>
-            <input
-              id="craftsman-business-name"
-              class="form-control"
-              type="text"
-              maxlength="160"
-              readonly
-            />
-          </div>
+          <label for="craftsman-business-name">
+            Business Name
+            <input id="craftsman-business-name" name="businessName" class="form-control craftsman-profile-control" type="text" minlength="2" maxlength="160" required disabled />
+          </label>
 
-          <div class="form-group">
-            <label class="form-label" for="craftsman-category">Category</label>
-            <input
-              id="craftsman-category"
-              class="form-control"
-              type="text"
-              readonly
-            />
-          </div>
+          <label for="craftsman-category">
+            Category
+            <select id="craftsman-category" name="categoryId" class="form-control craftsman-profile-control" required disabled>
+              <option value="">Loading categories...</option>
+            </select>
+          </label>
 
-          <div class="form-group">
-            <label class="form-label" for="craftsman-registration-number">
-              Business Registration Number
-            </label>
-            <input
-              id="craftsman-registration-number"
-              class="form-control"
-              type="text"
-              maxlength="64"
-              readonly
-            />
-          </div>
+          <label for="craftsman-registration-number">
+            Business Registration Number
+            <input id="craftsman-registration-number" name="bizRegNo" class="form-control craftsman-profile-control" type="text" maxlength="64" disabled />
+          </label>
 
-          <div class="form-group">
-            <label class="form-label" for="craftsman-total-jobs">Completed Jobs</label>
-            <input
-              id="craftsman-total-jobs"
-              class="form-control"
-              type="text"
-              readonly
-            />
-          </div>
-
-          <div class="form-group craftsman-profile-full">
-            <label class="form-label" for="craftsman-bio">Bio</label>
-            <textarea
-              id="craftsman-bio"
-              class="form-control craftsman-profile-bio"
-              maxlength="2000"
-              readonly
-            ></textarea>
-          </div>
-
-          <div class="craftsman-profile-full craftsman-consent-row">
-            <label for="craftsman-verbal-consent">
-              <input
-                id="craftsman-verbal-consent"
-                type="checkbox"
-                disabled
-              />
-              Verbal consent recorded
-            </label>
-          </div>
+          <label class="craftsman-profile-full" for="craftsman-bio">
+            Bio
+            <textarea id="craftsman-bio" name="bio" class="form-control craftsman-profile-bio craftsman-profile-control" maxlength="2000" disabled></textarea>
+          </label>
         </div>
 
         <div class="craftsman-profile-actions">
-          <button id="craftsman-profile-edit" class="btn btn-primary" type="button">
-            Edit Profile
-          </button>
-
-          <button id="craftsman-profile-save" class="btn btn-primary" type="submit" hidden>
-            Save Changes
-          </button>
-
-          <button id="craftsman-profile-cancel" class="btn-back" type="button" hidden>
-            Cancel
-          </button>
+          <button id="craftsman-profile-save" class="btn-primary" type="submit" disabled>Save Changes</button>
+          <button id="craftsman-profile-reset" class="btn-back" type="button" disabled>Reset</button>
         </div>
       @end
     </section>
-  </div>
+  </section>
 
   @vite(['resources/js/craftsman-profile.js'])
 @end

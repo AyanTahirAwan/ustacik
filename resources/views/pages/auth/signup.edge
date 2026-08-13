@@ -25,6 +25,48 @@
           </div>
 
           <div class="auth-field">
+            @field.root({ name: 'phone' })
+              @!field.label({ text: 'Phone number' })
+              @!input.control({ type: 'tel', autocomplete: 'tel' })
+              @!field.error()
+            @end
+          </div>
+
+          <div class="auth-field">
+            @field.root({ name: 'role' })
+              @!field.label({ text: 'Account type' })
+              @!select.control({
+                options: [
+                  { value: 'customer', name: 'Customer' },
+                  { value: 'craftsman', name: 'Craftsman' },
+                ],
+              })
+              @!field.error()
+            @end
+          </div>
+
+          <div id="craftsman-signup-fields" hidden>
+            <div class="auth-field">
+              @field.root({ name: 'businessName' })
+                @!field.label({ text: 'Business name' })
+                @!input.control({ autocomplete: 'organization' })
+                @!field.error()
+              @end
+            </div>
+
+            <div class="auth-field">
+              @field.root({ name: 'categoryId' })
+                @!field.label({ text: 'Service category' })
+                @!select.control({
+                  id: 'signup-category-select',
+                  options: [{ value: '', name: 'Loading categories…' }],
+                })
+                @!field.error()
+              @end
+            </div>
+          </div>
+
+          <div class="auth-field">
             @field.root({ name: 'password' })
               @!field.label({ text: 'Password' })
               @!input.control({ type: 'password', autocomplete: 'new-password' })

@@ -143,6 +143,24 @@ test.group('Job Requests - Authorization & Ownership', (group) => {
     response.assertStatus(403)
   })
 
+  test('Customer cannot reuse another customer\'s request ID', async ({ client }) => {
+    const { customer, craftsman, category, region } = await createTestUsers()
+    const customerB = await User.create({ email: 'customer-idempotency@test.com', phoneNormalised: '+1000000008', passwordHash: 'password123', role: 'customer', status: 'active' })
+    await Customer.create({ userId: customerB.id, fullName: 'Idempotency Customer', language: 'en', smsOptIn: true })
+    await JobRequest.create({ requestId: 'REQ-PRIVATE-OWNER', customerId: customerB.id, craftsmanId: craftsman.id, categoryId: category.id, regionId: region.id, description: 'Private customer request', status: 'pending' })
+
+    const response = await client.post('/api/jobs').loginAs(customer).json({
+      requestId: 'REQ-PRIVATE-OWNER',
+      craftsmanId: craftsman.id,
+      regionId: region.id,
+      description: 'Attempt to reuse another request identifier',
+    })
+
+    response.assertStatus(409)
+    response.assertBodyContains({ message: 'Unable to reuse this request identifier.' })
+    response.assertBodyNotContains({ description: 'Private customer request' })
+  })
+
   test('Craftsman B cannot accept Craftsman A\'s job', async ({ client }) => {
     const { customer, craftsman, category, region } = await createTestUsers()
     const craftsmanB = await User.create({ email: 'craftsmanb@test.com', phoneNormalised: '+1000000005', passwordHash: 'password123', role: 'craftsman', status: 'active' })
