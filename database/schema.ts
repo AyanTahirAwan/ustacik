@@ -376,7 +376,7 @@ export class UserConsentLogSchema extends BaseModel {
 }
 
 export class UserNotificationSchema extends BaseModel {
-  static $columns = ['id', 'isRead', 'messageBody', 'sentAt', 'title', 'type', 'userId'] as const
+  static $columns = ['id', 'isRead', 'messageBody', 'relatedJobId', 'sentAt', 'title', 'type', 'userId'] as const
   $columns = UserNotificationSchema.$columns
   @column({ isPrimary: true })
   declare id: number
@@ -384,6 +384,8 @@ export class UserNotificationSchema extends BaseModel {
   declare isRead: boolean
   @column()
   declare messageBody: string
+  @column()
+  declare relatedJobId: number | null
   @column.dateTime()
   declare sentAt: DateTime
   @column()

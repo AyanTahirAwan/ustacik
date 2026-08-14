@@ -61,12 +61,6 @@ router.get('craftsmen/:id', ({ params, view }) =>
   view.render('pages/craftsmen/show', { craftsmanId: params.id })
 )
 
-router.get('craftsmen/:id', ({ params, view }) =>
-  view.render('pages/craftsmen/show', {
-    craftsmanId: params.id,
-  })
-)
-
 router
   .group(() => {
     router.post('logout', [controllers.Session, 'destroy'])
@@ -132,9 +126,6 @@ router
 
 router
   .group(() => {
-    router.get('craftsman/profile', ({ view }) => view.render('pages/craftsman/profile'))
-    router.get('craftsman/work-photos', ({ view }) => view.render('pages/craftsman/work-photos'))
-    router.get('craftsman/subscription', ({ view }) => view.render('pages/craftsman/subscription'))
     router.get('notifications', ({ view }) => view.render('pages/notifications/index'))
     router.get('account/settings', ({ view }) => view.render('pages/account/settings'))
     router.patch('api/account/password', [AccountController, 'updatePassword'])
@@ -168,6 +159,7 @@ router
     router.get('craftsman/profile', ({ view }) => view.render('pages/craftsman/profile'))
     router.get('craftsman/jobs', ({ view }) => view.render('pages/craftsman/jobs'))
     router.get('craftsman/work-photos', ({ view }) => view.render('pages/craftsman/work-photos'))
+    router.get('craftsman/subscription', ({ view }) => view.render('pages/craftsman/subscription'))
     router.get('craftsman/service-prices', ({ view }) =>
       view.render('pages/craftsman/service-prices/index')
     )

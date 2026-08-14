@@ -25,6 +25,7 @@ export type ScannedRoutes = {
     'job_requests.index': { paramsTuple?: []; params?: {} }
     'job_requests.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'user_notifications.index': { paramsTuple?: []; params?: {} }
+    'user_notifications.mark_all_read': { paramsTuple?: []; params?: {} }
     'user_notifications.mark_read': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'customers.show': { paramsTuple?: []; params?: {} }
     'customers.update': { paramsTuple?: []; params?: {} }
@@ -37,10 +38,13 @@ export type ScannedRoutes = {
     'customer_favorites.destroy': { paramsTuple: [ParamValue]; params: {'craftsmanId': ParamValue} }
     'job_requests.store': { paramsTuple?: []; params?: {} }
     'job_requests.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'job_requests.contact': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'reviews.store': { paramsTuple?: []; params?: {} }
     'reviews.mark_helpful': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reviews.create': { paramsTuple: [ParamValue]; params: {'jobId': ParamValue} }
     'job_requests.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'job_disputes.store': { paramsTuple: [ParamValue]; params: {'jobId': ParamValue} }
+    'account.update_password': { paramsTuple?: []; params?: {} }
     'craftsmen.show_own': { paramsTuple?: []; params?: {} }
     'craftsmen.update_own': { paramsTuple?: []; params?: {} }
     'work_photos.index': { paramsTuple?: []; params?: {} }
@@ -48,6 +52,7 @@ export type ScannedRoutes = {
     'work_photos.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'subscriptions.show': { paramsTuple?: []; params?: {} }
     'verification_logs.own': { paramsTuple?: []; params?: {} }
+    'craftsmen.dashboard': { paramsTuple?: []; params?: {} }
     'service_price_catalogs.store': { paramsTuple?: []; params?: {} }
     'service_price_catalogs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'service_price_catalogs.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -100,10 +105,13 @@ export type ScannedRoutes = {
     'customers.show': { paramsTuple?: []; params?: {} }
     'customer_addresses.index': { paramsTuple?: []; params?: {} }
     'customer_favorites.index': { paramsTuple?: []; params?: {} }
+    'job_requests.contact': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reviews.create': { paramsTuple: [ParamValue]; params: {'jobId': ParamValue} }
     'craftsmen.show_own': { paramsTuple?: []; params?: {} }
     'work_photos.index': { paramsTuple?: []; params?: {} }
     'subscriptions.show': { paramsTuple?: []; params?: {} }
     'verification_logs.own': { paramsTuple?: []; params?: {} }
+    'craftsmen.dashboard': { paramsTuple?: []; params?: {} }
     'service_price_catalogs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.index': { paramsTuple?: []; params?: {} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -135,10 +143,13 @@ export type ScannedRoutes = {
     'customers.show': { paramsTuple?: []; params?: {} }
     'customer_addresses.index': { paramsTuple?: []; params?: {} }
     'customer_favorites.index': { paramsTuple?: []; params?: {} }
+    'job_requests.contact': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reviews.create': { paramsTuple: [ParamValue]; params: {'jobId': ParamValue} }
     'craftsmen.show_own': { paramsTuple?: []; params?: {} }
     'work_photos.index': { paramsTuple?: []; params?: {} }
     'subscriptions.show': { paramsTuple?: []; params?: {} }
     'verification_logs.own': { paramsTuple?: []; params?: {} }
+    'craftsmen.dashboard': { paramsTuple?: []; params?: {} }
     'service_price_catalogs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.index': { paramsTuple?: []; params?: {} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -170,11 +181,13 @@ export type ScannedRoutes = {
   }
   PATCH: {
     'password_recovery_requests.update': { paramsTuple: [ParamValue]; params: {'shortcode': ParamValue} }
+    'user_notifications.mark_all_read': { paramsTuple?: []; params?: {} }
     'user_notifications.mark_read': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'customers.update': { paramsTuple?: []; params?: {} }
     'customer_addresses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'job_requests.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'job_requests.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'account.update_password': { paramsTuple?: []; params?: {} }
     'craftsmen.update_own': { paramsTuple?: []; params?: {} }
     'service_price_catalogs.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'service_price_catalogs.toggle_active': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
