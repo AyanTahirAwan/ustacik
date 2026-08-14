@@ -1,5 +1,8 @@
 import vine from '@vinejs/vine'
 
 export const createWorkPhotoValidator = vine.create({
-  imageUrl: vine.string().trim().url().maxLength(500),
+  image: vine.file({
+    size: '5mb',
+    extnames: ['jpg', 'jpeg', 'png', 'webp'],
+  }),
 })

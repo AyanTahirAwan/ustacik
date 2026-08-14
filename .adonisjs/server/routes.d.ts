@@ -11,6 +11,10 @@ export type ScannedRoutes = {
     'session.store': { paramsTuple?: []; params?: {} }
     'password_recovery_requests.store': { paramsTuple?: []; params?: {} }
     'password_recovery_requests.update': { paramsTuple: [ParamValue]; params: {'shortcode': ParamValue} }
+    'password_recovery_requests.create_request': { paramsTuple?: []; params?: {} }
+    'password_recovery_requests.store_from_form': { paramsTuple?: []; params?: {} }
+    'password_recovery_requests.create': { paramsTuple: [ParamValue]; params: {'shortcode': ParamValue} }
+    'password_recovery_requests.update_from_form': { paramsTuple: [ParamValue]; params: {'shortcode': ParamValue} }
     'catalog.categories': { paramsTuple?: []; params?: {} }
     'catalog.sub_services': { paramsTuple: [ParamValue]; params: {'categoryId': ParamValue} }
     'catalog.regions': { paramsTuple?: []; params?: {} }
@@ -22,6 +26,10 @@ export type ScannedRoutes = {
     'session.destroy': { paramsTuple?: []; params?: {} }
     'refresh_tokens.index': { paramsTuple?: []; params?: {} }
     'refresh_tokens.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'verification.verify_email_code': { paramsTuple?: []; params?: {} }
+    'verification.verify_phone_code': { paramsTuple?: []; params?: {} }
+    'verification.send_email_code': { paramsTuple?: []; params?: {} }
+    'verification.send_phone_code': { paramsTuple?: []; params?: {} }
     'job_requests.index': { paramsTuple?: []; params?: {} }
     'job_requests.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'user_notifications.index': { paramsTuple?: []; params?: {} }
@@ -85,11 +93,15 @@ export type ScannedRoutes = {
     'job_disputes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'job_disputes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'reviews.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'platform_settings.dashboard': { paramsTuple?: []; params?: {} }
+    'platform_settings.update_phone_verification': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
+    'password_recovery_requests.create_request': { paramsTuple?: []; params?: {} }
+    'password_recovery_requests.create': { paramsTuple: [ParamValue]; params: {'shortcode': ParamValue} }
     'catalog.categories': { paramsTuple?: []; params?: {} }
     'catalog.sub_services': { paramsTuple: [ParamValue]; params: {'categoryId': ParamValue} }
     'catalog.regions': { paramsTuple?: []; params?: {} }
@@ -123,11 +135,14 @@ export type ScannedRoutes = {
     'regions.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verification_logs.for_craftsman': { paramsTuple: [ParamValue]; params: {'craftsmanId': ParamValue} }
     'job_disputes.index': { paramsTuple?: []; params?: {} }
+    'platform_settings.dashboard': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
+    'password_recovery_requests.create_request': { paramsTuple?: []; params?: {} }
+    'password_recovery_requests.create': { paramsTuple: [ParamValue]; params: {'shortcode': ParamValue} }
     'catalog.categories': { paramsTuple?: []; params?: {} }
     'catalog.sub_services': { paramsTuple: [ParamValue]; params: {'categoryId': ParamValue} }
     'catalog.regions': { paramsTuple?: []; params?: {} }
@@ -161,12 +176,19 @@ export type ScannedRoutes = {
     'regions.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verification_logs.for_craftsman': { paramsTuple: [ParamValue]; params: {'craftsmanId': ParamValue} }
     'job_disputes.index': { paramsTuple?: []; params?: {} }
+    'platform_settings.dashboard': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'new_account.store': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'password_recovery_requests.store': { paramsTuple?: []; params?: {} }
+    'password_recovery_requests.store_from_form': { paramsTuple?: []; params?: {} }
+    'password_recovery_requests.update_from_form': { paramsTuple: [ParamValue]; params: {'shortcode': ParamValue} }
     'session.destroy': { paramsTuple?: []; params?: {} }
+    'verification.verify_email_code': { paramsTuple?: []; params?: {} }
+    'verification.verify_phone_code': { paramsTuple?: []; params?: {} }
+    'verification.send_email_code': { paramsTuple?: []; params?: {} }
+    'verification.send_phone_code': { paramsTuple?: []; params?: {} }
     'customer_addresses.store': { paramsTuple?: []; params?: {} }
     'customer_favorites.store': { paramsTuple?: []; params?: {} }
     'job_requests.store': { paramsTuple?: []; params?: {} }
@@ -178,6 +200,7 @@ export type ScannedRoutes = {
     'sub_services.store': { paramsTuple?: []; params?: {} }
     'regions.store': { paramsTuple?: []; params?: {} }
     'verification_logs.store': { paramsTuple: [ParamValue]; params: {'craftsmanId': ParamValue} }
+    'platform_settings.update_phone_verification': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'password_recovery_requests.update': { paramsTuple: [ParamValue]; params: {'shortcode': ParamValue} }

@@ -21,6 +21,41 @@
       </div>
     </section>
 
+    <section
+      class="admin-panel admin-feature-setting"
+      aria-labelledby="phone-verification-setting-title"
+    >
+      <div>
+        <p class="admin-eyebrow">Feature controls</p>
+        <h2 id="phone-verification-setting-title">Phone verification</h2>
+        <p>
+          {{
+            phoneVerificationEnabled
+              ? 'Enabled. Users may request a code when SMS delivery is configured.'
+              : 'Disabled. Enable this after an SMS provider has been configured.'
+          }}
+        </p>
+      </div>
+      @form({
+        action: '/admin/settings/phone-verification',
+        method: 'POST',
+        class: 'admin-feature-setting-form',
+      })
+        <input
+          type="hidden"
+          name="enabled"
+          value="{{ phoneVerificationEnabled ? 'false' : 'true' }}"
+        />
+        <button class="admin-secondary-button" type="submit">
+          {{
+            phoneVerificationEnabled
+              ? 'Disable phone verification'
+              : 'Enable phone verification'
+          }}
+        </button>
+      @end
+    </section>
+
     <section id="admin-dashboard-loading" class="admin-state-card" aria-live="polite">
       <span class="admin-loading-spinner" aria-hidden="true"></span>
       <div>

@@ -1,4 +1,5 @@
 import Category from '#models/category'
+import Admin from '#models/admin'
 import Craftsman from '#models/craftsman'
 import Region from '#models/region'
 import ServicePriceCatalog from '#models/service_price_catalog'
@@ -49,6 +50,27 @@ export default class extends BaseSeeder {
     await Region.updateOrCreate(
       { nameEn: 'Famagusta' },
       { nameEn: 'Famagusta', nameTr: 'Gazimağusa' }
+    )
+
+    // Local-development administrator. Change this credential before any deployment.
+    const adminUser = await User.updateOrCreate(
+      { email: 'admin@ustacik.test' },
+      {
+        email: 'admin@ustacik.test',
+        phoneNormalised: '+905550000000',
+        passwordHash: 'AdminPassword123!',
+        role: 'admin',
+        status: 'active',
+      }
+    )
+    await Admin.updateOrCreate(
+      { userId: adminUser.id },
+      {
+        userId: adminUser.id,
+        fullName: 'Ustacik Administrator',
+        department: 'Platform Operations',
+        clearanceLvl: 1,
+      }
     )
 
     const craftsmanUser = await User.updateOrCreate(

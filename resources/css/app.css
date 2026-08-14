@@ -1069,6 +1069,52 @@ textarea.form-control {
   margin-top: 24px;
 }
 
+.signup-help,
+.password-strength-label {
+  margin-top: 7px;
+  color: var(--text-grey);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.signup-help strong {
+  color: var(--text-black);
+}
+
+.password-strength {
+  margin-top: 10px;
+}
+
+.password-strength-track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--gray-3);
+}
+
+.password-strength-fill {
+  display: block;
+  width: var(--password-strength, 0%);
+  height: 100%;
+  border-radius: inherit;
+  background: #d34a45;
+  transition:
+    width 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.password-strength-track[data-strength='2'] .password-strength-fill {
+  background: #d89b32;
+}
+
+.password-strength-track[data-strength='3'] .password-strength-fill {
+  background: #668a3c;
+}
+
+.password-strength-track[data-strength='4'] .password-strength-fill {
+  background: #237a4b;
+}
+
 /* --- Standalone Error Pages --- */
 .error-page {
   min-height: calc(100vh - 65px);
@@ -2241,6 +2287,20 @@ textarea.craftsman-profile-control {
   margin: 0 14px 14px;
 }
 
+/* Page Header Spacing */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: var(--text-black);
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
 /* ==========================================================================
    RESPONSIVE BREAKPOINTS
    ========================================================================== */
@@ -3397,7 +3457,9 @@ textarea.craftsman-profile-control {
   justify-content: space-between;
   color: #333333;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .craftsman-listing-card:hover {
@@ -3682,7 +3744,10 @@ textarea.craftsman-profile-control {
   background: var(--bg-white);
   color: var(--brand-brown);
   cursor: pointer;
-  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
 }
 
 .user-menu-trigger:hover,
@@ -3751,7 +3816,9 @@ textarea.craftsman-profile-control {
   border: 1px solid rgba(138, 82, 57, 0.2);
   border-radius: 12px;
   background: var(--bg-white);
-  box-shadow: 0 18px 42px rgba(42, 26, 20, 0.14), 0 3px 10px rgba(42, 26, 20, 0.06);
+  box-shadow:
+    0 18px 42px rgba(42, 26, 20, 0.14),
+    0 3px 10px rgba(42, 26, 20, 0.06);
 }
 
 .user-menu-panel a,
@@ -3912,7 +3979,9 @@ textarea.craftsman-profile-control {
     border: 1px solid rgba(138, 82, 57, 0.22);
     border-radius: 12px;
     background: var(--bg-white);
-    transition: border-color 160ms ease, box-shadow 160ms ease;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease;
   }
 
   .craftsman-workspace-menu > summary {
@@ -3920,7 +3989,9 @@ textarea.craftsman-profile-control {
     justify-content: space-between;
     gap: 16px;
     padding: 10px 14px;
-    transition: background-color 160ms ease, color 160ms ease;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
   }
 
   .craftsman-workspace-menu > summary .dropdown-chevron {
@@ -3940,7 +4011,9 @@ textarea.craftsman-profile-control {
 
   .craftsman-workspace-menu[open] {
     border-color: rgba(200, 90, 50, 0.35);
-    box-shadow: 0 18px 42px rgba(42, 26, 20, 0.1), 0 3px 10px rgba(42, 26, 20, 0.05);
+    box-shadow:
+      0 18px 42px rgba(42, 26, 20, 0.1),
+      0 3px 10px rgba(42, 26, 20, 0.05);
   }
 
   .craftsman-workspace-menu[open] > summary .dropdown-chevron,
@@ -4151,4 +4224,3 @@ textarea.craftsman-profile-control {
     text-align: center;
   }
 }
-

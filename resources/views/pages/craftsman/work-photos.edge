@@ -12,26 +12,22 @@
       <article class="dashboard-panel work-photo-form-card">
         <h2>Add Work Photo</h2>
         <p class="dashboard-muted">
-          For now, photos are added using a link. Paste a direct link to a photo of your previous work.
+          Upload a photo of your previous work. Supported formats: JPG, PNG, WebP (Max 5MB).
         </p>
 
-        @form({ action: '/api/craftsman/work-photos', method: 'POST', id: 'work-photo-form' })
-          <div class="work-photo-form-row">
-            <label for="work-photo-url">
-              Photo link
-              <input
-                id="work-photo-url"
-                name="imageUrl"
-                class="form-control"
-                type="url"
-                maxlength="500"
-                placeholder="https://example.com/my-work-photo.jpg"
-                required
-              />
-            </label>
-            <button id="work-photo-add" class="btn-primary" type="submit">Add Photo</button>
-          </div>
-        @end
+        <div class="work-photo-form-row">
+          <label for="work-photo-input">
+            Choose Photo
+            <input
+              id="work-photo-input"
+              class="form-control"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              required
+            />
+          </label>
+          <button id="work-photo-add" class="btn-primary" type="button">Upload Photo</button>
+        </div>
       </article>
 
       <section class="dashboard-panel">
@@ -54,10 +50,11 @@
     const workPhotosSuccess = document.getElementById('work-photos-success')
     const workPhotosEmpty = document.getElementById('work-photos-empty')
     const workPhotosList = document.getElementById('work-photos-list')
-    const workPhotoForm = document.getElementById('work-photo-form')
-    const workPhotoUrl = document.getElementById('work-photo-url')
+    const workPhotoInput = document.getElementById('work-photo-input')
     const workPhotoAdd = document.getElementById('work-photo-add')
-    const workPhotoCsrf = workPhotoForm.querySelector('input[name="_csrf"]')?.value
+    
+    // Get CSRF token from meta tag
+    const workPhotoCsrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
     let workPhotos = []
 
     const showWorkPhotoError = (message) => {
@@ -77,6 +74,8 @@
       workPhotosEmpty.hidden = workPhotos.length !== 0
 
       workPhotos.forEach((workPhoto) => {
+        console.log('Rendering photo:', { id: workPhoto.id, imageUrl: workPhoto.imageUrl })
+        
         const card = document.createElement('article')
         const image = document.createElement('img')
         const url = document.createElement('p')
@@ -86,6 +85,16 @@
         image.src = workPhoto.imageUrl
         image.alt = 'Craftsman work portfolio'
         image.loading = 'lazy'
+        
+        // Log when image fails to load
+        image.addEventListener('error', () => {
+          console.error('Failed to load image:', workPhoto.imageUrl)
+        })
+        
+        image.addEventListener('load', () => {
+          console.log('Image loaded successfully:', workPhoto.imageUrl)
+        })
+        
         url.className = 'work-photo-url'
         url.textContent = workPhoto.imageUrl
         remove.className = 'service-price-delete work-photo-remove'
@@ -125,47 +134,75 @@
           credentials: 'same-origin',
         })
         const payload = await response.json().catch(() => ({}))
-        if (!response.ok || !Array.isArray(payload.workPhotos)) throw new Error('Unable to load your work photos.')
+        console.log('Work photos response:', { status: response.status, ok: response.ok, payload })
+        
+        if (!response.ok) {
+          throw new Error(payload.message || `HTTP ${response.status}: Unable to load your work photos.`)
+        }
+        
+        if (!Array.isArray(payload.workPhotos)) {
+          throw new Error('Invalid response format: workPhotos is not an array')
+        }
+        
         workPhotos = payload.workPhotos
         renderWorkPhotos()
         workPhotosLoading.hidden = true
         workPhotosContent.hidden = false
       } catch (failure) {
+        console.error('Error loading work photos:', failure)
         workPhotosLoading.hidden = true
         showWorkPhotoError(failure.message || 'Unable to load your work photos.')
       }
     }
 
-    workPhotoForm.addEventListener('submit', async (event) => {
-      event.preventDefault()
+    workPhotoAdd.addEventListener('click', async () => {
+      const file = workPhotoInput.files[0]
+      
+      if (!file) {
+        showWorkPhotoError('Please select a photo to upload.')
+        return
+      }
+
       workPhotosError.hidden = true
       workPhotosSuccess.hidden = true
       workPhotoAdd.disabled = true
-      workPhotoAdd.textContent = 'Adding...'
+      workPhotoAdd.textContent = 'Uploading...'
+      
       try {
+        const formData = new FormData()
+        formData.append('image', file)
+
         const response = await fetch('/api/craftsman/work-photos', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json',
             'x-csrf-token': workPhotoCsrf,
           },
           credentials: 'same-origin',
-          body: JSON.stringify({ imageUrl: workPhotoUrl.value }),
+          body: formData,
         })
+        
         const payload = await response.json().catch(() => ({}))
-        if (!response.ok || !payload.workPhoto) {
-          throw new Error(payload.errors?.[0]?.message || payload.message || 'Unable to add the work photo.')
+        console.log('Upload response:', { status: response.status, ok: response.ok, payload })
+        
+        if (!response.ok) {
+          throw new Error(payload.message || `HTTP ${response.status}: Unable to add the work photo.`)
         }
+        
+        if (!payload.workPhoto) {
+          throw new Error('Invalid response format: workPhoto is missing')
+        }
+        
         workPhotos = [payload.workPhoto, ...workPhotos]
         renderWorkPhotos()
-        workPhotoForm.reset()
+        workPhotoInput.value = ''
         showWorkPhotoSuccess('The work photo has been added successfully.')
       } catch (failure) {
+        console.error('Error uploading photo:', failure)
         showWorkPhotoError(failure.message || 'Unable to add the work photo.')
       } finally {
         workPhotoAdd.disabled = false
-        workPhotoAdd.textContent = 'Add Photo'
+        workPhotoAdd.textContent = 'Upload Photo'
       }
     })
 

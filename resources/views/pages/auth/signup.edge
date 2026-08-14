@@ -27,9 +27,21 @@
           <div class="auth-field">
             @field.root({ name: 'phone' })
               @!field.label({ text: 'Phone number' })
-              @!input.control({ type: 'tel', autocomplete: 'tel' })
+              @!input.control({
+                type: 'tel',
+                autocomplete: 'tel',
+                placeholder: '+905551234567',
+                inputmode: 'tel',
+                'aria-describedby': 'phone-format-note',
+              })
               @!field.error()
             @end
+
+            <p id="phone-format-note" class="signup-help">
+              Use international format:
+              <strong>+905551234567</strong>
+              (a + followed by country code and number).
+            </p>
           </div>
 
           <div class="auth-field">
@@ -69,9 +81,33 @@
           <div class="auth-field">
             @field.root({ name: 'password' })
               @!field.label({ text: 'Password' })
-              @!input.control({ type: 'password', autocomplete: 'new-password' })
+              @!input.control({
+                type: 'password',
+                autocomplete: 'new-password',
+                'aria-describedby':
+                  'password-requirements password-strength-label',
+              })
               @!field.error()
             @end
+
+            <p id="password-requirements" class="signup-help">
+              Use 12+ characters with uppercase, lowercase, and a number.
+            </p>
+            <div class="password-strength" aria-live="polite">
+              <div
+                class="password-strength-track"
+                role="progressbar"
+                aria-label="Password strength"
+                aria-valuemin="0"
+                aria-valuemax="4"
+                aria-valuenow="0"
+              >
+                <span class="password-strength-fill"></span>
+              </div>
+              <p id="password-strength-label" class="password-strength-label">
+                Password strength: not entered
+              </p>
+            </div>
           </div>
 
           <div class="auth-field">

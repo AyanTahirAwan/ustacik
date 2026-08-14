@@ -1,13 +1,18 @@
 import vine from '@vinejs/vine'
 
-const email = () => vine.string().email().maxLength(254)
-const password = () => vine.string().minLength(8).maxLength(64)
-const phone = () => vine.string().trim().minLength(8).maxLength(32)
+export const emailRule = () => vine.string().trim().toLowerCase().email().maxLength(254)
+export const phoneRule = () =>
+  vine
+    .string()
+    .trim()
+    .regex(/^\+[1-9]\d{7,14}$/)
+export const passwordRule = () =>
+  vine.string().minLength(12).maxLength(128).regex(/[a-z]/).regex(/[A-Z]/).regex(/\d/)
 
 export const signupValidator = vine.create({
-  email: email().unique({ table: 'users', column: 'email' }),
-  phone: phone().unique({ table: 'users', column: 'phone_normalised' }),
-  password: password().confirmed({ confirmationField: 'passwordConfirmation' }),
+  email: emailRule().unique({ table: 'users', column: 'email' }),
+  phone: phoneRule().unique({ table: 'users', column: 'phone_normalised' }),
+  password: passwordRule().confirmed({ confirmationField: 'passwordConfirmation' }),
   role: vine.enum(['customer', 'craftsman'] as const),
 
   fullName: vine.string().trim().minLength(2).maxLength(160).optional(),
@@ -16,6 +21,6 @@ export const signupValidator = vine.create({
 })
 
 export const loginValidator = vine.create({
-  email: email(),
-  password: vine.string().minLength(1).maxLength(64),
+  email: emailRule(),
+  password: vine.string().minLength(1).maxLength(128),
 })

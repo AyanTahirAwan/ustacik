@@ -1,7 +1,7 @@
 import type User from '#models/user'
 
 const roleLandingPaths: Record<User['role'], string> = {
-  customer: '/customer/profile',
+  customer: '/craftsmen',
   craftsman: '/craftsman',
   admin: '/admin',
 }

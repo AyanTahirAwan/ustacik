@@ -6,6 +6,8 @@ import { signupValidator } from '#validators/user'
 import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
 import type { HttpContext } from '@adonisjs/core/http'
+import { VerificationService } from '#services/verification_service'
+import { EmailDeliveryService } from '#services/email_delivery_service'
 
 export default class NewAccountController {
   async create({ view }: HttpContext) {
@@ -15,8 +17,8 @@ export default class NewAccountController {
   async store({ request, response, session }: HttpContext) {
     const payload = await request.validateUsing(signupValidator)
 
-    await db.transaction(async (trx) => {
-      const newUser = await User.create(
+    const newUser = await db.transaction(async (trx) => {
+      const createdUser = await User.create(
         {
           email: payload.email,
           phoneNormalised: payload.phone,
@@ -30,7 +32,7 @@ export default class NewAccountController {
       if (payload.role === 'customer') {
         await Customer.create(
           {
-            userId: newUser.id,
+            userId: createdUser.id,
             fullName: payload.fullName ?? payload.email,
             language: 'en',
             smsOptIn: true,
@@ -44,7 +46,7 @@ export default class NewAccountController {
 
         await Craftsman.create(
           {
-            userId: newUser.id,
+            userId: createdUser.id,
             businessName: payload.businessName,
             categoryId: payload.categoryId,
             trustLevel: 0,
@@ -65,8 +67,20 @@ export default class NewAccountController {
         )
       }
 
-      return newUser
+      return createdUser
     })
+
+    // A failed third-party delivery must not roll back a valid account.
+    const { code } = await VerificationService.sendEmailVerification(newUser, newUser.email)
+    try {
+      await EmailDeliveryService.send({
+        to: newUser.email,
+        subject: 'Verify your Ustacik email address',
+        text: `Your Ustacik email verification code is ${code}. It expires in 10 minutes.`,
+      })
+    } catch {
+      // The code is retained for a later authenticated resend attempt.
+    }
 
     session.flash('success', 'Account created successfully. You can now log in.')
     response.redirect().toRoute('session.create')

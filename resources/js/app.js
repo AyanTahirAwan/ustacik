@@ -513,6 +513,30 @@ async function initSignup() {
     clear(categorySelect)
     addOption(categorySelect, '', 'Unable to load categories', '')
   }
+
+  const passwordInput = document.getElementById('password')
+  const strengthTrack = document.querySelector('.password-strength-track')
+  const strengthFill = document.querySelector('.password-strength-fill')
+  const strengthLabel = document.getElementById('password-strength-label')
+
+  const updatePasswordStrength = () => {
+    const value = passwordInput?.value || ''
+    const score = [
+      value.length >= 12,
+      /[a-z]/.test(value),
+      /[A-Z]/.test(value),
+      /\d/.test(value),
+    ].filter(Boolean).length
+    const labels = ['not entered', 'weak', 'fair', 'good', 'strong']
+
+    strengthTrack?.setAttribute('aria-valuenow', String(score))
+    strengthFill?.style.setProperty('--password-strength', `${score * 25}%`)
+    if (strengthTrack) strengthTrack.dataset.strength = String(score)
+    if (strengthLabel) strengthLabel.textContent = `Password strength: ${labels[score]}`
+  }
+
+  passwordInput?.addEventListener('input', updatePasswordStrength)
+  updatePasswordStrength()
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -24,6 +24,8 @@ export const controllers = {
   Subscriptions: () => import('#controllers/subscriptions_controller'),
   UserNotifications: () => import('#controllers/user_notifications_controller'),
   Users: () => import('#controllers/users_controller'),
+  Verification: () => import('#controllers/verification_controller'),
   VerificationLogs: () => import('#controllers/verification_logs_controller'),
   WorkPhotos: () => import('#controllers/work_photos_controller'),
+  PlatformSettings: () => import('#controllers/platform_settings_controller'),
 }

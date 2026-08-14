@@ -11,7 +11,7 @@ import RefreshToken from '#models/refresh_token'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
-  
+
   passwordColumnName: 'passwordHash',
 })
 
@@ -33,6 +33,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare status: 'active' | 'suspended'
+
+  @column.dateTime()
+  declare emailVerifiedAt: DateTime | null
+
+  @column.dateTime()
+  declare phoneVerifiedAt: DateTime | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -56,7 +62,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
     return this.status === 'active'
   }
 
-  
   get initials() {
     return this.email.slice(0, 2).toUpperCase()
   }

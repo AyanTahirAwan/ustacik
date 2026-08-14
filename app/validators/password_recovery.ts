@@ -1,13 +1,10 @@
 import vine from '@vinejs/vine'
+import { emailRule, passwordRule } from '#validators/user'
 
 export const requestPasswordRecoveryValidator = vine.create({
-  email: vine.string().email().maxLength(254),
+  email: emailRule(),
 })
 
 export const redeemPasswordRecoveryValidator = vine.create({
-  password: vine
-    .string()
-    .minLength(8)
-    .maxLength(64)
-    .confirmed({ confirmationField: 'passwordConfirmation' }),
+  password: passwordRule().confirmed({ confirmationField: 'passwordConfirmation' }),
 })

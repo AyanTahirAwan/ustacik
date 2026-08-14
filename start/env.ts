@@ -21,6 +21,10 @@ export default await Env.create(new URL('../', import.meta.url), {
   // App
   APP_KEY: Env.schema.secret(),
   APP_URL: Env.schema.string({ format: 'url', tld: false }),
+  RESEND_API_KEY: Env.schema.string.optional(),
+  MAIL_FROM: Env.schema.string.optional(),
+  SMS_DELIVERY_WEBHOOK_URL: Env.schema.string.optional(),
+  SMS_DELIVERY_WEBHOOK_TOKEN: Env.schema.string.optional(),
 
   // Session
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),

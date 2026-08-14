@@ -19,12 +19,12 @@ const RegionsController = () => import('#controllers/regions_controller')
 const ServicePriceCatalogsController = () =>
   import('#controllers/service_price_catalogs_controller')
 const VerificationLogsController = () => import('#controllers/verification_logs_controller')
+const VerificationController = () => import('#controllers/verification_controller')
 const JobRequestsController = () => import('#controllers/job_requests_controller')
 const ReviewsController = () => import('#controllers/reviews_controller')
 const JobDisputesController = () => import('#controllers/job_disputes_controller')
 const AccountController = () => import('#controllers/account_controller')
-
-
+const PlatformSettingsController = () => import('#controllers/platform_settings_controller')
 
 router.on('/').render('pages/home').as('home')
 
@@ -38,6 +38,10 @@ router
 
     router.post('api/password-recovery', [PasswordRecoveryRequestsController, 'store'])
     router.patch('api/password-recovery/:shortcode', [PasswordRecoveryRequestsController, 'update'])
+    router.get('forgot-password', [PasswordRecoveryRequestsController, 'createRequest'])
+    router.post('forgot-password', [PasswordRecoveryRequestsController, 'storeFromForm'])
+    router.get('password-reset/:shortcode', [PasswordRecoveryRequestsController, 'create'])
+    router.post('password-reset/:shortcode', [PasswordRecoveryRequestsController, 'updateFromForm'])
   })
   .use(middleware.guest())
 
@@ -67,6 +71,11 @@ router
 
     router.get('api/auth/refresh-tokens', [RefreshTokensController, 'index'])
     router.delete('api/auth/refresh-tokens/:id', [RefreshTokensController, 'destroy'])
+
+    router.post('api/verification/verify-email', [VerificationController, 'verifyEmailCode'])
+    router.post('api/verification/verify-phone', [VerificationController, 'verifyPhoneCode'])
+    router.post('api/verification/send-email-code', [VerificationController, 'sendEmailCode'])
+    router.post('api/verification/send-phone-code', [VerificationController, 'sendPhoneCode'])
 
     router.get('api/jobs', [JobRequestsController, 'index'])
     router.get('api/jobs/:id', [JobRequestsController, 'show'])
@@ -127,7 +136,7 @@ router
 router
   .group(() => {
     router.get('notifications', ({ view }) => view.render('pages/notifications/index'))
-    router.get('account/settings', ({ view }) => view.render('pages/account/settings'))
+    router.get('account/settings', ({ view }) => view.render('pages/customer/profile'))
     router.patch('api/account/password', [AccountController, 'updatePassword'])
 
     router.get('api/craftsman/profile', [CraftsmenController, 'showOwn'])
@@ -171,7 +180,7 @@ router
     )
   })
   .use(middleware.auth())
-  .use(middleware.role({ roles: ['craftsman'] }))
+  .use(middleware.role({ roles: ['craftsman', 'customer'] }))
 
 router
   .group(() => {
@@ -210,7 +219,11 @@ router
 
     router.delete('api/admin/reviews/:id', [ReviewsController, 'destroy'])
 
-    router.get('admin', ({ view }) => view.render('pages/admin/dashboard'))
+    router.get('admin', [PlatformSettingsController, 'dashboard'])
+    router.post('admin/settings/phone-verification', [
+      PlatformSettingsController,
+      'updatePhoneVerification',
+    ])
 
     router.get('admin/users', ({ view }) => view.render('pages/admin/users/index'))
     router.get('admin/users/:userId', ({ params, view }) =>

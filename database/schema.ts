@@ -227,6 +227,21 @@ export class PasswordRecoveryRequestSchema extends BaseModel {
   declare userId: number
 }
 
+export class PlatformSettingSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'key', 'updatedAt', 'value'] as const
+  $columns = PlatformSettingSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare key: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare value: string
+}
+
 export class RefreshTokenSchema extends BaseModel {
   static $columns = ['createdAt', 'expiresAt', 'id', 'revoked', 'tokenHash', 'userId'] as const
   $columns = RefreshTokenSchema.$columns
@@ -397,24 +412,57 @@ export class UserNotificationSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'id', 'passwordHash', 'phoneNormalised', 'role', 'status', 'updatedAt'] as const
+  static $columns = ['createdAt', 'email', 'emailVerifiedAt', 'id', 'passwordHash', 'phoneNormalised', 'phoneVerifiedAt', 'role', 'status', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
   declare email: string
+  @column.dateTime()
+  declare emailVerifiedAt: DateTime | null
   @column({ isPrimary: true })
   declare id: number
   @column()
   declare passwordHash: string
   @column()
   declare phoneNormalised: string
+  @column.dateTime()
+  declare phoneVerifiedAt: DateTime | null
   @column()
   declare role: string
   @column()
   declare status: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+}
+
+export class VerificationCodeSchema extends BaseModel {
+  static $columns = ['attempts', 'code', 'codeHash', 'createdAt', 'expiresAt', 'id', 'isVerified', 'target', 'type', 'updatedAt', 'userId', 'verifiedAt'] as const
+  $columns = VerificationCodeSchema.$columns
+  @column()
+  declare attempts: number
+  @column()
+  declare code: string
+  @column()
+  declare codeHash: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column.dateTime()
+  declare expiresAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isVerified: boolean
+  @column()
+  declare target: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: number
+  @column.dateTime()
+  declare verifiedAt: DateTime | null
 }
 
 export class VerificationLogSchema extends BaseModel {

@@ -495,6 +495,29 @@ html {
   background: var(--admin-surface);
 }
 
+.admin-feature-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding: 22px 24px;
+}
+
+.admin-feature-setting h2 {
+  margin: 2px 0 6px;
+  font-family: var(--admin-font-accent);
+  font-size: 1.35rem;
+}
+
+.admin-feature-setting p:not(.admin-eyebrow) {
+  color: var(--admin-slate);
+}
+
+.admin-feature-setting-form {
+  flex: 0 0 auto;
+}
+
 .admin-panel-heading {
   display: flex;
   padding: 20px 24px;
