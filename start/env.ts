@@ -26,6 +26,8 @@ export default await Env.create(new URL('../', import.meta.url), {
   SMS_DELIVERY_WEBHOOK_URL: Env.schema.string.optional(),
   SMS_DELIVERY_WEBHOOK_TOKEN: Env.schema.string.optional(),
 
-  // Session
-  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),
+DATABASE_URL: Env.schema.string(),
+
+// Session
+SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),
 })
