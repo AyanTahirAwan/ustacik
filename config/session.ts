@@ -2,6 +2,9 @@ import env from '#start/env'
 import app from '@adonisjs/core/services/app'
 import { defineConfig, stores } from '@adonisjs/session'
 
+// Default to 'cookie' for local/dev when SESSION_DRIVER isn't set.
+const _sessionDriver = (env.get('SESSION_DRIVER') ?? 'cookie') as 'cookie' | 'memory' | 'database'
+
 /**
  * Session configuration.
  * Defines how user sessions are managed, stored, and secured.
@@ -65,8 +68,6 @@ const sessionConfig = defineConfig({
    * variable in order to infer the store name without any
    * errors.
    */
-  // Default to 'cookie' for local/dev when SESSION_DRIVER isn't set.
-  const _sessionDriver = (env.get('SESSION_DRIVER') ?? 'cookie') as 'cookie' | 'memory' | 'database'
   store: _sessionDriver,
 
   /**
