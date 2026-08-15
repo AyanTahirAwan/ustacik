@@ -65,7 +65,9 @@ const sessionConfig = defineConfig({
    * variable in order to infer the store name without any
    * errors.
    */
-  store: env.get('SESSION_DRIVER'),
+  // Default to 'cookie' for local/dev when SESSION_DRIVER isn't set.
+  const _sessionDriver = (env.get('SESSION_DRIVER') ?? 'cookie') as 'cookie' | 'memory' | 'database'
+  store: _sessionDriver,
 
   /**
    * List of configured stores. Refer documentation to see
