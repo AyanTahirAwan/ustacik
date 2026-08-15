@@ -15,6 +15,7 @@ export const controllers = {
   JobRequests: () => import('#controllers/job_requests_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   PasswordRecoveryRequests: () => import('#controllers/password_recovery_requests_controller'),
+  PlatformSettings: () => import('#controllers/platform_settings_controller'),
   RefreshTokens: () => import('#controllers/refresh_tokens_controller'),
   Regions: () => import('#controllers/regions_controller'),
   Reviews: () => import('#controllers/reviews_controller'),
@@ -27,5 +28,4 @@ export const controllers = {
   Verification: () => import('#controllers/verification_controller'),
   VerificationLogs: () => import('#controllers/verification_logs_controller'),
   WorkPhotos: () => import('#controllers/work_photos_controller'),
-  PlatformSettings: () => import('#controllers/platform_settings_controller'),
 }

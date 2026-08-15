@@ -39,7 +39,6 @@
     "@adonisjs/assembler": "^8.4.0",
     "@adonisjs/eslint-config": "^3.1.0",
     "@adonisjs/prettier-config": "^1.5.0",
-    "@adonisjs/tsconfig": "^2.0.0",
     "@japa/api-client": "^3.2.1",
     "@japa/assert": "^4.2.0",
     "@japa/browser-client": "^2.3.0",
@@ -64,14 +63,16 @@
     "@adonisjs/session": "^8.1.0",
     "@adonisjs/shield": "^9.0.0",
     "@adonisjs/static": "^2.0.1",
+    "@adonisjs/tsconfig": "^2.0.0",
     "@adonisjs/vite": "^5.1.1",
+    "@poppinss/ts-exec": "^1.4.4",
     "@vinejs/vine": "^4.4.0",
     "better-sqlite3": "^12.10.0",
     "edge.js": "^6.5.1",
     "luxon": "^3.7.2",
     "pg": "^8.22.0",
     "reflect-metadata": "^0.2.2",
-    "@poppinss/ts-exec": "^1.4.4"
+    "sqlite3": "^6.0.1"
   },
   "hotHook": {
     "boundaries": [

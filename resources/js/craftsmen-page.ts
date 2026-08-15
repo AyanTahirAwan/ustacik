@@ -62,17 +62,17 @@ if (
 
 
 function setLoading(value: boolean) {
-  loading.hidden = !value
+  loading!.hidden = !value
 }
 
 
 function setError(value: boolean) {
-  error.hidden = !value
+  error!.hidden = !value
 }
 
 
 function setEmpty(value: boolean) {
-  empty.hidden = !value
+  empty!.hidden = !value
 }
 
 
@@ -140,7 +140,7 @@ function escapeHtml(value: string) {
 
 
 function renderCraftsmen(craftsmen: Craftsman[]) {
-  list.innerHTML = ''
+  list!.innerHTML = ''
 
   setEmpty(craftsmen.length === 0)
 
@@ -193,7 +193,7 @@ function renderCraftsmen(craftsmen: Craftsman[]) {
       </div>
     `
 
-    list.appendChild(card)
+    list!.appendChild(card)
   })
 }
 
@@ -217,7 +217,7 @@ async function loadCategories() {
   const data =
     await response.json() as CategoriesResponse
 
-  categorySelect.innerHTML = `
+  categorySelect!.innerHTML = `
     <option value="">
       All categories
     </option>
@@ -232,7 +232,7 @@ data.data.forEach((category) => {    const option = document.createElement('opti
       category.nameTr ||
       `Category ${category.id}`
 
-    categorySelect.appendChild(option)
+    categorySelect!.appendChild(option)
   })
 }
 
@@ -243,7 +243,7 @@ async function loadCraftsmen() {
     setError(false)
     setEmpty(false)
 
-    const categoryId = categorySelect.value
+    const categoryId = categorySelect!.value
 
     const params = new URLSearchParams()
 
@@ -276,7 +276,7 @@ async function loadCraftsmen() {
   } catch (requestError) {
     console.error('Failed to load craftsmen:', requestError)
 
-    list.innerHTML = ''
+    list!.innerHTML = ''
     setError(true)
   } finally {
     setLoading(false)
@@ -284,13 +284,13 @@ async function loadCraftsmen() {
 }
 
 
-categorySelect.addEventListener('change', () => {
+categorySelect!.addEventListener('change', () => {
   loadCraftsmen()
 })
 
 
-clearButton.addEventListener('click', () => {
-  categorySelect.value = ''
+clearButton!.addEventListener('click', () => {
+  categorySelect!.value = ''
 
   loadCraftsmen()
 })

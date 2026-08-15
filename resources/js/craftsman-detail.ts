@@ -187,7 +187,7 @@ function renderPriceRanges(data: PriceResponse) {
 
 async function loadCraftsman(): Promise<Craftsman> {
 const response = await fetch(
-`/api/craftsmen/${encodeURIComponent(craftsmanId)}`,
+`/api/craftsmen/${encodeURIComponent(String(craftsmanId))}`,
 {
 headers: {
 Accept: 'application/json',
@@ -201,14 +201,14 @@ throw new Error(
 )
 }
 
-const data = await response.json()
+const data = await response.json() as any
 
 return data.craftsman as Craftsman
 }
 
 async function loadReviews(): Promise<ReviewResponse> {
 const response = await fetch(
-`/api/craftsmen/${encodeURIComponent(craftsmanId)}/reviews`,
+`/api/craftsmen/${encodeURIComponent(String(craftsmanId))}/reviews`,
 {
 headers: {
 Accept: 'application/json',
@@ -222,12 +222,13 @@ throw new Error(
 )
 }
 
-return await response.json() as ReviewResponse
+const reviewsData = await response.json() as any
+  return reviewsData as ReviewResponse
 }
 
 async function loadPriceRanges(): Promise<PriceResponse> {
 const response = await fetch(
-`/api/catalog/prices?craftsmanId=${encodeURIComponent(craftsmanId)}`,
+`/api/catalog/prices?craftsmanId=${encodeURIComponent(String(craftsmanId))}`,
 {
 headers: {
 Accept: 'application/json',
@@ -241,7 +242,8 @@ throw new Error(
 )
 }
 
-return await response.json() as PriceResponse
+const pricesData = await response.json() as any
+  return pricesData as PriceResponse
 }
 
 async function load() {
