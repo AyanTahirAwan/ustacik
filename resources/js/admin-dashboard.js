@@ -1,8 +1,11 @@
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 const TRUST_LEVELS = [
-  { value: 0, label: 'Unverified', key: 'unverified' },
-  { value: 1, label: 'Registered', key: 'registered' },
-  { value: 2, label: 'Verified', key: 'verified' },
-  { value: 3, label: 'Approved', key: 'approved' },
+  { value: 0, label: tr('Unverified', 'Doğrulanmamış'), key: 'unverified' },
+  { value: 1, label: tr('Registered', 'Kayıtlı'), key: 'registered' },
+  { value: 2, label: tr('Verified', 'Doğrulanmış'), key: 'verified' },
+  { value: 3, label: tr('Approved', 'Onaylı'), key: 'approved' },
 ]
 
 const TRUST_DISPLAY_ORDER = [3, 2, 1, 0]
@@ -15,10 +18,10 @@ const TRUST_STAMPS = {
 }
 
 const RANGE_LABELS = {
-  30: 'last 30 days',
-  90: 'last 90 days',
-  year: 'this year',
-  all: 'all time',
+  30: tr('last 30 days', 'son 30 gün'),
+  90: tr('last 90 days', 'son 90 gün'),
+  year: tr('this year', 'bu yıl'),
+  all: tr('all time', 'tüm zamanlar'),
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -85,8 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
     categories: [],
   }
 
-  const numberFormatter = new Intl.NumberFormat('en')
-  const dateFormatter = new Intl.DateTimeFormat('en', {
+  const numberFormatter = new Intl.NumberFormat(isTr ? 'tr' : 'en')
+  const dateFormatter = new Intl.DateTimeFormat(isTr ? 'tr' : 'en', {
     month: 'short',
     year: 'numeric',
   })
@@ -111,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function formatLabel(value) {
     if (!value) {
-      return 'Unavailable'
+      return tr('Unavailable', 'Mevcut değil')
     }
 
     return String(value)
@@ -182,11 +185,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!category) {
       return categoryId === null || categoryId === undefined
-        ? 'Unassigned'
+        ? tr('Unassigned', 'Atanmamış')
         : `Category #${categoryId}`
     }
 
-    return category.nameEn || category.nameTr || `Category #${category.id}`
+    return (isTr ? category.nameTr : category.nameEn) || `Category #${category.id}`
   }
 
   function getTrustLevel(value) {
@@ -228,18 +231,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     elements.totalCraftsmen.textContent = formatNumber(craftsmen.length)
     elements.totalCraftsmenNote.textContent =
-      getRange() === 'all' ? 'All registered craftsmen' : `Joined in the ${rangeLabel}`
+      getRange() === 'all' 
+        ? tr('All registered craftsmen', 'Tüm kayıtlı ustalar') 
+        : (isTr ? `${rangeLabel} katılanlar` : `Joined in the ${rangeLabel}`)
+    
     elements.approvedTier.textContent = `${approvedPercentage}%`
     elements.approvedTierNote.textContent =
-      getRange() === 'all' ? 'Current trust snapshot' : 'Current trust • selected joined cohort'
+      getRange() === 'all' 
+        ? tr('Current trust snapshot', 'Mevcut güven durumu') 
+        : tr('Current trust • selected joined cohort', 'Mevcut güven • seçilen katılım grubu')
+    
     elements.jobsCompleted.textContent = formatNumber(allTimeJobs)
     elements.openDisputes.textContent = formatNumber(openDisputes)
     elements.openDisputesNote.textContent =
       getRange() === 'all'
-        ? 'Currently open • all time'
-        : `Opened in the ${rangeLabel} • still open`
+        ? tr('Currently open • all time', 'Şu anda açık • tüm zamanlar')
+        : (isTr ? `${rangeLabel} açılan • hala açık` : `Opened in the ${rangeLabel} • still open`)
+    
     elements.cohortNote.textContent =
-      getRange() === 'all' ? 'Current platform snapshot' : `Craftsmen joined in the ${rangeLabel}`
+      getRange() === 'all' 
+        ? tr('Current platform snapshot', 'Güncel platform özeti') 
+        : (isTr ? `${rangeLabel} katılan ustalar` : `Craftsmen joined in the ${rangeLabel}`)
   }
 
   function renderTrustDistribution(craftsmen) {
@@ -279,10 +291,13 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     elements.trustSummary.textContent =
-      total === 1 ? '1 craftsman' : `${formatNumber(total)} craftsmen`
+      total === 1 
+        ? (isTr ? '1 usta' : '1 craftsman') 
+        : (isTr ? `${formatNumber(total)} usta` : `${formatNumber(total)} craftsmen`)
+    
     elements.trustBar.setAttribute(
       'aria-label',
-      total ? ariaParts.join('. ') : 'No craftsman trust data available'
+      total ? ariaParts.join('. ') : tr('No craftsman trust data available', 'Usta güven verisi mevcut değil')
     )
     elements.trustEmpty.hidden = total !== 0
     elements.trustBar.hidden = total === 0
@@ -293,7 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentValue = elements.category.value
     const firstOption = elements.category.options[0]
 
-    firstOption.textContent = state.categories.length ? 'All categories' : 'No categories available'
+    firstOption.textContent = state.categories.length 
+      ? tr('All categories', 'Tüm kategoriler') 
+      : tr('No categories available', 'Kategori mevcut değil')
+    
     elements.category.replaceChildren(firstOption)
     elements.category.disabled = state.categories.length === 0
 
@@ -321,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createUnavailableCell() {
     const cell = createElement('td', 'admin-data-unavailable', '—')
-    cell.title = 'Aggregate data unavailable'
+    cell.title = tr('Aggregate data unavailable', 'Veri mevcut değil')
     return cell
   }
 
@@ -354,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const joined = createElement(
         'span',
         'admin-craftsman-joined',
-        `Joined ${formatDate(user.createdAt)}`
+        isTr ? `Katılım: ${formatDate(user.createdAt)}` : `Joined ${formatDate(user.createdAt)}`
       )
 
       avatar.setAttribute('aria-hidden', 'true')
@@ -368,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
         getCategoryName(user.craftsman?.categoryId, categoryMap)
       )
       const regionCell = createUnavailableCell()
-      regionCell.title = 'A canonical craftsman region is unavailable'
+      regionCell.title = tr('A canonical craftsman region is unavailable', 'Usta bölgesi mevcut değil')
 
       const trustCell = document.createElement('td')
       const trustLevel = getTrustLevel(user.craftsman?.trustLevel)
@@ -405,13 +423,14 @@ document.addEventListener('DOMContentLoaded', () => {
       elements.tableBody.appendChild(row)
     })
 
-    elements.tableSummary.textContent = `Showing ${formatNumber(
-      filteredCraftsmen.length
-    )} of ${formatNumber(craftsmen.length)}`
+    elements.tableSummary.textContent = isTr
+      ? `${formatNumber(filteredCraftsmen.length)} / ${formatNumber(craftsmen.length)} gösteriliyor`
+      : `Showing ${formatNumber(filteredCraftsmen.length)} of ${formatNumber(craftsmen.length)}`
+    
     elements.tableEmpty.textContent =
       state.users.length === 0
-        ? 'No craftsmen are registered yet.'
-        : 'No craftsmen match the selected filters and joined-date range.'
+        ? tr('No craftsmen are registered yet.', 'Henüz kayıtlı usta yok.')
+        : tr('No craftsmen match the selected filters and joined-date range.', 'Hiçbir usta seçilen filtrelere uymuyor.')
     elements.tableEmpty.hidden = filteredCraftsmen.length !== 0
     elements.tableContainer.hidden = filteredCraftsmen.length === 0
   }
@@ -432,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .map(([categoryId, count]) => ({
         categoryId,
         count,
-        name: categoryId === 'unassigned' ? 'Unassigned' : getCategoryName(categoryId, categoryMap),
+        name: categoryId === 'unassigned' ? tr('Unassigned', 'Atanmamış') : getCategoryName(categoryId, categoryMap),
       }))
       .sort((first, second) => second.count - first.count || first.name.localeCompare(second.name))
 
@@ -453,8 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     elements.jobsEmpty.textContent =
       state.jobs.length === 0
-        ? 'No job records are available yet.'
-        : 'No jobs are currently marked completed.'
+        ? tr('No job records are available yet.', 'Henüz iş kaydı yok.')
+        : tr('No jobs are currently marked completed.', 'Şu anda tamamlandı olarak işaretlenmiş iş yok.')
     elements.jobsEmpty.hidden = groupedJobs.length !== 0
     elements.jobsList.hidden = groupedJobs.length === 0
   }
@@ -466,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     disputes.forEach((dispute) => {
       const item = createElement('article', 'admin-dispute-item')
-      const craftsmanName = dispute.craftsman?.businessName || 'Craftsman unavailable'
+      const craftsmanName = dispute.craftsman?.businessName || tr('Craftsman unavailable', 'Usta bilgisi yok')
       const top = createElement('div', 'admin-dispute-top')
       const people = createElement('span', 'admin-dispute-people', craftsmanName)
       const reason = createElement(
@@ -479,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'admin-dispute-description',
         dispute.customerNotes ||
           dispute.job?.description ||
-          'No additional description was provided.'
+          tr('No additional description was provided.', 'Ek açıklama girilmemiş.')
       )
 
       top.append(people, reason)
@@ -489,7 +508,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const rangeLabel = RANGE_LABELS[getRange()]
     elements.disputesSummary.textContent =
-      getRange() === 'all' ? 'Newest first' : `Opened in the ${rangeLabel}`
+      getRange() === 'all' 
+        ? tr('Newest first', 'En yeniden eskiye') 
+        : (isTr ? `${rangeLabel} açılanlar` : `Opened in the ${rangeLabel}`)
     elements.disputesEmpty.hidden = disputes.length !== 0
     elements.disputesList.hidden = disputes.length === 0
   }

@@ -4224,3 +4224,39 @@ textarea.craftsman-profile-control {
     text-align: center;
   }
 }
+
+/* Language Switcher Theme Styling */
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg-white, #ffffff);
+  border: 1.5px solid var(--brand-brown, #8a5239);
+  border-radius: 20px;
+  padding: 2px;
+  box-shadow: 0 1px 3px rgba(138, 82, 57, 0.08);
+}
+
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+  text-decoration: none;
+  color: var(--brand-brown, #8a5239);
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.lang-btn:hover {
+  color: var(--brand-rust, #c85a32);
+  background: rgba(200, 90, 50, 0.1);
+}
+
+.lang-btn.active {
+  background: var(--btn-brown, #834731);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(131, 71, 49, 0.25);
+}

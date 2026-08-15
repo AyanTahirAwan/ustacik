@@ -1,3 +1,6 @@
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 document.addEventListener('DOMContentLoaded', async () => {
   const page = document.getElementById('craftsman-profile-page')
   if (!page) return
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const payload = await response.json().catch(() => ({}))
     if (!response.ok || !payload.craftsman) {
-      throw new Error('Unable to load your profile.')
+      throw new Error(tr('Unable to load your profile.', 'Profiliniz yüklenemedi.'))
     }
 
     return payload.craftsman
@@ -74,11 +77,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const categoriesPayload = await categoriesResponse.json().catch(() => ({}))
     if (!categoriesResponse.ok || !Array.isArray(categoriesPayload.data)) {
-      throw new Error('Unable to load categories.')
+      throw new Error(tr('Unable to load categories.', 'Kategoriler yüklenemedi.'))
     }
 
-    category.replaceChildren(new Option('Choose a category', ''))
-    categoriesPayload.data.forEach((item) => category.append(new Option(item.nameEn, item.id)))
+    category.replaceChildren(new Option(tr('Choose a category', 'Kategori seçin'), ''))
+    categoriesPayload.data.forEach((item) => category.append(new Option(isTr ? item.nameTr : item.nameEn, item.id)))
 
     savedCraftsman = craftsman
     applyCraftsman(savedCraftsman)
@@ -87,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     content.hidden = false
   } catch (failure) {
     loading.hidden = true
-    showError(failure.message || 'Unable to load your profile.')
+    showError(failure.message || tr('Unable to load your profile.', 'Profiliniz yüklenemedi.'))
   }
 
   resetButton.addEventListener('click', () => {
@@ -99,10 +102,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     event.preventDefault()
     clearMessages()
     if (!form.reportValidity()) return
-    if (!csrf) return showError('Unable to save your profile. Please refresh the page and try again.')
+    if (!csrf) return showError(tr('Unable to save your profile. Please refresh the page and try again.', 'Profiliniz kaydedilemedi. Lütfen sayfayı yenileyip tekrar deneyin.'))
 
     setBusy(true)
-    saveButton.textContent = 'Saving...'
+    saveButton.textContent = tr('Saving...', 'Kaydediliyor...')
 
     try {
       const response = await fetch('/api/craftsman/profile', {
@@ -123,17 +126,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const payload = await response.json().catch(() => ({}))
       if (!response.ok || !payload.craftsman) {
-        throw new Error(payload.errors?.[0]?.message || payload.message || 'Unable to save your profile.')
+        throw new Error(payload.errors?.[0]?.message || payload.message || tr('Unable to save your profile.', 'Profiliniz kaydedilemedi.'))
       }
 
       savedCraftsman = await fetchProfile()
       applyCraftsman(savedCraftsman)
-      showSuccess('Your profile has been updated successfully.')
+      showSuccess(tr('Your profile has been updated successfully.', 'Profiliniz başarıyla güncellendi.'))
     } catch (failure) {
-      showError(failure.message || 'Unable to save your profile.')
+      showError(failure.message || tr('Unable to save your profile.', 'Profiliniz kaydedilemedi.'))
     } finally {
       setBusy(false)
-      saveButton.textContent = 'Save Changes'
+      saveButton.textContent = tr('Save Changes', 'Değişiklikleri Kaydet')
     }
   })
 })

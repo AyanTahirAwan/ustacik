@@ -1,3 +1,6 @@
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 document.addEventListener('DOMContentLoaded', async () => {
   const page = document.getElementById('public-craftsman-profile')
   if (!page) return
@@ -20,17 +23,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     const payload = await response.json().catch(() => ({}))
     if (!response.ok) {
       const message = response.status === 404
-        ? 'This craftsman profile could not be found.'
-        : 'We could not load this craftsman profile. Please try again.'
+        ? tr('This craftsman profile could not be found.', 'Bu usta profili bulunamadı.')
+        : tr('We could not load this craftsman profile. Please try again.', 'Bu usta profili yüklenemedi. Lütfen tekrar deneyin.')
       throw new Error(message)
     }
     return payload
   }
 
   const trustLabel = (value) => {
+    const map = {
+      unverified: tr('Unverified', 'Doğrulanmamış'),
+      registered: tr('Registered', 'Kayıtlı'),
+      verified: tr('Verified', 'Doğrulanmış'),
+      approved: tr('Approved', 'Onaylı'),
+    }
     const allowed = ['unverified', 'registered', 'verified', 'approved']
-    const label = allowed.includes(value) ? value : 'unverified'
-    return { value: label, text: label.charAt(0).toUpperCase() + label.slice(1) }
+    const safe = allowed.includes(value) ? value : 'unverified'
+    return { value: safe, text: map[safe] }
   }
 
   const renderNextAction = () => {
@@ -39,31 +48,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     target.replaceChildren()
 
     if (role === 'guest') {
-      copy.textContent = 'Sign in with a customer account to request this service.'
+      copy.textContent = tr(
+        'Sign in with a customer account to request this service.',
+        'Bu hizmeti talep etmek için müşteri hesabınızla giriş yapın.'
+      )
       const link = document.createElement('a')
       link.className = 'btn-primary public-profile-cta'
       link.href = '/login'
-      link.textContent = 'Login to Request Service'
+      link.textContent = tr('Login to Request Service', 'Hizmet Talep Etmek İçin Giriş Yapın')
       target.append(link)
       return
     }
 
     if (role === 'customer') {
-      copy.textContent = 'Describe the work you need and send a request directly to this craftsman.'
+      copy.textContent = tr(
+        'Describe the work you need and send a request directly to this craftsman.',
+        'İhtiyacınız olan işi açıklayın ve bu ustaya doğrudan talep gönderin.'
+      )
       const link = document.createElement('a')
       link.className = 'btn-primary public-profile-cta'
       link.href = `/craftsmen/${encodeURIComponent(craftsmanId)}/request`
-      link.textContent = 'Request Service'
+      link.textContent = tr('Request Service', 'Hizmet Talep Et')
       target.append(link)
       return
     }
 
-    copy.textContent = 'Service requests are available to customer accounts.'
+    copy.textContent = tr(
+      'Service requests are available to customer accounts.',
+      'Hizmet talepleri yalnızca müşteri hesapları için mevcuttur.'
+    )
     const button = document.createElement('button')
     button.className = 'btn-primary public-profile-cta'
     button.type = 'button'
     button.disabled = true
-    button.textContent = 'Customer Action Only'
+    button.textContent = tr('Customer Action Only', 'Yalnızca Müşteri İşlemi')
     target.append(button)
   }
 
@@ -73,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!photos.length) {
       const empty = document.createElement('div')
       empty.className = 'empty-state'
-      empty.textContent = 'No previous work photos available yet.'
+      empty.textContent = tr('No previous work photos available yet.', 'Henüz iş fotoğrafı eklenmemiş.')
       target.append(empty)
       return
     }
@@ -84,12 +102,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const image = document.createElement('img')
       image.className = 'public-profile-photo'
       image.src = photo.imageUrl
-      image.alt = `${businessName} previous work ${index + 1}`
+      image.alt = `${businessName} ${tr('previous work', 'iş fotoğrafı')} ${index + 1}`
       image.loading = 'lazy'
       image.addEventListener('error', () => {
         const unavailable = document.createElement('div')
         unavailable.className = 'public-profile-photo-unavailable'
-        unavailable.textContent = 'Photo unavailable'
+        unavailable.textContent = tr('Photo unavailable', 'Fotoğraf mevcut değil')
         frame.replaceChildren(unavailable)
       }, { once: true })
       frame.append(image)
@@ -109,17 +127,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     const summary = document.getElementById('public-profile-review-summary')
     document.getElementById('public-profile-review-count').textContent = String(count)
     document.getElementById('public-profile-average').textContent = average === null
-      ? 'Not available'
+      ? tr('Not available', 'Mevcut değil')
       : `${Number(average).toFixed(1)} / 5`
     summary.textContent = average === null
-      ? `${count} review${count === 1 ? '' : 's'} · Average shown after 3 reviews`
-      : `${Number(average).toFixed(1)} out of 5 from ${count} reviews`
+      ? isTr
+        ? `${count} değerlendirme · Ortalama, 3 değerlendirmeden sonra gösterilir`
+        : `${count} review${count === 1 ? '' : 's'} · Average shown after 3 reviews`
+      : isTr
+        ? `${count} değerlendirmeden ${Number(average).toFixed(1)} / 5`
+        : `${Number(average).toFixed(1)} out of 5 from ${count} reviews`
     target.replaceChildren()
 
     if (!reviews.length) {
       const empty = document.createElement('div')
       empty.className = 'empty-state'
-      empty.textContent = 'No customer reviews available yet.'
+      empty.textContent = tr('No customer reviews available yet.', 'Henüz müşteri değerlendirmesi yok.')
       target.append(empty)
       return
     }
@@ -130,19 +152,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       const heading = document.createElement('div')
       heading.className = 'public-profile-review-heading'
       const title = document.createElement('h3')
-      title.textContent = 'Customer review'
+      title.textContent = tr('Customer review', 'Müşteri değerlendirmesi')
       const rating = document.createElement('strong')
       const value = reviewAverage(review)
-      rating.textContent = value === null ? 'Rating unavailable' : `${value.toFixed(1)} / 5`
+      rating.textContent = value === null
+        ? tr('Rating unavailable', 'Puan mevcut değil')
+        : `${value.toFixed(1)} / 5`
       heading.append(title, rating)
       card.append(heading)
       const scores = document.createElement('dl')
       scores.className = 'public-profile-review-scores'
       ;[
-        ['Punctuality', review.punctuality],
-        ['Workmanship', review.workmanship],
-        ['Price honesty', review.priceHonesty],
-        ['Communication', review.communication],
+        [tr('Punctuality', 'Zamanlama'), review.punctuality],
+        [tr('Workmanship', 'İşçilik'), review.workmanship],
+        [tr('Price honesty', 'Fiyat dürüstlüğü'), review.priceHonesty],
+        [tr('Communication', 'İletişim'), review.communication],
       ].forEach(([label, score]) => {
         const term = document.createElement('dt')
         term.textContent = label
@@ -160,7 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const reply = document.createElement('div')
         reply.className = 'public-profile-review-reply'
         const replyTitle = document.createElement('strong')
-        replyTitle.textContent = 'Craftsman reply'
+        replyTitle.textContent = tr('Craftsman reply', 'Usta yanıtı')
         const replyText = document.createElement('p')
         replyText.textContent = review.craftsmanReply
         reply.append(replyTitle, replyText)
@@ -171,7 +195,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if (!/^\d+$/.test(craftsmanId)) {
-    showError('This craftsman profile could not be found.')
+    showError(tr('This craftsman profile could not be found.', 'Bu usta profili bulunamadı.'))
     return
   }
 
@@ -180,21 +204,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       fetchJson(`/api/craftsmen/${encodeURIComponent(craftsmanId)}`),
       fetchJson(`/api/craftsmen/${encodeURIComponent(craftsmanId)}/reviews`),
     ])
-    if (!craftsman) throw new Error('This craftsman profile could not be found.')
+    if (!craftsman) throw new Error(tr('This craftsman profile could not be found.', 'Bu usta profili bulunamadı.'))
 
     const trust = trustLabel(craftsman.trustLevelLabel)
-    document.getElementById('public-profile-name').textContent = craftsman.businessName || 'Independent craftsman'
-    document.getElementById('public-profile-category').textContent = craftsman.category?.nameEn || 'Not specified'
-    document.getElementById('public-profile-bio').textContent = craftsman.bio || 'No business description is available yet.'
+    document.getElementById('public-profile-name').textContent =
+      craftsman.businessName || tr('Independent craftsman', 'Bağımsız usta')
+    document.getElementById('public-profile-category').textContent =
+      (isTr ? craftsman.category?.nameTr : craftsman.category?.nameEn) ||
+      tr('Not specified', 'Belirtilmemiş')
+    document.getElementById('public-profile-bio').textContent =
+      craftsman.bio || tr('No business description is available yet.', 'Henüz bir işletme açıklaması eklenmemiş.')
     document.getElementById('public-profile-trust').textContent = trust.text
     document.getElementById('public-profile-jobs').textContent = String(craftsman.totalJobs ?? 0)
 
     const meta = document.getElementById('public-profile-meta')
     meta.replaceChildren()
-    if (craftsman.category?.nameEn) {
+    const categoryName = isTr ? craftsman.category?.nameTr : craftsman.category?.nameEn
+    if (categoryName) {
       const category = document.createElement('span')
       category.className = 'status-badge'
-      category.textContent = craftsman.category.nameEn
+      category.textContent = categoryName
       meta.append(category)
     }
     const badge = document.createElement('span')
@@ -203,11 +232,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     meta.append(badge)
 
     renderNextAction()
-    renderPhotos(craftsman.workPhotos, craftsman.businessName || 'Craftsman')
+    renderPhotos(craftsman.workPhotos, craftsman.businessName || tr('Craftsman', 'Usta'))
     renderReviews(reviewsPayload)
     loading.hidden = true
     content.hidden = false
   } catch (error) {
-    showError(error.message || 'We could not load this craftsman profile. Please try again.')
+    showError(error.message || tr('We could not load this craftsman profile. Please try again.', 'Bu usta profili yüklenemedi. Lütfen tekrar deneyin.'))
   }
 })

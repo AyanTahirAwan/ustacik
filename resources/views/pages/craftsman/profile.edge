@@ -1,49 +1,49 @@
-@dashboardLayout({ title: 'Profile' })
+@dashboardLayout({ title: t('nav.profile', {}, 'Profile') })
   <section id="craftsman-profile-page" class="craftsman-profile-page">
     <div class="craftsman-profile-toolbar">
-      <a class="btn-back" href="/craftsman">Back to Dashboard</a>
+      <a class="btn-back" href="/craftsman">{{ t('craftsman.back_to_dashboard', {}, 'Back to Dashboard') }}</a>
     </div>
 
-    <div id="craftsman-profile-loading" class="dashboard-message">Loading your profile...</div>
+    <div id="craftsman-profile-loading" class="dashboard-message">{{ t('btn.loading', {}, 'Loading your profile...') }}</div>
     <div id="craftsman-profile-error" class="dashboard-message dashboard-message-error" hidden></div>
     <div id="craftsman-profile-success" class="dashboard-message craftsman-profile-success" hidden></div>
 
     <section id="craftsman-profile-content" class="dashboard-panel craftsman-profile-card" hidden>
       <div class="dashboard-panel-heading">
         <div>
-          <h2>Profile Details</h2>
-          <p class="dashboard-muted">View and update your business information.</p>
+          <h2>{{ t('customer.profile_details', {}, 'Profile Details') }}</h2>
+          <p class="dashboard-muted">{{ t('craftsman.view_update_info', {}, 'View and update your business information.') }}</p>
         </div>
       </div>
 
       @form({ action: '/api/craftsman/profile', method: 'POST', id: 'craftsman-profile-form' })
         <div class="craftsman-profile-fields">
           <label for="craftsman-business-name">
-            Business Name
+            {{ t('craftsman.biz_name', {}, 'Business Name') }}
             <input id="craftsman-business-name" name="businessName" class="form-control craftsman-profile-control" type="text" minlength="2" maxlength="160" required disabled />
           </label>
 
           <label for="craftsman-category">
-            Category
+            {{ t('craftsman.category', {}, 'Category') }}
             <select id="craftsman-category" name="categoryId" class="form-control craftsman-profile-control" required disabled>
-              <option value="">Loading categories...</option>
+              <option value="">{{ t('btn.loading', {}, 'Loading categories...') }}</option>
             </select>
           </label>
 
           <label for="craftsman-registration-number">
-            Business Registration Number
+            {{ t('craftsman.biz_reg_no', {}, 'Business Registration Number') }}
             <input id="craftsman-registration-number" name="bizRegNo" class="form-control craftsman-profile-control" type="text" maxlength="64" disabled />
           </label>
 
           <label class="craftsman-profile-full" for="craftsman-bio">
-            Bio
+            {{ t('craftsman.bio', {}, 'Bio') }}
             <textarea id="craftsman-bio" name="bio" class="form-control craftsman-profile-bio craftsman-profile-control" maxlength="2000" disabled></textarea>
           </label>
         </div>
 
         <div class="craftsman-profile-actions">
-          <button id="craftsman-profile-save" class="btn-primary" type="submit" disabled>Save Changes</button>
-          <button id="craftsman-profile-reset" class="btn-back" type="button" disabled>Reset</button>
+          <button id="craftsman-profile-save" class="btn-primary" type="submit" disabled>{{ t('btn.save', {}, 'Save Changes') }}</button>
+          <button id="craftsman-profile-reset" class="btn-back" type="button" disabled>{{ t('admin.reset', {}, 'Reset') }}</button>
         </div>
       @end
     </section>

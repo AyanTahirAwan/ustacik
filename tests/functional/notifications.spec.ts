@@ -57,8 +57,10 @@ test.group('In-app workflow notifications', (group) => {
       'type',
       'title',
       'message',
+      'messageBody',
       'isRead',
       'createdAt',
+      'sentAt',
       'target',
     ])
 

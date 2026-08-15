@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="{{ lang || 'en' }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ $props.get('title') ?? 'Craftsman Dashboard' }} — UstaÇık</title>
+    <title>{{ $props.get('title') ?? t('nav.craftsman_workspace') }} — UstaÇık</title>
+    <script>window.APP_LOCALE = "{{ lang || 'en' }}";</script>
     @if($props.get('accountPage'))
       @vite([
         'resources/css/app.css',
@@ -58,43 +59,41 @@
           href="/craftsman"
           aria-current="{{ $props.get('active') === 'dashboard' ? 'page' : 'false' }}"
         >
-          Dashboard
+          {{ t('nav.dashboard') }}
         </a>
         <a
           class="craftsman-dashboard-nav-item {{ $props.get('active') === 'profile' ? 'is-active' : '' }}"
           href="/craftsman/profile"
           aria-current="{{ $props.get('active') === 'profile' ? 'page' : 'false' }}"
         >
-          My Profile
+          {{ t('nav.profile') }}
         </a>
         <a
           class="craftsman-dashboard-nav-item {{ $props.get('active') === 'work-photos' ? 'is-active' : '' }}"
           href="/craftsman/work-photos"
           aria-current="{{ $props.get('active') === 'work-photos' ? 'page' : 'false' }}"
         >
-          Work Photos
+          {{ t('nav.work_photos') }}
         </a>
-        <span class="craftsman-dashboard-nav-item is-disabled" aria-disabled="true">
-          Job Requests
-        </span>
-        <a class="craftsman-dashboard-nav-item" href="/craftsman/service-prices">
-          My Services &amp; Catalog
+        <a class="craftsman-dashboard-nav-item {{ $props.get('active') === 'jobs' ? 'is-active' : '' }}" href="/craftsman/jobs">
+          {{ t('nav.jobs') }}
         </a>
-        <span class="craftsman-dashboard-nav-item is-disabled" aria-disabled="true">Reviews</span>
-        <span class="craftsman-dashboard-nav-item is-disabled" aria-disabled="true">Disputes</span>
+        <a class="craftsman-dashboard-nav-item {{ $props.get('active') === 'service-prices' ? 'is-active' : '' }}" href="/craftsman/service-prices">
+          {{ t('nav.prices') }}
+        </a>
       </nav>
 
       <div class="craftsman-dashboard-verification" data-craftsman-verification>
-        <h2 data-craftsman-verification-title>Craftsman status</h2>
-        <p data-craftsman-verification-copy>Loading your current account status...</p>
+        <h2 data-craftsman-verification-title>{{ t('craftsman.status') }}</h2>
+        <p data-craftsman-verification-copy>{{ t('btn.loading') }}</p>
       </div>
     </aside>
 
     <main id="craftsman-dashboard-content" class="craftsman-dashboard-main">
       <header class="craftsman-dashboard-header">
         <div class="craftsman-dashboard-greeting">
-          <h1>{{ $props.get('title') ?? 'Overview' }}</h1>
-          <p>Welcome back, Master Craftsman</p>
+          <h1>{{ $props.get('title') ?? t('nav.dashboard') }}</h1>
+          <p>{{ t('craftsman.welcome_back') }}</p>
         </div>
 
         <div class="craftsman-dashboard-account" data-craftsman-account-menu>
@@ -108,9 +107,9 @@
           >
             <span class="craftsman-dashboard-profile-copy">
               <strong data-craftsman-profile-name>
-                {{ auth.user ? auth.user.email : 'Craftsman Account' }}
+                {{ auth.user ? auth.user.email : t('craftsman.account') }}
               </strong>
-              <span data-craftsman-profile-category>Craftsman account</span>
+              <span data-craftsman-profile-category>{{ t('admin.craftsman') }}</span>
             </span>
             <span
               class="craftsman-dashboard-avatar"
@@ -129,6 +128,10 @@
             data-craftsman-account-dropdown
             hidden
           >
+            <div class="craftsman-account-lang" style="padding: 0.75rem 1rem; display: flex; gap: 1rem; border-bottom: 1px solid var(--border);">
+              <a href="/lang/tr" class="{{ lang === 'tr' ? 'active' : '' }}" style="color: inherit; text-decoration: none; font-weight: 500;">TR</a>
+              <a href="/lang/en" class="{{ lang === 'en' ? 'active' : '' }}" style="color: inherit; text-decoration: none; font-weight: 500;">EN</a>
+            </div>
             @form({
               route: 'session.destroy',
               method: 'POST',
@@ -138,7 +141,7 @@
                 class="craftsman-dashboard-account-action craftsman-dashboard-account-logout"
                 type="submit"
               >
-                Logout
+                {{ t('nav.logout') }}
               </button>
             @end
           </div>

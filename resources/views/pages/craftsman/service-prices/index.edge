@@ -1,21 +1,29 @@
-@dashboardLayout({ title: 'My Service Prices' })
+@dashboardLayout({ title: t('craftsman.my_service_prices', {}, 'My Service Prices') })
   <section class="service-price-page" data-service-price-index>
     <div class="service-price-toolbar">
-      <a class="btn-back" href="/craftsman">Back to Dashboard</a>
-      <a class="btn-primary service-price-create" href="/craftsman/service-prices/create">Create Service Price</a>
+      <a class="btn-back" href="/craftsman">{{ t('craftsman.back_to_dashboard', {}, 'Back to Dashboard') }}</a>
+      <a class="btn-primary service-price-create" href="/craftsman/service-prices/create">{{ t('craftsman.create_service_price', {}, 'Create Service Price') }}</a>
     </div>
 
     <div id="service-price-error" class="dashboard-message dashboard-message-error" hidden></div>
-    <div id="service-price-loading" class="dashboard-message">Loading your service prices...</div>
+    <div id="service-price-loading" class="dashboard-message">{{ t('btn.loading', {}, 'Loading your service prices...') }}</div>
     <div id="service-price-empty" class="dashboard-empty service-price-empty" hidden>
-      <p>You have not created any service prices yet.</p>
-      <a class="action-link" href="/craftsman/service-prices/create">Create your first price</a>
+      <p>{{ t('craftsman.no_service_prices', {}, 'You have not created any service prices yet.') }}</p>
+      <a class="action-link" href="/craftsman/service-prices/create">{{ t('craftsman.create_first_price', {}, 'Create your first price') }}</a>
     </div>
 
     <div id="service-price-table" class="dashboard-panel dashboard-table-wrap" hidden>
       <table class="dashboard-table service-price-table">
         <thead>
-          <tr><th>Service</th><th>Region</th><th>Minimum</th><th>Maximum</th><th>Currency</th><th>Status</th><th>Action</th></tr>
+          <tr>
+            <th>{{ t('search.service', {}, 'Service') }}</th>
+            <th>{{ t('search.region', {}, 'Region') }}</th>
+            <th>{{ t('craftsman.minimum', {}, 'Minimum') }}</th>
+            <th>{{ t('craftsman.maximum', {}, 'Maximum') }}</th>
+            <th>{{ t('craftsman.currency', {}, 'Currency') }}</th>
+            <th>{{ t('admin.status', {}, 'Status') }}</th>
+            <th>{{ t('admin.account_actions', {}, 'Action') }}</th>
+          </tr>
         </thead>
         <tbody id="service-price-rows"></tbody>
       </table>
@@ -40,7 +48,7 @@
             credentials: 'same-origin',
           })
           const data = await response.json().catch(() => ({}))
-          if (!response.ok) throw new Error(data.message || 'Unable to load your service prices.')
+          if (!response.ok) throw new Error(data.message || "{{ t('dashboard.unable_to_load', {}, 'Unable to load your service prices.') }}")
 
           const prices = data.craftsman?.servicePriceCatalogs || []
           loading.hidden = true
@@ -51,19 +59,19 @@
 
           document.getElementById('service-price-rows').innerHTML = prices.map((price) => `
             <tr>
-              <td>${escapePriceText(price.subService?.nameEn || 'Service')}</td>
-              <td>${escapePriceText(price.region?.nameEn || 'Region')}</td>
+              <td>${escapePriceText((window.APP_LOCALE === 'tr' ? price.subService?.nameTr : price.subService?.nameEn) || price.subService?.name || "{{ t('search.service', {}, 'Service') }}")}</td>
+              <td>${escapePriceText((window.APP_LOCALE === 'tr' ? price.region?.nameTr : price.region?.nameEn) || price.region?.name || "{{ t('search.region', {}, 'Region') }}")}</td>
               <td>${Number(price.minPrice).toFixed(2)}</td>
               <td>${Number(price.maxPrice).toFixed(2)}</td>
               <td>${escapePriceText(price.currency)}</td>
-              <td><span class="status-badge ${price.isActive ? 'status-active' : ''}">${price.isActive ? 'Active' : 'Inactive'}</span></td>
-              <td><a class="action-link" href="/craftsman/service-prices/${price.id}/edit">Edit</a></td>
+              <td><span class="status-badge ${price.isActive ? 'status-active' : ''}">${price.isActive ? "{{ t('admin.status_active', {}, 'Active') }}" : "{{ t('admin.status_inactive', {}, 'Inactive') }}"}</span></td>
+              <td><a class="action-link" href="/craftsman/service-prices/${price.id}/edit">{{ t('admin.edit', {}, 'Edit') }}</a></td>
             </tr>
           `).join('')
           table.hidden = false
         } catch (failure) {
           loading.hidden = true
-          error.textContent = failure.message || 'Unable to load your service prices.'
+          error.textContent = failure.message || "{{ t('dashboard.unable_to_load', {}, 'Unable to load your service prices.') }}"
           error.hidden = false
         }
       }

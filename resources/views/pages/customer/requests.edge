@@ -2,16 +2,16 @@
   <section id="customer-requests-page" class="customer-requests-page">
     <div class="section-header">
       <div>
-        <h1 class="section-heading">My Requests</h1>
-        <p class="section-subheading">Track the current status of your service requests.</p>
+        <h1 class="section-heading">{{ t('customer.requests', {}, 'My Requests') }}</h1>
+        <p class="section-subheading">{{ t('customer.my_requests_sub', {}, 'Track the current status of your service requests.') }}</p>
       </div>
-      <a class="btn-back" href="/search">Find a Service</a>
+      <a class="btn-back" href="/search">{{ t('customer.find_service', {}, 'Find a Service') }}</a>
     </div>
 
     <div id="customer-requests-success" class="dashboard-message customer-request-success" hidden>
-      Your service request was sent successfully.
+      {{ t('customer.request_sent_success', {}, 'Your service request was sent successfully.') }}
     </div>
-    <div id="customer-requests-loading" class="dashboard-message">Loading your requests…</div>
+    <div id="customer-requests-loading" class="dashboard-message">{{ t('customer.loading_requests', {}, 'Loading your requests…') }}</div>
     <div id="customer-requests-error" class="dashboard-message dashboard-message-error" hidden></div>
     <div id="customer-requests-list" class="customer-request-list" hidden></div>
   </section>

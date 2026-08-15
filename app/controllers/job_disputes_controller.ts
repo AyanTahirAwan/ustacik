@@ -46,7 +46,7 @@ export default class JobDisputesController {
 
       return response.created({ dispute })
     } catch (error) {
-      return response.badRequest({ message: error.message })
+      return response.badRequest({ message: (error as Error).message })
     }
   }
 
@@ -90,7 +90,7 @@ export default class JobDisputesController {
 
       return response.ok({ dispute: updated })
     } catch (error) {
-      return response.badRequest({ message: error.message })
+      return response.badRequest({ message: (error as Error).message })
     }
   }
 

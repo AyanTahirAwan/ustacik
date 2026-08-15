@@ -22,13 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       dashboard.classList.remove('is-navigation-open')
       dashboard.style.removeProperty('top')
+      document.body.style.overflow = ''
       window.scrollTo(0, navigationScrollPosition)
     }
 
     menuToggle.setAttribute('aria-expanded', String(isOpen))
     menuToggle.setAttribute(
       'aria-label',
-      isOpen ? 'Close dashboard navigation' : 'Open dashboard navigation'
+      isOpen ? (isTr ? 'Kontrol paneli menüsünü kapat' : 'Close dashboard navigation') : (isTr ? 'Kontrol paneli menüsünü aç' : 'Open dashboard navigation')
     )
 
     if (isOpen) {
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     accountToggle.setAttribute('aria-expanded', String(isOpen))
     accountToggle.setAttribute(
       'aria-label',
-      isOpen ? 'Close craftsman account menu' : 'Open craftsman account menu'
+      isOpen ? (isTr ? 'Hesap menüsünü kapat' : 'Close craftsman account menu') : (isTr ? 'Hesap menüsünü aç' : 'Open craftsman account menu')
     )
 
     if (isOpen && focusFirstAction) {
@@ -111,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 async function hydrateProfile(dashboard) {
+  const isTr = document.documentElement.lang === 'tr'
   const name = dashboard.querySelector('[data-craftsman-profile-name]')
   const category = dashboard.querySelector('[data-craftsman-profile-category]')
   const avatar = dashboard.querySelector('[data-craftsman-profile-avatar]')
@@ -136,21 +138,20 @@ async function hydrateProfile(dashboard) {
       throw new Error('Craftsman profile is missing')
     }
 
-    const businessName = craftsman.businessName?.trim() || 'Craftsman Account'
-    const categoryName =
-      craftsman.category?.nameEn ?? craftsman.category?.nameTr ?? 'Craftsman account'
+    const businessName = craftsman.businessName?.trim() || (isTr ? 'Usta Hesabı' : 'Craftsman Account')
+    const categoryName = isTr ? (craftsman.category?.nameTr ?? 'Usta hesabı') : (craftsman.category?.nameEn ?? 'Craftsman account')
     const trustLabel = formatLabel(craftsman.trustLevelLabel || 'unverified')
 
     name.textContent = businessName
     category.textContent = categoryName
     avatar.textContent = getInitials(businessName)
     verification.dataset.status = craftsman.trustLevelLabel || 'unverified'
-    verificationTitle.textContent = `${trustLabel} Craftsman`
-    verificationCopy.textContent = 'Your current account verification status.'
+    verificationTitle.textContent = isTr ? `${trustLabel} Usta` : `${trustLabel} Craftsman`
+    verificationCopy.textContent = isTr ? 'Mevcut hesap doğrulama durumunuz.' : 'Your current account verification status.'
   } catch (error) {
     console.error('Failed to load dashboard profile details', error)
-    verificationTitle.textContent = 'Craftsman status'
-    verificationCopy.textContent = 'Open your profile to review account details.'
+    verificationTitle.textContent = isTr ? 'Usta durumu' : 'Craftsman status'
+    verificationCopy.textContent = isTr ? 'Hesap detaylarını incelemek için profilinizi açın.' : 'Open your profile to review account details.'
   }
 }
 

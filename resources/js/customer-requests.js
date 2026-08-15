@@ -1,3 +1,6 @@
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 document.addEventListener('DOMContentLoaded', async () => {
   const page = document.getElementById('customer-requests-page')
   if (!page) return
@@ -6,15 +9,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const errorState = document.getElementById('customer-requests-error')
   const success = document.getElementById('customer-requests-success')
   const list = document.getElementById('customer-requests-list')
+
   const labels = {
-    pending: 'Pending',
-    accepted: 'Accepted',
-    declined: 'Declined',
-    in_progress: 'In Progress',
-    completed: 'Completed',
-    cancelled: 'Cancelled',
-    expired: 'Expired',
-    disputed: 'Disputed',
+    pending: tr('Pending', 'Beklemede'),
+    accepted: tr('Accepted', 'Kabul Edildi'),
+    declined: tr('Declined', 'Reddedildi'),
+    in_progress: tr('In Progress', 'Devam Ediyor'),
+    completed: tr('Completed', 'Tamamlandı'),
+    cancelled: tr('Cancelled', 'İptal Edildi'),
+    expired: tr('Expired', 'Süresi Doldu'),
+    disputed: tr('Disputed', 'İtirazda'),
   }
   const contactStatuses = new Set(['accepted', 'in_progress', 'completed'])
 
@@ -37,7 +41,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       window.location.assign(whatsappUrl.href)
     } catch {
-      feedback.textContent = 'WhatsApp contact is currently unavailable. Please try again later.'
+      feedback.textContent = tr(
+        'WhatsApp contact is currently unavailable. Please try again later.',
+        'WhatsApp iletişimi şu anda mevcut değil. Lütfen daha sonra tekrar deneyin.'
+      )
       feedback.hidden = false
       button.disabled = false
     }
@@ -46,11 +53,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const notice = new URLSearchParams(window.location.search)
   if (notice.get('created') === '1') success.hidden = false
   if (notice.get('reviewed') === '1') {
-    success.textContent = 'Thank you. Your review was submitted successfully.'
+    success.textContent = tr('Thank you. Your review was submitted successfully.', 'Teşekkürler. Değerlendirmeniz başarıyla gönderildi.')
     success.hidden = false
   }
   if (notice.get('reviewError') === 'not-completed') {
-    errorState.textContent = 'A review can only be left after the job is completed.'
+    errorState.textContent = tr('A review can only be left after the job is completed.', 'Değerlendirme yalnızca iş tamamlandıktan sonra yapılabilir.')
     errorState.hidden = false
   }
 
@@ -61,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
     const payload = await response.json().catch(() => ({}))
     if (!response.ok || !Array.isArray(payload.jobs))
-      throw new Error(payload.message || 'Unable to load your requests.')
+      throw new Error(payload.message || tr('Unable to load your requests.', 'Talepleriniz yüklenemedi.'))
 
     loading.hidden = true
     list.hidden = false
@@ -70,11 +77,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const empty = document.createElement('div')
       empty.className = 'empty-state'
       const message = document.createElement('p')
-      message.textContent = 'You have not sent any service requests yet.'
+      message.textContent = tr('You have not sent any service requests yet.', 'Henüz hiç hizmet talebi göndermediniz.')
       const link = document.createElement('a')
       link.className = 'card-link'
       link.href = '/search'
-      link.textContent = 'Find a service →'
+      link.textContent = tr('Find a service →', 'Hizmet bul →')
       empty.append(message, link)
       list.append(empty)
       return
@@ -86,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const heading = document.createElement('div')
       heading.className = 'customer-request-item-heading'
       const title = document.createElement('h2')
-      title.textContent = job.craftsman?.businessName || 'Craftsman request'
+      title.textContent = job.craftsman?.businessName || tr('Craftsman request', 'Usta talebi')
       const status = document.createElement('span')
       status.className = `request-status request-status-${job.status}`
       status.textContent = labels[job.status] || job.status
@@ -95,9 +102,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       const meta = document.createElement('dl')
       meta.className = 'customer-request-meta'
       const rows = [
-        ['Category', job.category?.nameEn],
-        ['Region', job.region?.nameEn],
-        ['Requested', job.createdAt ? new Date(job.createdAt).toLocaleDateString() : null],
+        [tr('Category', 'Kategori'), isTr ? job.category?.nameTr : job.category?.nameEn],
+        [tr('Region', 'Bölge'), isTr ? job.region?.nameTr : job.region?.nameEn],
+        [tr('Requested', 'Talep tarihi'), job.createdAt ? new Date(job.createdAt).toLocaleDateString(isTr ? 'tr-TR' : 'en-GB') : null],
       ]
       rows.forEach(([label, value]) => {
         if (!value) return
@@ -116,11 +123,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       const contactNote = document.createElement('p')
       contactNote.className = 'customer-request-contact-note'
       if (job.status === 'pending') {
-        contactNote.textContent =
-          'Contact becomes available after the craftsman accepts your request.'
+        contactNote.textContent = tr(
+          'Contact becomes available after the craftsman accepts your request.',
+          'İletişim, usta talebinizi kabul ettikten sonra kullanılabilir hale gelir.'
+        )
         card.append(contactNote)
       } else if (contactStatuses.has(job.status)) {
-        contactNote.textContent = 'Your request was accepted. You can now contact the craftsman.'
+        contactNote.textContent = tr(
+          'Your request was accepted. You can now contact the craftsman.',
+          'Talebiniz kabul edildi. Artık ustayla iletişime geçebilirsiniz.'
+        )
         card.append(contactNote)
       }
 
@@ -132,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const contactButton = document.createElement('button')
           contactButton.type = 'button'
           contactButton.className = 'btn-primary customer-request-contact'
-          contactButton.textContent = 'Contact on WhatsApp'
+          contactButton.textContent = tr('Contact on WhatsApp', "WhatsApp'tan İletişime Geç")
           const feedback = document.createElement('p')
           feedback.className = 'customer-request-contact-error'
           feedback.setAttribute('role', 'status')
@@ -147,13 +159,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (job.reviewed) {
             const reviewed = document.createElement('span')
             reviewed.className = 'request-reviewed'
-            reviewed.textContent = 'Reviewed'
+            reviewed.textContent = tr('Reviewed', 'Değerlendirildi')
             actions.append(reviewed)
           } else {
             const reviewLink = document.createElement('a')
             reviewLink.className = 'btn-primary'
             reviewLink.href = `/customer/requests/${encodeURIComponent(job.id)}/review`
-            reviewLink.textContent = 'Leave Review'
+            reviewLink.textContent = tr('Leave Review', 'Değerlendirme Yap')
             actions.append(reviewLink)
           }
         }
@@ -163,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
   } catch (error) {
     loading.hidden = true
-    errorState.textContent = error.message || 'Unable to load your requests.'
+    errorState.textContent = error.message || tr('Unable to load your requests.', 'Talepleriniz yüklenemedi.')
     errorState.hidden = false
   }
 })

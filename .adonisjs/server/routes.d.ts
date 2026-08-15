@@ -74,6 +74,7 @@ export type ScannedRoutes = {
     'users.index': { paramsTuple?: []; params?: {} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.suspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.unsuspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.index': { paramsTuple?: []; params?: {} }
     'categories.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -220,6 +221,7 @@ export type ScannedRoutes = {
     'job_requests.complete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'reviews.reply': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.suspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.unsuspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'sub_services.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'regions.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

@@ -1,15 +1,15 @@
 @layout()
   <div class="hero">
-    <h1>Categories</h1>
-    <p>Browse all service categories.</p>
+    <h1>{{ t('nav.categories') }}</h1>
+    <p>{{ t('categories.sub') }}</p>
   </div>
 
   <section aria-labelledby="categories-heading">
-    <h2 id="categories-heading" class="section-heading">Choose a service</h2>
-    <p class="section-subheading">Select a category to explore the services available.</p>
+    <h2 id="categories-heading" class="section-heading">{{ t('categories.choose_service') }}</h2>
+    <p class="section-subheading">{{ t('categories.choose_sub') }}</p>
     <div id="categories-list" class="catalog-grid" aria-live="polite">
       <div class="empty-state">
-        <p>Loading categories…</p>
+        <p>{{ t('btn.loading_categories') }}</p>
       </div>
     </div>
   </section>

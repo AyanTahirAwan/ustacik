@@ -1,7 +1,7 @@
-@craftsmanDashboardLayout({ title: 'Subscription', accountPage: true })
+@craftsmanDashboardLayout({ title: t('craftsman.subscription_details', {}, 'Subscription'), accountPage: true })
   <div id="craftsman-subscription-page">
     <p id="craftsman-subscription-loading" class="craftsman-page-loading">
-      Loading subscription...
+      {{ t('btn.loading', {}, 'Loading subscription...') }}
     </p>
 
     <div id="craftsman-subscription-error" class="alert alert-destructive craftsman-message" hidden>
@@ -11,9 +11,9 @@
     <section id="craftsman-subscription-content" class="card craftsman-subscription-card" hidden>
       <div class="craftsman-section-header">
         <div>
-          <h2 class="card-title">Subscription Details</h2>
+          <h2 class="card-title">{{ t('craftsman.subscription_details', {}, 'Subscription Details') }}</h2>
           <p class="card-description">
-            View the current subscription attached to your craftsman account.
+            {{ t('craftsman.view_subscription', {}, 'View the current subscription attached to your craftsman account.') }}
           </p>
         </div>
 
@@ -21,32 +21,32 @@
       </div>
 
       <p id="craftsman-subscription-empty" class="craftsman-empty-state" hidden>
-        No subscription is currently attached to this account.
+        {{ t('craftsman.no_subscription', {}, 'No subscription is currently attached to this account.') }}
       </p>
 
       <dl id="craftsman-subscription-details" class="craftsman-subscription-details">
         <div>
-          <dt>Plan</dt>
+          <dt>{{ t('craftsman.plan', {}, 'Plan') }}</dt>
           <dd id="craftsman-subscription-plan"></dd>
         </div>
 
         <div>
-          <dt>Status</dt>
+          <dt>{{ t('admin.status', {}, 'Status') }}</dt>
           <dd id="craftsman-subscription-status-text"></dd>
         </div>
 
         <div>
-          <dt>Period Start</dt>
+          <dt>{{ t('craftsman.period_start', {}, 'Period Start') }}</dt>
           <dd id="craftsman-subscription-start"></dd>
         </div>
 
         <div>
-          <dt>Period End</dt>
+          <dt>{{ t('craftsman.period_end', {}, 'Period End') }}</dt>
           <dd id="craftsman-subscription-end"></dd>
         </div>
 
         <div>
-          <dt>Monthly Fee</dt>
+          <dt>{{ t('craftsman.monthly_fee', {}, 'Monthly Fee') }}</dt>
           <dd id="craftsman-subscription-fee"></dd>
         </div>
       </dl>

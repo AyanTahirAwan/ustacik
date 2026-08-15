@@ -1,11 +1,11 @@
-@adminUserLayout({ title: 'User Management', active: 'users' })
+@adminUserLayout({ title: t('admin.user_management', {}, 'User Management'), active: 'users' })
   <div id="admin-users-page" class="admin-users-page">
     <section class="admin-users-intro">
       <div>
-        <p class="admin-users-kicker">Platform Administration</p>
-        <h2>User Management</h2>
+        <p class="admin-users-kicker">{{ t('admin.kicker', {}, 'Platform Administration') }}</p>
+        <h2>{{ t('admin.user_management', {}, 'User Management') }}</h2>
         <p>
-          Review registered accounts and filter users by role or account status.
+          {{ t('admin.user_management_sub', {}, 'Review registered accounts and filter users by role or account status.') }}
         </p>
       </div>
     </section>
@@ -22,32 +22,32 @@
       <form id="admin-users-filter-form" class="admin-users-filter-bar">
         <div class="form-group">
           <label class="form-label" for="admin-users-role">
-            Role
+            {{ t('admin.role', {}, 'Role') }}
           </label>
 
           <select id="admin-users-role" class="form-control">
-            <option value="">All roles</option>
-            <option value="customer">Customer</option>
-            <option value="craftsman">Craftsman</option>
-            <option value="admin">Admin</option>
+            <option value="">{{ t('admin.all_roles', {}, 'All roles') }}</option>
+            <option value="customer">{{ t('admin.customer', {}, 'Customer') }}</option>
+            <option value="craftsman">{{ t('admin.craftsman', {}, 'Craftsman') }}</option>
+            <option value="admin">{{ t('admin.admin', {}, 'Admin') }}</option>
           </select>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="admin-users-status">
-            Status
+            {{ t('admin.status', {}, 'Status') }}
           </label>
 
           <select id="admin-users-status" class="form-control">
-            <option value="">All statuses</option>
-            <option value="active">Active</option>
-            <option value="suspended">Suspended</option>
+            <option value="">{{ t('admin.all_statuses', {}, 'All statuses') }}</option>
+            <option value="active">{{ t('admin.active', {}, 'Active') }}</option>
+            <option value="suspended">{{ t('admin.suspended', {}, 'Suspended') }}</option>
           </select>
         </div>
 
         <div class="admin-users-filter-actions">
           <button class="btn-primary" type="submit">
-            Apply Filters
+            {{ t('admin.apply_filters', {}, 'Apply Filters') }}
           </button>
 
           <button
@@ -55,27 +55,27 @@
             class="btn-back"
             type="button"
           >
-            Reset
+            {{ t('admin.reset', {}, 'Reset') }}
           </button>
         </div>
       </form>
 
       <div class="admin-users-panel-heading">
         <div>
-          <h3>Platform Users</h3>
+          <h3>{{ t('admin.platform_users', {}, 'Platform Users') }}</h3>
           <p>
             <span id="admin-users-count">0</span>
-            user(s) found.
+            {{ t('admin.users_found', {}, 'user(s) found.') }}
           </p>
         </div>
       </div>
 
       <p id="admin-users-loading" class="admin-users-loading">
-        Loading users...
+        {{ t('btn.loading', {}, 'Loading users...') }}
       </p>
 
       <p id="admin-users-empty" class="admin-users-empty" hidden>
-        No users match the selected filters.
+        {{ t('admin.no_users_found', {}, 'No users match the selected filters.') }}
       </p>
 
       <div
@@ -87,11 +87,11 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>User</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th>{{ t('admin.user', {}, 'User') }}</th>
+              <th>{{ t('auth.email', {}, 'Email') }}</th>
+              <th>{{ t('admin.role', {}, 'Role') }}</th>
+              <th>{{ t('admin.status', {}, 'Status') }}</th>
+              <th>{{ t('admin.account_actions', {}, 'Action') }}</th>
             </tr>
           </thead>
 

@@ -1,15 +1,15 @@
 @layout()
   <div class="hero">
-    <h1>Regions</h1>
-    <p>Browse all service regions.</p>
+    <h1>{{ t('nav.regions') }}</h1>
+    <p>{{ t('regions.sub') }}</p>
   </div>
 
   <section aria-labelledby="regions-heading">
-    <h2 id="regions-heading" class="section-heading">Find help nearby</h2>
-    <p class="section-subheading">Choose a region to see matching services.</p>
+    <h2 id="regions-heading" class="section-heading">{{ t('regions.find_nearby') }}</h2>
+    <p class="section-subheading">{{ t('regions.choose_region') }}</p>
     <div id="regions-list" class="catalog-grid" aria-live="polite">
       <div class="empty-state">
-        <p>Loading regions…</p>
+        <p>{{ t('btn.loading_regions') }}</p>
       </div>
     </div>
   </section>

@@ -28,6 +28,13 @@ const PlatformSettingsController = () => import('#controllers/platform_settings_
 
 router.on('/').render('pages/home').as('home')
 
+router.get('lang/:locale', async ({ params, session, response, request }) => {
+  const locale = params.locale === 'tr' ? 'tr' : 'en'
+  session.put('lang', locale)
+  response.cookie('lang', locale, { maxAge: '1y', path: '/' })
+  return response.redirect().toPath(request.header('referer') || '/')
+})
+
 router
   .group(() => {
     router.get('signup', [controllers.NewAccount, 'create'])
@@ -187,6 +194,7 @@ router
     router.get('api/admin/users', [UsersController, 'index'])
     router.get('api/admin/users/:id', [UsersController, 'show'])
     router.patch('api/admin/users/:id/suspend', [UsersController, 'suspend'])
+    router.patch('api/admin/users/:id/unsuspend', [UsersController, 'unsuspend'])
 
     router.get('api/admin/categories', [CategoriesController, 'index'])
     router.get('api/admin/categories/:id', [CategoriesController, 'show'])

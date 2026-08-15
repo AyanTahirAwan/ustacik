@@ -2,8 +2,8 @@
   <section id="notifications-page" class="notifications-page">
     <div class="section-header notifications-header">
       <div>
-        <h1 class="section-heading">Notifications</h1>
-        <p class="section-subheading">Important updates about your service requests and reviews.</p>
+        <h1 class="section-heading">{{ t('notifications.title', {}, 'Notifications') }}</h1>
+        <p class="section-subheading">{{ t('notifications.subtitle', {}, 'Important updates about your service requests and reviews.') }}</p>
       </div>
       <span id="notifications-unread-count" class="notifications-unread-count" hidden></span>
     </div>
@@ -14,7 +14,7 @@
     })
     @end
 
-    <div id="notifications-loading" class="dashboard-message">Loading notifications…</div>
+    <div id="notifications-loading" class="dashboard-message">{{ t('notifications.loading', {}, 'Loading notifications…') }}</div>
     <div
       id="notifications-error"
       class="dashboard-message dashboard-message-error"
@@ -25,10 +25,10 @@
     <div id="notifications-content" hidden>
       <div class="notifications-toolbar">
         <button id="notifications-read-all" class="btn-back" type="button" hidden>
-          Mark All as Read
+          {{ t('notifications.mark_all_read', {}, 'Mark All as Read') }}
         </button>
       </div>
-      <p id="notifications-empty" class="notifications-empty" hidden>No notifications yet.</p>
+      <p id="notifications-empty" class="notifications-empty" hidden>{{ t('notifications.empty', {}, 'No notifications yet.') }}</p>
       <div id="notifications-list" class="notifications-list" aria-live="polite"></div>
     </div>
   </section>

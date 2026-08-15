@@ -1,8 +1,8 @@
 @layout()
   <section class="hero-ad-banner">
-    <h2>Advertisement</h2>
+    <h2>{{ t('home.hero_title') }}</h2>
     <p>
-      Welcome to Ustacik! Find trusted home repair professionals or join our craftsman network today.
+      {{ t('home.hero_subtitle') }}
     </p>
   </section>
 
@@ -10,26 +10,26 @@
     @if(!auth.user)
       <div class="card">
         <div>
-          <h2 class="card-title">Join the team</h2>
+          <h2 class="card-title">{{ t('home.join_title') }}</h2>
           <p class="card-description">
-            Are you a qualified professional looking for work? Register your business and discover nearby local service opportunities.
+            {{ t('home.join_desc') }}
           </p>
         </div>
         <div class="action-container">
-          @!link({ href: '/signup?role=craftsman', text: 'Get Started →', class: 'btn-primary' })
+          @!link({ href: '/signup?role=craftsman', text: t('home.join_btn'), class: 'btn-primary' })
         </div>
       </div>
     @end
 
     <div class="card">
       <div>
-        <h2 class="card-title">Get a service</h2>
+        <h2 class="card-title">{{ t('home.get_service_title') }}</h2>
         <p class="card-description">
-          Need something fixed or installed? Browse our specialized service categories to find top-rated local craftsmen.
+          {{ t('home.get_service_desc') }}
         </p>
       </div>
       <div class="action-container">
-        @!link({ href: '/categories', text: 'Browse Services →', class: 'btn-primary' })
+        @!link({ href: '/categories', text: t('home.get_service_btn'), class: 'btn-primary' })
       </div>
     </div>
   </div>

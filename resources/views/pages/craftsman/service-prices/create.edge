@@ -1,21 +1,21 @@
-@dashboardLayout({ title: 'Create Service Price' })
+@dashboardLayout({ title: t('craftsman.create_service_price', {}, 'Create Service Price') })
   <section class="service-price-page">
     <div class="service-price-toolbar">
-      <a class="btn-back" href="/craftsman/service-prices">Back to My Service Prices</a>
+      <a class="btn-back" href="/craftsman/service-prices">{{ t('craftsman.back_to_prices', {}, 'Back to My Service Prices') }}</a>
     </div>
     <div id="service-price-form-error" class="dashboard-message dashboard-message-error" hidden></div>
     <div class="dashboard-panel service-price-form-card">
       @form({ method: 'POST', action: '/api/craftsman/service-prices', id: 'service-price-form' })
         <div class="service-price-form-grid">
-          <label>Category<select id="price-category" class="form-control" required><option value="">Loading categories...</option></select></label>
-          <label>Service<select id="price-sub-service" name="subServiceId" class="form-control" required disabled><option value="">Choose a category first</option></select></label>
-          <label>Region<select id="price-region" name="regionId" class="form-control" required><option value="">Loading regions...</option></select></label>
-          <label>Currency<select name="currency" class="form-control" required><option value="TRY">TRY</option><option value="GBP">GBP</option><option value="EUR">EUR</option><option value="USD">USD</option></select></label>
-          <label>Minimum Price<input name="minPrice" class="form-control" type="number" min="0" step="0.01" required /></label>
-          <label>Maximum Price<input name="maxPrice" class="form-control" type="number" min="0" step="0.01" required /></label>
+          <label>{{ t('search.category', {}, 'Category') }}<select id="price-category" class="form-control" required><option value="">{{ t('btn.loading', {}, 'Loading categories...') }}</option></select></label>
+          <label>{{ t('search.service', {}, 'Service') }}<select id="price-sub-service" name="subServiceId" class="form-control" required disabled><option value="">{{ t('search.choose_cat_first', {}, 'Choose a category first') }}</option></select></label>
+          <label>{{ t('search.region', {}, 'Region') }}<select id="price-region" name="regionId" class="form-control" required><option value="">{{ t('btn.loading', {}, 'Loading regions...') }}</option></select></label>
+          <label>{{ t('craftsman.currency', {}, 'Currency') }}<select name="currency" class="form-control" required><option value="TRY">TRY</option><option value="GBP">GBP</option><option value="EUR">EUR</option><option value="USD">USD</option></select></label>
+          <label>{{ t('search.min_price', {}, 'Minimum Price') }}<input name="minPrice" class="form-control" type="number" min="0" step="0.01" required /></label>
+          <label>{{ t('search.max_price', {}, 'Maximum Price') }}<input name="maxPrice" class="form-control" type="number" min="0" step="0.01" required /></label>
         </div>
-        <label class="service-price-checkbox"><input name="isActive" type="checkbox" value="true" checked /> Active listing</label>
-        <div class="service-price-actions"><a class="btn-back" href="/craftsman/service-prices">Cancel</a><button class="btn-primary" type="submit">Create Service Price</button></div>
+        <label class="service-price-checkbox"><input name="isActive" type="checkbox" value="true" checked /> {{ t('craftsman.active_listing', {}, 'Active listing') }}</label>
+        <div class="service-price-actions"><a class="btn-back" href="/craftsman/service-prices">{{ t('btn.cancel', {}, 'Cancel') }}</a><button class="btn-primary" type="submit">{{ t('craftsman.create_service_price', {}, 'Create Service Price') }}</button></div>
       @end
     </div>
   </section>
@@ -29,14 +29,14 @@
       const option = (value, label) => new Option(label, value)
 
       const loadServices = async () => {
-        service.replaceChildren(option('', category.value ? 'Loading services...' : 'Choose a category first'))
+        service.replaceChildren(option('', category.value ? "{{ t('btn.loading', {}, 'Loading services...') }}" : "{{ t('search.choose_cat_first', {}, 'Choose a category first') }}"))
         service.disabled = true
         if (!category.value) return
         const response = await fetch(`/api/catalog/categories/${category.value}/sub-services`, { headers: { Accept: 'application/json' } })
         const data = await response.json().catch(() => ({}))
-        if (!response.ok) throw new Error(data.message || 'Unable to load services.')
-        service.replaceChildren(option('', 'Choose a service'))
-        data.data.forEach((item) => service.append(option(item.id, item.nameEn)))
+        if (!response.ok) throw new Error(data.message || "{{ t('dashboard.unable_to_load', {}, 'Unable to load services.') }}")
+        service.replaceChildren(option('', "{{ t('search.choose_service', {}, 'Choose a service') }}"))
+        data.data.forEach((item) => service.append(option(item.id, window.APP_LOCALE === 'tr' ? item.nameTr : item.nameEn)))
         service.disabled = false
       }
 
@@ -48,13 +48,13 @@
           ])
           const categories = await categoriesResponse.json()
           const regions = await regionsResponse.json()
-          if (!categoriesResponse.ok || !regionsResponse.ok) throw new Error('Unable to load form options.')
-          category.replaceChildren(option('', 'Choose a category'))
-          categories.data.forEach((item) => category.append(option(item.id, item.nameEn)))
-          region.replaceChildren(option('', 'Choose a region'))
-          regions.data.forEach((item) => region.append(option(item.id, item.nameEn)))
+          if (!categoriesResponse.ok || !regionsResponse.ok) throw new Error("{{ t('dashboard.unable_to_load', {}, 'Unable to load form options.') }}")
+          category.replaceChildren(option('', "{{ t('search.choose_category', {}, 'Choose a category') }}"))
+          categories.data.forEach((item) => category.append(option(item.id, window.APP_LOCALE === 'tr' ? item.nameTr : item.nameEn)))
+          region.replaceChildren(option('', "{{ t('search.choose_region', {}, 'Choose a region') }}"))
+          regions.data.forEach((item) => region.append(option(item.id, window.APP_LOCALE === 'tr' ? item.nameTr : item.nameEn)))
         } catch (failure) {
-          errorBox.textContent = failure.message || 'Unable to load form options.'
+          errorBox.textContent = failure.message || "{{ t('dashboard.unable_to_load', {}, 'Unable to load form options.') }}"
           errorBox.hidden = false
         }
       }
@@ -71,10 +71,10 @@
         try {
           const response = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' }, credentials: 'same-origin' })
           const data = await response.json().catch(() => ({}))
-          if (!response.ok) throw new Error(data.errors?.[0]?.message || data.message || 'Unable to create service price.')
+          if (!response.ok) throw new Error(data.errors?.[0]?.message || data.message || "{{ t('dashboard.unable_to_save', {}, 'Unable to create service price.') }}")
           window.location.assign('/craftsman/service-prices')
         } catch (failure) {
-          errorBox.textContent = failure.message || 'Unable to create service price.'
+          errorBox.textContent = failure.message || "{{ t('dashboard.unable_to_save', {}, 'Unable to create service price.') }}"
           errorBox.hidden = false
           submit.disabled = false
         }

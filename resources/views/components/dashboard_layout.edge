@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="{{ lang || 'en' }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrfToken }}" />
-    <title>{{ $props.get('title') ?? 'Dashboard' }} — UstaÇık</title>
+    <title>{{ $props.get('title') ?? t('nav.dashboard') }} — UstaÇık</title>
+    <script>window.APP_LOCALE = "{{ lang || 'en' }}";</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
   </head>
   <body>
@@ -14,7 +15,7 @@
       <main class="dashboard-main">
         @include('partials/flash_alerts')
         <div class="page-header">
-          <h1>{{ $props.get('title') ?? 'Dashboard' }}</h1>
+          <h1>{{ $props.get('title') ?? t('nav.dashboard') }}</h1>
         </div>
         {{{ await $slots.main() }}}
       </main>

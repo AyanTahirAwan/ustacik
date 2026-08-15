@@ -1,23 +1,23 @@
-@dashboardLayout({ title: 'Work Photos' })
+@dashboardLayout({ title: t('nav.work_photos', {}, 'Work Photos') })
   <section class="work-photos-page" data-work-photos>
     <div class="work-photos-toolbar">
-      <a class="btn-back" href="/craftsman">Back to Dashboard</a>
+      <a class="btn-back" href="/craftsman">{{ t('craftsman.back_to_dashboard', {}, 'Back to Dashboard') }}</a>
     </div>
 
-    <div id="work-photos-loading" class="dashboard-message">Loading your work photos...</div>
+    <div id="work-photos-loading" class="dashboard-message">{{ t('btn.loading', {}, 'Loading your work photos...') }}</div>
     <div id="work-photos-error" class="dashboard-message dashboard-message-error" hidden></div>
     <div id="work-photos-success" class="dashboard-message work-photos-success" hidden></div>
 
     <section id="work-photos-content" hidden>
       <article class="dashboard-panel work-photo-form-card">
-        <h2>Add Work Photo</h2>
+        <h2>{{ t('craftsman.add_work_photo', {}, 'Add Work Photo') }}</h2>
         <p class="dashboard-muted">
-          Upload a photo of your previous work. Supported formats: JPG, PNG, WebP (Max 5MB).
+          {{ t('craftsman.upload_photo_desc', {}, 'Upload a photo of your previous work. Supported formats: JPG, PNG, WebP (Max 5MB).') }}
         </p>
 
         <div class="work-photo-form-row">
           <label for="work-photo-input">
-            Choose Photo
+            {{ t('craftsman.choose_photo', {}, 'Choose Photo') }}
             <input
               id="work-photo-input"
               class="form-control"
@@ -26,18 +26,18 @@
               required
             />
           </label>
-          <button id="work-photo-add" class="btn-primary" type="button">Upload Photo</button>
+          <button id="work-photo-add" class="btn-primary" type="button">{{ t('craftsman.upload_btn', {}, 'Upload Photo') }}</button>
         </div>
       </article>
 
       <section class="dashboard-panel">
         <div class="dashboard-panel-heading">
           <div>
-            <h2>Portfolio</h2>
-            <p class="dashboard-muted">Your saved work photos.</p>
+            <h2>{{ t('craftsman.portfolio', {}, 'Portfolio') }}</h2>
+            <p class="dashboard-muted">{{ t('craftsman.saved_work_photos', {}, 'Your saved work photos.') }}</p>
           </div>
         </div>
-        <div id="work-photos-empty" class="dashboard-empty" hidden>You have not added any work photos yet.</div>
+        <div id="work-photos-empty" class="dashboard-empty" hidden>{{ t('craftsman.no_photos_added', {}, 'You have not added any work photos yet.') }}</div>
         <div id="work-photos-list" class="work-photos-grid"></div>
       </section>
     </section>
@@ -56,6 +56,15 @@
     // Get CSRF token from meta tag
     const workPhotoCsrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
     let workPhotos = []
+    const isTr = window.APP_LOCALE === 'tr'
+
+    if (isTr) {
+      if (workPhotoAdd) workPhotoAdd.textContent = 'Fotoğraf Yükle'
+      const label = document.querySelector('label[for="work-photo-input"]')
+      if (label && label.childNodes.length > 0) {
+        label.childNodes[0].textContent = 'Fotoğraf Seç '
+      }
+    }
 
     const showWorkPhotoError = (message) => {
       workPhotosError.textContent = message
@@ -99,26 +108,26 @@
         url.textContent = workPhoto.imageUrl
         remove.className = 'service-price-delete work-photo-remove'
         remove.type = 'button'
-        remove.textContent = 'Remove Photo'
+        remove.textContent = isTr ? 'Fotoğrafı Kaldır' : 'Remove Photo'
 
         remove.addEventListener('click', async () => {
-          if (!window.confirm('Remove this work photo?')) return
+          if (!window.confirm(isTr ? 'Bu çalışma fotoğrafını kaldırmak istiyor musunuz?' : 'Remove this work photo?')) return
           remove.disabled = true
-          remove.textContent = 'Removing...'
+          remove.textContent = isTr ? 'Kaldırılıyor...' : 'Removing...'
           try {
             const response = await fetch(`/api/craftsman/work-photos/${workPhoto.id}`, {
               method: 'DELETE',
               headers: { Accept: 'application/json', 'x-csrf-token': workPhotoCsrf },
               credentials: 'same-origin',
             })
-            if (!response.ok) throw new Error('Unable to remove the work photo.')
+            if (!response.ok) throw new Error(isTr ? 'Çalışma fotoğrafı kaldırılamadı.' : 'Unable to remove the work photo.')
             workPhotos = workPhotos.filter((photo) => photo.id !== workPhoto.id)
             renderWorkPhotos()
-            showWorkPhotoSuccess('The work photo has been removed.')
+            showWorkPhotoSuccess(isTr ? 'Çalışma fotoğrafı kaldırıldı.' : 'The work photo has been removed.')
           } catch (failure) {
             remove.disabled = false
-            remove.textContent = 'Remove Photo'
-            showWorkPhotoError(failure.message || 'Unable to remove the work photo.')
+            remove.textContent = isTr ? 'Fotoğrafı Kaldır' : 'Remove Photo'
+            showWorkPhotoError(failure.message || (isTr ? 'Çalışma fotoğrafı kaldırılamadı.' : 'Unable to remove the work photo.'))
           }
         })
 
@@ -137,7 +146,7 @@
         console.log('Work photos response:', { status: response.status, ok: response.ok, payload })
         
         if (!response.ok) {
-          throw new Error(payload.message || `HTTP ${response.status}: Unable to load your work photos.`)
+          throw new Error(payload.message || `HTTP ${response.status}: ${isTr ? 'Çalışma fotoğraflarınız yüklenemedi.' : 'Unable to load your work photos.'}`)
         }
         
         if (!Array.isArray(payload.workPhotos)) {
@@ -151,7 +160,7 @@
       } catch (failure) {
         console.error('Error loading work photos:', failure)
         workPhotosLoading.hidden = true
-        showWorkPhotoError(failure.message || 'Unable to load your work photos.')
+        showWorkPhotoError(failure.message || (isTr ? 'Çalışma fotoğraflarınız yüklenemedi.' : 'Unable to load your work photos.'))
       }
     }
 
@@ -159,14 +168,14 @@
       const file = workPhotoInput.files[0]
       
       if (!file) {
-        showWorkPhotoError('Please select a photo to upload.')
+        showWorkPhotoError(isTr ? 'Lütfen yüklemek için bir fotoğraf seçin.' : 'Please select a photo to upload.')
         return
       }
 
       workPhotosError.hidden = true
       workPhotosSuccess.hidden = true
       workPhotoAdd.disabled = true
-      workPhotoAdd.textContent = 'Uploading...'
+      workPhotoAdd.textContent = isTr ? 'Yükleniyor...' : 'Uploading...'
       
       try {
         const formData = new FormData()
@@ -186,7 +195,7 @@
         console.log('Upload response:', { status: response.status, ok: response.ok, payload })
         
         if (!response.ok) {
-          throw new Error(payload.message || `HTTP ${response.status}: Unable to add the work photo.`)
+          throw new Error(payload.message || `HTTP ${response.status}: ${isTr ? 'Çalışma fotoğrafı eklenemedi.' : 'Unable to add the work photo.'}`)
         }
         
         if (!payload.workPhoto) {
@@ -196,13 +205,13 @@
         workPhotos = [payload.workPhoto, ...workPhotos]
         renderWorkPhotos()
         workPhotoInput.value = ''
-        showWorkPhotoSuccess('The work photo has been added successfully.')
+        showWorkPhotoSuccess(isTr ? 'Çalışma fotoğrafı başarıyla eklendi.' : 'The work photo has been added successfully.')
       } catch (failure) {
         console.error('Error uploading photo:', failure)
-        showWorkPhotoError(failure.message || 'Unable to add the work photo.')
+        showWorkPhotoError(failure.message || (isTr ? 'Çalışma fotoğrafı eklenemedi.' : 'Unable to add the work photo.'))
       } finally {
         workPhotoAdd.disabled = false
-        workPhotoAdd.textContent = 'Upload Photo'
+        workPhotoAdd.textContent = isTr ? 'Fotoğraf Yükle' : 'Upload Photo'
       }
     })
 

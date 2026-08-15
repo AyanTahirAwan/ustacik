@@ -44,4 +44,13 @@ export default class UsersController {
 
     return response.ok({ user })
   }
+
+  async unsuspend({ params, response }: HttpContext) {
+    const user = await User.findOrFail(params.id)
+
+    user.status = 'active'
+    await user.save()
+
+    return response.ok({ user })
+  }
 }

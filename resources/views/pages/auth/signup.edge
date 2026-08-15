@@ -2,15 +2,15 @@
   <div class="auth-wrapper">
     <div class="auth-card">
       <div class="auth-card-header">
-        <h1>Signup</h1>
-        <p>Enter your details below to create your account</p>
+        <h1>{{ t('auth.signup_heading', {}, 'Signup') }}</h1>
+        <p>{{ t('auth.signup_sub', {}, 'Enter your details below to create your account') }}</p>
       </div>
 
       <div>
         @form({ route: 'new_account.store', method: 'POST' })
           <div class="auth-field">
             @field.root({ name: 'fullName' })
-              @!field.label({ text: 'Full name' })
+              @!field.label({ text: t('auth.full_name', {}, 'Full name') })
               @!input.control()
               @!field.error()
             @end
@@ -18,7 +18,7 @@
 
           <div class="auth-field">
             @field.root({ name: 'email' })
-              @!field.label({ text: 'Email' })
+              @!field.label({ text: t('auth.email', {}, 'Email') })
               @!input.control({ type: 'email', autocomplete: 'email' })
               @!field.error()
             @end
@@ -26,7 +26,7 @@
 
           <div class="auth-field">
             @field.root({ name: 'phone' })
-              @!field.label({ text: 'Phone number' })
+              @!field.label({ text: t('auth.phone_number', {}, 'Phone number') })
               @!input.control({
                 type: 'tel',
                 autocomplete: 'tel',
@@ -38,19 +38,17 @@
             @end
 
             <p id="phone-format-note" class="signup-help">
-              Use international format:
-              <strong>+905551234567</strong>
-              (a + followed by country code and number).
+              {{ t('auth.phone_note', {}, 'Use international format: +905551234567 (a + followed by country code and number).') }}
             </p>
           </div>
 
           <div class="auth-field">
             @field.root({ name: 'role' })
-              @!field.label({ text: 'Account type' })
+              @!field.label({ text: t('auth.account_type', {}, 'Account type') })
               @!select.control({
                 options: [
-                  { value: 'customer', name: 'Customer' },
-                  { value: 'craftsman', name: 'Craftsman' },
+                  { value: 'customer', name: t('admin.customer', {}, 'Customer') },
+                  { value: 'craftsman', name: t('admin.craftsman', {}, 'Craftsman') },
                 ],
               })
               @!field.error()
@@ -60,7 +58,7 @@
           <div id="craftsman-signup-fields" hidden>
             <div class="auth-field">
               @field.root({ name: 'businessName' })
-                @!field.label({ text: 'Business name' })
+                @!field.label({ text: t('auth.business_name', {}, 'Business name') })
                 @!input.control({ autocomplete: 'organization' })
                 @!field.error()
               @end
@@ -68,10 +66,10 @@
 
             <div class="auth-field">
               @field.root({ name: 'categoryId' })
-                @!field.label({ text: 'Service category' })
+                @!field.label({ text: t('auth.service_category', {}, 'Service category') })
                 @!select.control({
                   id: 'signup-category-select',
-                  options: [{ value: '', name: 'Loading categories…' }],
+                  options: [{ value: '', name: t('btn.loading', {}, 'Loading categories…') }],
                 })
                 @!field.error()
               @end
@@ -80,7 +78,7 @@
 
           <div class="auth-field">
             @field.root({ name: 'password' })
-              @!field.label({ text: 'Password' })
+              @!field.label({ text: t('auth.password', {}, 'Password') })
               @!input.control({
                 type: 'password',
                 autocomplete: 'new-password',
@@ -91,7 +89,7 @@
             @end
 
             <p id="password-requirements" class="signup-help">
-              Use 12+ characters with uppercase, lowercase, and a number.
+              {{ t('auth.password_requirements', {}, 'Use 12+ characters with uppercase, lowercase, and a number.') }}
             </p>
             <div class="password-strength" aria-live="polite">
               <div
@@ -105,21 +103,21 @@
                 <span class="password-strength-fill"></span>
               </div>
               <p id="password-strength-label" class="password-strength-label">
-                Password strength: not entered
+                {{ t('auth.password_strength', {}, 'Password strength: not entered') }}
               </p>
             </div>
           </div>
 
           <div class="auth-field">
             @field.root({ name: 'passwordConfirmation' })
-              @!field.label({ text: 'Confirm password' })
+              @!field.label({ text: t('auth.confirm_password', {}, 'Confirm password') })
               @!input.control({ type: 'password', autocomplete: 'new-password' })
               @!field.error()
             @end
           </div>
 
           <div class="auth-actions">
-            @!button({ text: 'Sign up', type: 'submit', class: 'btn-primary' })
+            @!button({ text: t('nav.signup', {}, 'Sign up'), type: 'submit', class: 'btn-primary' })
           </div>
         @end
       </div>

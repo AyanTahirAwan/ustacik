@@ -1,3 +1,6 @@
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 document.addEventListener('DOMContentLoaded', () => {
   const page = document.getElementById('admin-users-page')
 
@@ -20,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function formatLabel(value) {
     if (!value) {
-      return 'Unavailable'
+      return tr('Unavailable', 'Mevcut değil')
     }
 
     return value.charAt(0).toUpperCase() + value.slice(1)
@@ -93,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       detailLink.href = `/admin/users/${user.id}`
       detailLink.className = 'btn-back admin-user-view-link'
-      detailLink.textContent = 'View Details'
+      detailLink.textContent = tr('View Details', 'Detayları Gör')
 
       actionCell.appendChild(detailLink)
 
@@ -155,8 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Failed to load admin users', loadError)
 
       loading.hidden = true
-      errorMessage.textContent =
-        'Unable to load the user list. Please try again.'
+      errorMessage.textContent = tr(
+        'Unable to load the user list. Please try again.',
+        'Kullanıcı listesi yüklenemedi. Lütfen tekrar deneyin.'
+      )
       error.hidden = false
     }
   }

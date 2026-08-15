@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="{{ lang || 'en' }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ustacik — Find trusted craftsmen in your area</title>
+    <title>{{ t('home.title') }}</title>
+    <script>window.APP_LOCALE = "{{ lang || 'en' }}";</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('dumper')
   </head>

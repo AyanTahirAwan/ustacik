@@ -1,3 +1,6 @@
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 document.addEventListener('DOMContentLoaded', async () => {
   const page = document.getElementById('craftsman-subscription-page')
 
@@ -21,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function formatLabel(value) {
     if (!value) {
-      return 'Unavailable'
+      return tr('Unavailable', 'Mevcut değil')
     }
 
     return value
@@ -32,16 +35,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function formatDate(value) {
     if (!value) {
-      return 'No end date'
+      return tr('No end date', 'Bitiş tarihi yok')
     }
 
     const date = new Date(value)
 
     if (Number.isNaN(date.getTime())) {
-      return 'Unavailable'
+      return tr('Unavailable', 'Mevcut değil')
     }
 
-    return new Intl.DateTimeFormat('en', {
+    return new Intl.DateTimeFormat(isTr ? 'tr' : 'en', {
       dateStyle: 'medium',
     }).format(date)
   }
@@ -53,7 +56,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     statusText.textContent = status
     start.textContent = formatDate(subscription.periodStart)
     end.textContent = formatDate(subscription.periodEnd)
-    fee.textContent = String(subscription.monthlyFee ?? 0)
+    
+    const formatter = new Intl.NumberFormat(isTr ? 'tr' : 'en')
+    fee.textContent = subscription.monthlyFee ? formatter.format(subscription.monthlyFee) : '0'
 
     statusBadge.textContent = status
     statusBadge.dataset.status = subscription.status
@@ -95,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     loading.hidden = true
     errorMessage.textContent =
-      'Unable to load your subscription information. Please try again.'
+      tr('Unable to load your subscription information. Please try again.', 'Abonelik bilgileriniz yüklenemedi. Lütfen tekrar deneyin.')
     error.hidden = false
   }
 })

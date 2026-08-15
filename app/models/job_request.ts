@@ -117,7 +117,7 @@ export default class JobRequest extends BaseModel {
     await this.save()
 
     if (next === 'completed') {
-      const craftsman = await this.related('craftsman').query().firstOrFail()
+      const craftsman = await Craftsman.findOrFail(this.craftsmanId)
       craftsman.totalJobs += 1
       await craftsman.save()
     }

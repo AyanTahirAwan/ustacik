@@ -209,10 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ])
 
     if (!profileResponse.ok || !profilePayload.customer) {
-      throw new Error(profilePayload.message || 'Unable to load account settings.')
+      throw new Error(profilePayload.message || (isTr ? 'Hesap ayarları yüklenemedi.' : 'Unable to load account settings.'))
     }
     if (!regionsResponse.ok || !Array.isArray(regionsPayload.data)) {
-      throw new Error('Unable to load available regions.')
+      throw new Error(isTr ? 'Mevcut bölgeler yüklenemedi.' : 'Unable to load available regions.')
     }
 
     const emptyOption = region.firstElementChild
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     regionsPayload.data.forEach((item) => {
       const option = document.createElement('option')
       option.value = String(item.id)
-      option.textContent = item.nameEn
+      option.textContent = isTr ? item.nameTr : item.nameEn
       region.append(option)
     })
     applyCustomer(profilePayload.customer)

@@ -1,3 +1,6 @@
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 document.addEventListener('DOMContentLoaded', async () => {
   const page = document.getElementById('request-service-page')
   if (!page) return
@@ -36,12 +39,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fetchJson = async (url) => {
     const response = await fetch(url, { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
     const payload = await response.json().catch(() => ({}))
-    if (!response.ok) throw new Error(response.status === 404 ? 'This craftsman could not be found.' : payload.message || 'Unable to load the request form.')
+    if (!response.ok) throw new Error(response.status === 404 ? tr('This craftsman could not be found.', 'Bu usta bulunamadı.') : payload.message || tr('Unable to load the request form.', 'Talep formu yüklenemedi.'))
     return payload
   }
 
   if (!/^\d+$/.test(craftsmanId)) {
-    showPageError('This craftsman could not be found.')
+    showPageError(tr('This craftsman could not be found.', 'Bu usta bulunamadı.'))
     return
   }
 
@@ -50,17 +53,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       fetchJson(`/api/craftsmen/${encodeURIComponent(craftsmanId)}`),
       fetchJson('/api/catalog/regions'),
     ])
-    if (!craftsman) throw new Error('This craftsman could not be found.')
+    if (!craftsman) throw new Error(tr('This craftsman could not be found.', 'Bu usta bulunamadı.'))
 
-    document.getElementById('request-craftsman-name').textContent = craftsman.businessName || 'Independent craftsman'
-    document.getElementById('request-craftsman-category').textContent = craftsman.category?.nameEn || 'Category not specified'
-    region.replaceChildren(new Option('Choose a region', ''))
-    regions.forEach((item) => region.append(new Option(item.nameEn, item.id)))
+    document.getElementById('request-craftsman-name').textContent = craftsman.businessName || tr('Independent craftsman', 'Bağımsız usta')
+    document.getElementById('request-craftsman-category').textContent = (isTr ? craftsman.category?.nameTr : craftsman.category?.nameEn) || tr('Category not specified', 'Kategori belirtilmemiş')
+    region.replaceChildren(new Option(tr('Choose a region', 'Bir bölge seçin'), ''))
+    regions.forEach((item) => region.append(new Option(isTr ? item.nameTr : item.nameEn, item.id)))
     loading.hidden = true
     content.hidden = false
     setBusy(false)
   } catch (error) {
-    showPageError(error.message || 'Unable to load the request form.')
+    showPageError(error.message || tr('Unable to load the request form.', 'Talep formu yüklenemedi.'))
   }
 
   form.addEventListener('submit', async (event) => {
@@ -68,14 +71,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     formError.hidden = true
     if (!form.reportValidity()) return
     if (!csrf) {
-      formError.textContent = 'Unable to send your request. Please refresh the page and try again.'
+      formError.textContent = tr('Unable to send your request. Please refresh the page and try again.', 'Talebiniz gönderilemedi. Lütfen sayfayı yenileyip tekrar deneyin.')
       formError.hidden = false
       return
     }
 
     requestId ??= generateRequestId()
     setBusy(true)
-    submit.textContent = 'Sending…'
+    submit.textContent = tr('Sending…', 'Gönderiliyor…')
     try {
       const response = await fetch('/api/jobs', {
         method: 'POST',
@@ -90,14 +93,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
       const payload = await response.json().catch(() => ({}))
       if (!response.ok || !payload.job) {
-        throw new Error(payload.errors?.[0]?.message || payload.message || 'Unable to send your request. Please try again.')
+        throw new Error(payload.errors?.[0]?.message || payload.message || tr('Unable to send your request. Please try again.', 'Talebiniz gönderilemedi. Lütfen tekrar deneyin.'))
       }
       window.location.assign('/customer/requests?created=1')
     } catch (error) {
-      formError.textContent = error.message || 'Unable to send your request. Please try again.'
+      formError.textContent = error.message || tr('Unable to send your request. Please try again.', 'Talebiniz gönderilemedi. Lütfen tekrar deneyin.')
       formError.hidden = false
       setBusy(false)
-      submit.textContent = 'Send Request'
+      submit.textContent = tr('Send Request', 'Talebi Gönder')
     }
   })
 })

@@ -9,12 +9,13 @@
   .join('')
   .toUpperCase())
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang || 'en' }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>{{ $props.get('title') ?? 'Admin' }} — ustacik.com</title>
+    <script>window.APP_LOCALE = "{{ lang || 'en' }}";</script>
     @if(activeSection === 'users')
       @vite([
         'resources/css/app.css',
@@ -35,20 +36,25 @@
           <a class="admin-brand" href="/admin" aria-label="ustacik.com Admin home">
             ustacik<span class="admin-brand-dot">.</span>com
           </a>
-          <span class="admin-badge">Admin</span>
+          <span class="admin-badge">{{ t('admin.admin') }}</span>
         </div>
 
         <nav class="admin-topnav" aria-label="Admin navigation">
           <a href="/admin" aria-current="{{ activeSection === 'dashboard' ? 'page' : 'false' }}">
-            Dashboard
+            {{ t('admin.dashboard') }}
           </a>
           <a href="/admin/users" aria-current="{{ activeSection === 'users' ? 'page' : 'false' }}">
-            User Management
+            {{ t('admin.user_management') }}
           </a>
-          <a href="/admin/categories">Categories</a>
-          <a href="/admin/regions">Regions</a>
-          <a href="/admin/sub-services">Sub Services</a>
+          <a href="/admin/categories">{{ t('admin.categories') }}</a>
+          <a href="/admin/regions">{{ t('admin.regions') }}</a>
+          <a href="/admin/sub-services">{{ t('admin.sub_services') }}</a>
         </nav>
+
+        <div class="lang-switcher">
+          <a href="/lang/tr" class="lang-btn {{ lang === 'tr' ? 'active' : '' }}">TR</a>
+          <a href="/lang/en" class="lang-btn {{ lang === 'en' ? 'active' : '' }}">EN</a>
+        </div>
 
         <details class="admin-account-menu">
           <summary class="admin-avatar-chip" aria-label="{{ adminName }} account menu">
@@ -58,7 +64,7 @@
           <div class="admin-account-dropdown">
             <div class="admin-account-identity">
               <strong>{{ adminName }}</strong>
-              <span>Admin</span>
+              <span>{{ t('admin.admin') }}</span>
             </div>
             @form({
               route: 'session.destroy',
@@ -66,7 +72,7 @@
               class: 'admin-account-logout-form',
             })
               <button class="admin-account-action admin-account-logout" type="submit">
-                Logout
+                {{ t('nav.logout') }}
               </button>
             @end
           </div>

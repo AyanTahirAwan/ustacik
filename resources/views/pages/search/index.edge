@@ -1,12 +1,12 @@
 @layout()
   <section class="hero">
-    <h1>Search Services</h1>
-    <p>Find craftsmen and compare service prices.</p>
+    <h1>{{ t('search.title') }}</h1>
+    <p>{{ t('search.sub') }}</p>
   </section>
 
   <section class="search-section">
-    <h2 class="section-heading">Find a Service</h2>
-    <p class="section-subheading">Search by category, service, region, or price.</p>
+    <h2 class="section-heading">{{ t('search.find_service') }}</h2>
+    <p class="section-subheading">{{ t('search.find_sub') }}</p>
 
     <div class="card">
       @form({
@@ -16,11 +16,11 @@
       })
         <div class="form-group">
           @field.root({ name: 'categoryId' })
-            @!field.label({ text: 'Category', class: 'form-label' })
+            @!field.label({ text: t('search.category'), class: 'form-label' })
             @!select.control({
               id: 'category-select',
               class: 'form-control',
-              options: [{ value: '', name: 'Loading categories...' }],
+              options: [{ value: '', name: t('btn.loading_categories') }],
             })
             @!field.error()
           @end
@@ -28,12 +28,12 @@
 
         <div class="form-group">
           @field.root({ name: 'subServiceId' })
-            @!field.label({ text: 'Service', class: 'form-label' })
+            @!field.label({ text: t('search.service'), class: 'form-label' })
             @!select.control({
               id: 'sub-service-select',
               class: 'form-control',
               disabled: true,
-              options: [{ value: '', name: 'Choose a category first' }],
+              options: [{ value: '', name: t('search.choose_cat_first') }],
             })
             @!field.error()
           @end
@@ -41,11 +41,11 @@
 
         <div class="form-group">
           @field.root({ name: 'regionId' })
-            @!field.label({ text: 'Region', class: 'form-label' })
+            @!field.label({ text: t('search.region'), class: 'form-label' })
             @!select.control({
               id: 'region-select',
               class: 'form-control',
-              options: [{ value: '', name: 'Loading regions...' }],
+              options: [{ value: '', name: t('btn.loading_regions') }],
             })
             @!field.error()
           @end
@@ -53,7 +53,7 @@
 
         <div class="form-group">
           @field.root({ name: 'minPrice' })
-            @!field.label({ text: 'Minimum Price', class: 'form-label' })
+            @!field.label({ text: t('search.min_price'), class: 'form-label' })
             @!input.control({
               class: 'form-control',
               type: 'number',
@@ -67,7 +67,7 @@
 
         <div class="form-group">
           @field.root({ name: 'maxPrice' })
-            @!field.label({ text: 'Maximum Price', class: 'form-label' })
+            @!field.label({ text: t('search.max_price'), class: 'form-label' })
             @!input.control({
               class: 'form-control',
               type: 'number',
@@ -80,9 +80,9 @@
         </div>
 
         <div class="search-actions">
-          <a href="/search" class="btn-back">Clear filters</a>
+          <a href="/search" class="btn-back">{{ t('search.clear_filters') }}</a>
           @!button({
-            text: 'Search',
+            text: t('search.search_btn'),
             type: 'submit',
             class: 'btn-primary',
           })
@@ -92,16 +92,16 @@
   </section>
 
   <section class="search-section">
-    <h2 class="section-heading">Search Results</h2>
+    <h2 class="section-heading">{{ t('search.results') }}</h2>
 
     <div id="active-filters" class="active-filters" hidden>
-      <strong>Active filters:</strong>
+      <strong>{{ t('search.active_filters') }}</strong>
       <span id="active-filter-values"></span>
     </div>
 
     <div id="search-results" class="results-grid" aria-live="polite">
       <div class="empty-state">
-        <p>Use the filters above to find available services.</p>
+        <p>{{ t('search.use_filters') }}</p>
       </div>
     </div>
   </section>

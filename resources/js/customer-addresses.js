@@ -1,5 +1,8 @@
 import { confirmAction } from './confirmation-modal.js'
 
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 async function loadCustomerAddresses() {
   const page = document.getElementById('customer-addresses-page')
 
@@ -52,14 +55,14 @@ async function loadCustomerAddresses() {
     const emptyOption = document.createElement('option')
 
     emptyOption.value = ''
-    emptyOption.textContent = 'Select a region'
+    emptyOption.textContent = tr('Select a region', 'Bir bölge seçin')
     region.replaceChildren(emptyOption)
 
     regions.forEach((regionItem) => {
       const option = document.createElement('option')
 
       option.value = String(regionItem.id)
-      option.textContent = regionItem.nameEn
+      option.textContent = isTr ? regionItem.nameTr : regionItem.nameEn
       region.appendChild(option)
     })
   }
@@ -68,8 +71,8 @@ async function loadCustomerAddresses() {
     editingAddressId = null
     form.reset()
     region.value = ''
-    formTitle.textContent = 'Add Address'
-    submitButton.textContent = 'Save Address'
+    formTitle.textContent = tr('Add Address', 'Adres Ekle')
+    submitButton.textContent = tr('Save Address', 'Adresi Kaydet')
     cancelButton.hidden = true
 
     if (options.focus) {
@@ -86,8 +89,8 @@ async function loadCustomerAddresses() {
     street.value = address.street ?? ''
     landmark.value = address.landmark ?? ''
     isDefault.checked = Boolean(address.isDefault)
-    formTitle.textContent = 'Edit Address'
-    submitButton.textContent = 'Update Address'
+    formTitle.textContent = tr('Edit Address', 'Adresi Düzenle')
+    submitButton.textContent = tr('Update Address', 'Adresi Güncelle')
     cancelButton.hidden = false
 
     form.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -115,7 +118,7 @@ async function loadCustomerAddresses() {
       const titleGroup = document.createElement('div')
       const title = createTextElement('h3', 'customer-address-title', address.label)
       const regionName =
-        address.region?.nameEn ?? address.region?.nameTr ?? `Region ${address.regionId}`
+        (isTr ? address.region?.nameTr : address.region?.nameEn) ?? `Region ${address.regionId}`
       const regionText = createTextElement(
         'p',
         'customer-address-region',
@@ -127,11 +130,11 @@ async function loadCustomerAddresses() {
         address.street
       )
       const actions = document.createElement('div')
-      const editButton = createTextElement('button', 'btn-primary', 'Edit')
+      const editButton = createTextElement('button', 'btn-primary', tr('Edit', 'Düzenle'))
       const deleteButton = createTextElement(
         'button',
         'customer-address-delete',
-        'Delete'
+        tr('Delete', 'Sil')
       )
 
       card.className = 'customer-address-card'
@@ -144,7 +147,7 @@ async function loadCustomerAddresses() {
         const defaultBadge = createTextElement(
           'span',
           'customer-address-default-badge',
-          'Default'
+          tr('Default', 'Varsayılan')
         )
 
         header.append(titleGroup, defaultBadge)
@@ -158,7 +161,7 @@ async function loadCustomerAddresses() {
         const landmarkText = createTextElement(
           'p',
           'customer-address-landmark',
-          `Landmark: ${address.landmark}`
+          isTr ? `Yer İmi: ${address.landmark}` : `Landmark: ${address.landmark}`
         )
 
         card.appendChild(landmarkText)
@@ -173,10 +176,12 @@ async function loadCustomerAddresses() {
 
       deleteButton.addEventListener('click', async () => {
         const confirmed = await confirmAction({
-          title: 'Delete address?',
-          message: `Delete "${address.label}"? This action cannot be undone.`,
-          confirmLabel: 'Delete Address',
-          cancelLabel: 'Cancel',
+          title: tr('Delete address?', 'Adres silinsin mi?'),
+          message: isTr
+            ? `"${address.label}" adresi silinsin mi? Bu işlem geri alınamaz.`
+            : `Delete "${address.label}"? This action cannot be undone.`,
+          confirmLabel: tr('Delete Address', 'Adresi Sil'),
+          cancelLabel: tr('Cancel', 'İptal'),
         })
 
         if (!confirmed) {
@@ -186,12 +191,12 @@ async function loadCustomerAddresses() {
         hideMessages()
 
         if (!csrfInput?.value) {
-          showError('Unable to delete the address. Please refresh the page.')
+          showError(tr('Unable to delete the address. Please refresh the page.', 'Adres silinemedi. Lütfen sayfayı yenileyin.'))
           return
         }
 
         deleteButton.disabled = true
-        deleteButton.textContent = 'Deleting...'
+        deleteButton.textContent = tr('Deleting...', 'Siliniyor...')
 
         try {
           const response = await fetch(
@@ -215,12 +220,12 @@ async function loadCustomerAddresses() {
           }
 
           await fetchAddresses()
-          showSuccess('The address has been deleted successfully.')
+          showSuccess(tr('The address has been deleted successfully.', 'Adres başarıyla silindi.'))
         } catch (deleteError) {
           console.error('Failed to delete customer address', deleteError)
-          showError('Unable to delete the address. Please try again.')
+          showError(tr('Unable to delete the address. Please try again.', 'Adres silinemedi. Lütfen tekrar deneyin.'))
           deleteButton.disabled = false
-          deleteButton.textContent = 'Delete'
+          deleteButton.textContent = tr('Delete', 'Sil')
         }
       })
 
@@ -278,7 +283,7 @@ async function loadCustomerAddresses() {
   } catch (loadError) {
     console.error('Failed to load customer addresses', loadError)
     loading.hidden = true
-    showError('Unable to load your addresses. Please try again.')
+    showError(tr('Unable to load your addresses. Please try again.', 'Adresleriniz yüklenemedi. Lütfen tekrar deneyin.'))
   }
 
   newButton.addEventListener('click', () => {
@@ -296,7 +301,7 @@ async function loadCustomerAddresses() {
     hideMessages()
 
     if (!csrfInput?.value) {
-      showError('Unable to save the address. Please refresh the page.')
+      showError(tr('Unable to save the address. Please refresh the page.', 'Adres kaydedilemedi. Lütfen sayfayı yenileyin.'))
       return
     }
 
@@ -304,9 +309,8 @@ async function loadCustomerAddresses() {
     cancelButton.disabled = true
 
     const isEditing = editingAddressId !== null
-    const originalButtonText = submitButton.textContent
 
-    submitButton.textContent = isEditing ? 'Updating...' : 'Saving...'
+    submitButton.textContent = isEditing ? tr('Updating...', 'Güncelleniyor...') : tr('Saving...', 'Kaydediliyor...')
 
     try {
       const response = await fetch(
@@ -343,25 +347,25 @@ async function loadCustomerAddresses() {
       resetForm()
       showSuccess(
         isEditing
-          ? 'The address has been updated successfully.'
-          : 'The address has been saved successfully.'
+          ? tr('The address has been updated successfully.', 'Adres başarıyla güncellendi.')
+          : tr('The address has been saved successfully.', 'Adres başarıyla kaydedildi.')
       )
     } catch (saveError) {
       console.error('Failed to save customer address', saveError)
 
       if (saveError.message === 'VALIDATION_ERROR') {
-        showError('Please check the address details and try again.')
+        showError(tr('Please check the address details and try again.', 'Lütfen adres bilgilerini kontrol edin ve tekrar deneyin.'))
       } else {
-        showError('Unable to save the address. Please try again.')
+        showError(tr('Unable to save the address. Please try again.', 'Adres kaydedilemedi. Lütfen tekrar deneyin.'))
       }
     } finally {
       submitButton.disabled = false
       cancelButton.disabled = false
 
       if (editingAddressId === null) {
-        submitButton.textContent = 'Save Address'
+        submitButton.textContent = tr('Save Address', 'Adresi Kaydet')
       } else {
-        submitButton.textContent = originalButtonText
+        submitButton.textContent = tr('Update Address', 'Adresi Güncelle')
       }
     }
   })

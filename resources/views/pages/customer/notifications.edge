@@ -1,7 +1,7 @@
-@customerAccountLayout({ title: 'Notifications', active: 'notifications' })
+@customerAccountLayout({ title: t('notifications.title', {}, 'Notifications'), active: 'notifications' })
   <div id="customer-notifications-page">
     <p id="customer-notifications-loading" class="customer-notifications-loading">
-      Loading notifications...
+      {{ t('notifications.loading', {}, 'Loading notifications...') }}
     </p>
 
     <div
@@ -10,9 +10,16 @@
       hidden
     >
       <p id="customer-notifications-error-message">
-        Unable to load your notifications. Please try again.
+        {{ t('notifications.error_load', {}, 'Unable to load your notifications. Please try again.') }}
       </p>
     </div>
+
+    @form({
+      action: '/api/notifications/read-all',
+      method: 'PATCH',
+      id: 'customer-notifications-csrf-form',
+    })
+    @end
 
     <section
       id="customer-notifications-content"
@@ -21,17 +28,22 @@
     >
       <div class="customer-notifications-header">
         <div>
-          <h2 class="card-title">Your Notifications</h2>
+          <h2 class="card-title">{{ t('notifications.your_notifications') }}</h2>
           <p class="card-description">
-            Updates related to your account and activity.
+            {{ t('notifications.your_notifications_sub') }}
           </p>
         </div>
 
-        <span
-          id="customer-notifications-unread-count"
-          class="customer-notifications-count"
-          hidden
-        ></span>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button id="customer-notifications-read-all" class="btn-back" type="button" hidden>
+            {{ t('notifications.mark_all_read') }}
+          </button>
+          <span
+            id="customer-notifications-unread-count"
+            class="customer-notifications-count"
+            hidden
+          ></span>
+        </div>
       </div>
 
       <p
@@ -39,7 +51,7 @@
         class="customer-notifications-empty"
         hidden
       >
-        You do not have any notifications yet.
+        {{ t('notifications.empty', {}, 'You do not have any notifications yet.') }}
       </p>
 
       <div
