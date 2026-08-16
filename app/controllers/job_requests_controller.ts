@@ -254,13 +254,8 @@ export default class JobRequestsController {
     try {
       await job.transitionTo('cancelled')
       return response.ok({ job })
-<<<<<<< HEAD
     } catch (error: any) {
       return response.badRequest({ message: error?.message ?? String(error) })
-=======
-    } catch (error) {
-      return response.badRequest({ message: (error as Error).message })
->>>>>>> 37d0de462233b7e517319ba50e25738608961de2
     }
   }
 
@@ -296,13 +291,8 @@ export default class JobRequestsController {
         return transitioningJob
       })
       return response.ok({ job })
-<<<<<<< HEAD
     } catch (error: any) {
       return response.badRequest({ message: error?.message ?? String(error) })
-=======
-    } catch (error) {
-      return response.badRequest({ message: (error as Error).message })
->>>>>>> 37d0de462233b7e517319ba50e25738608961de2
     }
   }
 }
