@@ -1,5 +1,8 @@
 import { confirmAction } from './confirmation-modal.js'
 
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 document.addEventListener('DOMContentLoaded', async () => {
   const page = document.getElementById('craftsman-work-photos-page')
 
@@ -54,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       image.className = 'craftsman-work-photo-image'
       image.src = workPhoto.imageUrl
-      image.alt = 'Craftsman work portfolio'
+      image.alt = tr('Craftsman work portfolio', 'Usta iş portföyü')
       image.loading = 'lazy'
 
       urlText.className = 'craftsman-work-photo-url'
@@ -62,14 +65,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       removeButton.className = 'btn btn-secondary craftsman-work-photo-remove'
       removeButton.type = 'button'
-      removeButton.textContent = 'Remove Photo'
+      removeButton.textContent = tr('Remove Photo', 'Fotoğrafı Kaldır')
 
       removeButton.addEventListener('click', async () => {
         const confirmed = await confirmAction({
-          title: 'Remove work photo?',
-          message: 'Remove this photo from your work portfolio? This action cannot be undone.',
-          confirmLabel: 'Remove Photo',
-          cancelLabel: 'Cancel',
+          title: tr('Remove work photo?', 'İş fotoğrafı kaldırılsın mı?'),
+          message: tr('Remove this photo from your work portfolio? This action cannot be undone.', 'Bu fotoğrafı iş portföyünüzden kaldırmak istiyor musunuz? Bu işlem geri alınamaz.'),
+          confirmLabel: tr('Remove Photo', 'Fotoğrafı Kaldır'),
+          cancelLabel: tr('Cancel', 'İptal'),
         })
 
         if (!confirmed) {
@@ -79,12 +82,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         hideMessages()
 
         if (!csrfInput?.value) {
-          showError('Unable to remove the photo. Please refresh the page and try again.')
+          showError(tr('Unable to remove the photo. Please refresh the page and try again.', 'Fotoğraf kaldırılamadı. Lütfen sayfayı yenileyip tekrar deneyin.'))
           return
         }
 
         removeButton.disabled = true
-        removeButton.textContent = 'Removing...'
+        removeButton.textContent = tr('Removing...', 'Kaldırılıyor...')
 
         try {
           const response = await fetch(
@@ -105,12 +108,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           workPhotos = workPhotos.filter((photo) => photo.id !== workPhoto.id)
           renderPhotos()
-          showSuccess('The work photo has been removed.')
+          showSuccess(tr('The work photo has been removed.', 'İş fotoğrafı kaldırıldı.'))
         } catch (removeError) {
           console.error('Failed to remove work photo', removeError)
           removeButton.disabled = false
-          removeButton.textContent = 'Remove Photo'
-          showError('Unable to remove the work photo. Please try again.')
+          removeButton.textContent = tr('Remove Photo', 'Fotoğrafı Kaldır')
+          showError(tr('Unable to remove the work photo. Please try again.', 'İş fotoğrafı kaldırılamadı. Lütfen tekrar deneyin.'))
         }
       })
 
@@ -148,7 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (loadError) {
     console.error('Failed to load work photos', loadError)
     loading.hidden = true
-    showError('Unable to load your work photos. Please try again.')
+    showError(tr('Unable to load your work photos. Please try again.', 'İş fotoğraflarınız yüklenemedi. Lütfen tekrar deneyin.'))
   }
 
   form.addEventListener('submit', async (event) => {
@@ -156,12 +159,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     hideMessages()
 
     if (!csrfInput?.value) {
-      showError('Unable to add the photo. Please refresh the page and try again.')
+      showError(tr('Unable to add the photo. Please refresh the page and try again.', 'Fotoğraf eklenemedi. Lütfen sayfayı yenileyip tekrar deneyin.'))
       return
     }
 
     addButton.disabled = true
-    addButton.textContent = 'Adding...'
+    addButton.textContent = tr('Adding...', 'Ekleniyor...')
 
     try {
       const response = await fetch('/api/craftsman/work-photos', {
@@ -191,13 +194,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderPhotos()
 
       form.reset()
-      showSuccess('The work photo has been added successfully.')
+      showSuccess(tr('The work photo has been added successfully.', 'İş fotoğrafı başarıyla eklendi.'))
     } catch (addError) {
       console.error('Failed to add work photo', addError)
-      showError('Unable to add the work photo. Please check the image URL and try again.')
+      showError(tr('Unable to add the work photo. Please check the image URL and try again.', 'İş fotoğrafı eklenemedi. Lütfen resim URL\'sini kontrol edin ve tekrar deneyin.'))
     } finally {
       addButton.disabled = false
-      addButton.textContent = 'Add Photo'
+      addButton.textContent = tr('Add Photo', 'Fotoğraf Ekle')
     }
   })
 })

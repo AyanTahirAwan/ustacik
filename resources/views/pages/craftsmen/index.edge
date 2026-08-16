@@ -2,14 +2,14 @@
   <section aria-labelledby="craftsmen-heading">
     <div class="section-header">
       <div>
-        <h2 id="craftsmen-heading" class="section-heading">Local professionals</h2>
-        <p class="section-subheading">Review profiles and find the right person for your job.</p>
+        <h2 id="craftsmen-heading" class="section-heading">{{ t('craftsmen.local_pros') }}</h2>
+        <p class="section-subheading">{{ t('craftsmen.sub') }}</p>
       </div>
-      <a class="btn-back" href="/search">Filter services</a>
+      <a class="btn-back" href="/search">{{ t('craftsmen.filter_services') }}</a>
     </div>
     <div id="craftsmen-list" class="craftsmen-grid" aria-live="polite">
       <div class="empty-state">
-        <p>Loading craftsmen…</p>
+        <p>{{ t('btn.loading_craftsmen') }}</p>
       </div>
     </div>
   </section>

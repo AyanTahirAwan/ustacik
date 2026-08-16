@@ -1,3 +1,6 @@
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 document.addEventListener('DOMContentLoaded', () => {
   const page = document.getElementById('craftsman-jobs-page')
   if (!page) return
@@ -9,9 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const successState = document.getElementById('craftsman-jobs-success')
   const summary = document.getElementById('craftsman-jobs-summary')
   const list = document.getElementById('craftsman-jobs-list')
+
   const labels = {
-    pending: 'Pending', accepted: 'Accepted', declined: 'Declined', in_progress: 'In Progress',
-    completed: 'Completed', cancelled: 'Cancelled', expired: 'Expired', disputed: 'Disputed',
+    pending: tr('Pending', 'Beklemede'),
+    accepted: tr('Accepted', 'Kabul Edildi'),
+    declined: tr('Declined', 'Reddedildi'),
+    in_progress: tr('In Progress', 'Devam Ediyor'),
+    completed: tr('Completed', 'Tamamlandı'),
+    cancelled: tr('Cancelled', 'İptal Edildi'),
+    expired: tr('Expired', 'Süresi Doldu'),
+    disputed: tr('Disputed', 'İtirazda'),
   }
 
   form.addEventListener('submit', (event) => event.preventDefault())
@@ -30,14 +40,21 @@ document.addEventListener('DOMContentLoaded', () => {
     list.hidden = false
     const pending = jobs.filter((job) => job.status === 'pending').length
     summary.textContent = pending
-      ? `${pending} pending request${pending === 1 ? '' : 's'} need your response.`
-      : jobs.length ? 'You have no pending requests.' : ''
+      ? isTr
+        ? `${pending} bekleyen talep yanıtınızı bekliyor.`
+        : `${pending} pending request${pending === 1 ? '' : 's'} need your response.`
+      : jobs.length
+        ? tr('You have no pending requests.', 'Bekleyen talebiniz yok.')
+        : ''
     summary.hidden = !jobs.length
 
     if (!jobs.length) {
       const empty = document.createElement('div')
       empty.className = 'dashboard-empty craftsman-jobs-empty'
-      empty.textContent = 'No job requests have been assigned to you yet.'
+      empty.textContent = tr(
+        'No job requests have been assigned to you yet.',
+        'Henüz size atanmış iş talebi bulunmuyor.'
+      )
       list.append(empty)
       return
     }
@@ -48,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const heading = document.createElement('div')
       heading.className = 'craftsman-job-heading'
       const title = document.createElement('h3')
-      title.textContent = job.customer?.fullName || 'Customer'
+      title.textContent = job.customer?.fullName || tr('Customer', 'Müşteri')
       const status = document.createElement('span')
       status.className = `request-status request-status-${job.status}`
       status.textContent = labels[job.status] || job.status
@@ -56,13 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const meta = document.createElement('dl')
       meta.className = 'craftsman-job-meta'
-      addFact(meta, 'Category', job.category?.nameEn || job.category?.name)
-      addFact(meta, 'Region', job.region?.nameEn || job.region?.name)
-      addFact(meta, 'Requested', job.createdAt ? new Date(job.createdAt).toLocaleDateString() : null)
+      addFact(meta, tr('Category', 'Kategori'), isTr ? (job.category?.nameTr || job.category?.nameEn) : (job.category?.nameEn || job.category?.name))
+      addFact(meta, tr('Region', 'Bölge'), isTr ? (job.region?.nameTr || job.region?.nameEn) : (job.region?.nameEn || job.region?.name))
+      addFact(meta, tr('Requested', 'Talep tarihi'), job.createdAt ? new Date(job.createdAt).toLocaleDateString(isTr ? 'tr-TR' : 'en-GB') : null)
 
       const description = document.createElement('p')
       description.className = 'craftsman-job-description'
-      description.textContent = job.description || 'No description provided.'
+      description.textContent = job.description || tr('No description provided.', 'Açıklama girilmemiş.')
       card.append(heading, meta, description)
 
       if (['pending', 'accepted', 'in_progress'].includes(job.status)) {
@@ -78,12 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
           actions.append(button)
         }
         if (job.status === 'pending') {
-          addAction('accept', 'Accept', 'btn-primary')
-          addAction('decline', 'Decline', 'btn-back')
+          addAction('accept', tr('Accept', 'Kabul Et'), 'btn-primary')
+          addAction('decline', tr('Decline', 'Reddet'), 'btn-back')
         } else if (job.status === 'accepted') {
-          addAction('start', 'Start Work', 'btn-primary')
+          addAction('start', tr('Start Work', 'İşe Başla'), 'btn-primary')
         } else if (job.status === 'in_progress') {
-          addAction('complete', 'Mark as Completed', 'btn-primary')
+          addAction('complete', tr('Mark as Completed', 'Tamamlandı Olarak İşaretle'), 'btn-primary')
         }
         card.append(actions)
       }
@@ -96,12 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch('/api/jobs', { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
       const payload = await response.json().catch(() => ({}))
-      if (!response.ok || !Array.isArray(payload.jobs)) throw new Error(payload.message || 'Unable to load job requests.')
+      if (!response.ok || !Array.isArray(payload.jobs)) throw new Error(payload.message || tr('Unable to load job requests.', 'İş talepleri yüklenemedi.'))
       render(payload.jobs)
     } catch (error) {
       list.hidden = true
       summary.hidden = true
-      errorState.textContent = error.message || 'Unable to load job requests.'
+      errorState.textContent = error.message || tr('Unable to load job requests.', 'İş talepleri yüklenemedi.')
       errorState.hidden = false
     } finally {
       loading.hidden = true
@@ -112,7 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const button = event.target.closest('button[data-job-action]')
     if (!button || button.disabled) return
     if (!csrf) {
-      errorState.textContent = 'Unable to update this request. Please refresh the page and try again.'
+      errorState.textContent = tr(
+        'Unable to update this request. Please refresh the page and try again.',
+        'Bu talep güncellenemedi. Lütfen sayfayı yenileyip tekrar deneyin.'
+      )
       errorState.hidden = false
       return
     }
@@ -135,19 +155,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const expectedStatus = expectedStatuses[action]
       if (!response.ok || payload.job?.status !== expectedStatus) {
-        throw new Error(payload.message || 'This request could not be updated. It may have changed already.')
+        throw new Error(payload.message || tr(
+          'This request could not be updated. It may have changed already.',
+          'Bu talep güncellenemedi. Talep zaten değişmiş olabilir.'
+        ))
       }
       const successMessages = {
-        accept: 'Job request accepted.',
-        decline: 'Job request declined.',
-        start: 'Work started. The customer can now see that this job is in progress.',
-        complete: 'Job marked as completed.',
+        accept: tr('Job request accepted.', 'İş talebi kabul edildi.'),
+        decline: tr('Job request declined.', 'İş talebi reddedildi.'),
+        start: tr('Work started. The customer can now see that this job is in progress.', 'İş başlatıldı. Müşteri, işin devam ettiğini görebilir.'),
+        complete: tr('Job marked as completed.', 'İş tamamlandı olarak işaretlendi.'),
       }
       successState.textContent = successMessages[action]
       successState.hidden = false
       await loadJobs()
     } catch (error) {
-      errorState.textContent = error.message || 'This request could not be updated.'
+      errorState.textContent = error.message || tr('This request could not be updated.', 'Bu talep güncellenemedi.')
       errorState.hidden = false
       buttons.forEach((item) => { item.disabled = false })
     }

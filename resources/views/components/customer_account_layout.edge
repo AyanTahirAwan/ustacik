@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="{{ lang || 'en' }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ $props.get('title') ?? 'Customer Account' }} — UstaÇık</title>
+    <title>{{ $props.get('title') ?? t('customer.account') }} — UstaÇık</title>
+    <script>window.APP_LOCALE = "{{ lang || 'en' }}";</script>
     @vite([
       'resources/css/app.css',
       'resources/css/customer-account.css',
@@ -51,28 +52,28 @@
           href="/customer/profile"
           aria-current="{{ $props.get('active') === 'profile' ? 'page' : 'false' }}"
         >
-          My Profile
+          {{ t('nav.profile') }}
         </a>
         <a
           class="customer-account-nav-item {{ $props.get('active') === 'addresses' ? 'is-active' : '' }}"
           href="/customer/addresses"
           aria-current="{{ $props.get('active') === 'addresses' ? 'page' : 'false' }}"
         >
-          Addresses
+          {{ t('customer.addresses') }}
         </a>
         <a
           class="customer-account-nav-item {{ $props.get('active') === 'favorites' ? 'is-active' : '' }}"
           href="/customer/favorites"
           aria-current="{{ $props.get('active') === 'favorites' ? 'page' : 'false' }}"
         >
-          Favorites
+          {{ t('customer.favorites') }}
         </a>
         <a
           class="customer-account-nav-item {{ $props.get('active') === 'notifications' ? 'is-active' : '' }}"
           href="/customer/notifications"
           aria-current="{{ $props.get('active') === 'notifications' ? 'page' : 'false' }}"
         >
-          Notifications
+          {{ t('nav.notifications') }}
         </a>
       </nav>
     </aside>
@@ -80,8 +81,8 @@
     <main id="customer-account-content" class="customer-account-shell">
       <header class="customer-account-header">
         <div class="customer-account-heading">
-          <p>Customer Account</p>
-          <h1>{{ $props.get('title') ?? 'Customer Account' }}</h1>
+          <p>{{ t('customer.account') }}</p>
+          <h1>{{ $props.get('title') ?? t('customer.account') }}</h1>
         </div>
 
         <div class="customer-account-control" data-customer-account-control>
@@ -95,9 +96,9 @@
           >
             <span class="customer-account-profile-copy">
               <strong data-customer-account-name>
-                {{ auth.user ? auth.user.email : 'Customer Account' }}
+                {{ auth.user ? auth.user.email : t('customer.account') }}
               </strong>
-              <span data-customer-account-email>Customer account</span>
+              <span data-customer-account-email>{{ t('customer.account') }}</span>
             </span>
             <span class="customer-account-avatar" data-customer-account-avatar aria-hidden="true">
               {{ auth.user ? auth.user.initials : 'UC' }}
@@ -112,13 +113,17 @@
             data-customer-account-dropdown
             hidden
           >
+            <div class="customer-account-lang" style="padding: 0.75rem 1rem; display: flex; gap: 1rem; border-bottom: 1px solid var(--border);">
+              <a href="/lang/tr" class="{{ lang === 'tr' ? 'active' : '' }}" style="color: inherit; text-decoration: none; font-weight: 500;">TR</a>
+              <a href="/lang/en" class="{{ lang === 'en' ? 'active' : '' }}" style="color: inherit; text-decoration: none; font-weight: 500;">EN</a>
+            </div>
             @form({
               route: 'session.destroy',
               method: 'POST',
               class: 'customer-account-logout-form',
             })
               <button class="customer-account-action customer-account-logout" type="submit">
-                Logout
+                {{ t('nav.logout') }}
               </button>
             @end
           </div>

@@ -1,5 +1,8 @@
 import { confirmAction } from './confirmation-modal.js'
 
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 async function loadCustomerFavorites() {
   const page = document.getElementById('customer-favorites-page')
 
@@ -59,9 +62,8 @@ async function loadCustomerFavorites() {
 
   function getCategoryName(craftsman) {
     return (
-      craftsman.category?.nameEn ??
-      craftsman.category?.nameTr ??
-      'Category unavailable'
+      (isTr ? craftsman.category?.nameTr : craftsman.category?.nameEn) ??
+      tr('Category unavailable', 'Kategori mevcut değil')
     )
   }
 
@@ -72,7 +74,7 @@ async function loadCustomerFavorites() {
     )
 
     placeholder.value = ''
-    placeholder.textContent = 'Select a craftsman'
+    placeholder.textContent = tr('Select a craftsman', 'Bir usta seçin')
     craftsmanSelect.replaceChildren(placeholder)
 
     const availableCraftsmen = craftsmen.filter(
@@ -106,24 +108,33 @@ async function loadCustomerFavorites() {
       const businessName = createTextElement(
         'h3',
         'customer-favorite-business-name',
-        craftsman?.businessName ?? `Craftsman #${favorite.craftsmanId}`
+        craftsman?.businessName ?? (isTr ? `Usta #${favorite.craftsmanId}` : `Craftsman #${favorite.craftsmanId}`)
       )
       const category = createTextElement(
         'p',
         'customer-favorite-category',
-        craftsman ? getCategoryName(craftsman) : 'Craftsman details unavailable'
+        craftsman ? getCategoryName(craftsman) : tr('Craftsman details unavailable', 'Usta bilgileri mevcut değil')
       )
+      
+      const trustLabels = {
+        unverified: tr('Unverified', 'Doğrulanmamış'),
+        registered: tr('Registered', 'Kayıtlı'),
+        verified: tr('Verified', 'Doğrulanmış'),
+        approved: tr('Approved', 'Onaylı'),
+      }
+      const safeTrust = craftsman?.trustLevelLabel || 'unverified'
+
       const trustBadge = createTextElement(
         'span',
         'customer-favorite-trust-badge',
-        craftsman?.trustLevelLabel ?? 'Unavailable'
+        trustLabels[safeTrust] || tr('Unavailable', 'Mevcut değil')
       )
       const details = document.createElement('div')
       const actions = document.createElement('div')
       const removeButton = createTextElement(
         'button',
         'customer-favorite-remove',
-        'Remove from Favorites'
+        tr('Remove from Favorites', 'Favorilerden Kaldır')
       )
 
       card.className = 'customer-favorite-card'
@@ -145,7 +156,7 @@ async function loadCustomerFavorites() {
           createTextElement(
             'p',
             'customer-favorite-jobs',
-            `${craftsman.totalJobs ?? 0} completed jobs`
+            isTr ? `${craftsman.totalJobs ?? 0} tamamlanan iş` : `${craftsman.totalJobs ?? 0} completed jobs`
           )
         )
       }
@@ -154,10 +165,12 @@ async function loadCustomerFavorites() {
 
       removeButton.addEventListener('click', async () => {
         const confirmed = await confirmAction({
-          title: 'Remove from favorites?',
-          message: `Remove "${craftsman?.businessName ?? `Craftsman #${favorite.craftsmanId}`}" from your saved craftsmen?`,
-          confirmLabel: 'Remove',
-          cancelLabel: 'Cancel',
+          title: tr('Remove from favorites?', 'Favorilerden kaldırılsın mı?'),
+          message: isTr 
+            ? `"${craftsman?.businessName ?? `Usta #${favorite.craftsmanId}`}" ustanızı kaydedilenlerden çıkarmak istiyor musunuz?`
+            : `Remove "${craftsman?.businessName ?? `Craftsman #${favorite.craftsmanId}`}" from your saved craftsmen?`,
+          confirmLabel: tr('Remove', 'Kaldır'),
+          cancelLabel: tr('Cancel', 'İptal'),
         })
 
         if (!confirmed) {
@@ -168,13 +181,13 @@ async function loadCustomerFavorites() {
 
         if (!csrfInput?.value) {
           showError(
-            'Unable to remove the favorite. Please refresh the page and try again.'
+            tr('Unable to remove the favorite. Please refresh the page and try again.', 'Favori kaldırılamadı. Lütfen sayfayı yenileyip tekrar deneyin.')
           )
           return
         }
 
         removeButton.disabled = true
-        removeButton.textContent = 'Removing...'
+        removeButton.textContent = tr('Removing...', 'Kaldırılıyor...')
 
         try {
           const response = await fetch(
@@ -194,12 +207,12 @@ async function loadCustomerFavorites() {
           }
 
           await fetchFavorites()
-          showSuccess('The craftsman has been removed from your favorites.')
+          showSuccess(tr('The craftsman has been removed from your favorites.', 'Usta favorilerinizden kaldırıldı.'))
         } catch (removeError) {
           console.error('Failed to remove customer favorite', removeError)
-          showError('Unable to remove the favorite. Please try again.')
+          showError(tr('Unable to remove the favorite. Please try again.', 'Favori kaldırılamadı. Lütfen tekrar deneyin.'))
           removeButton.disabled = false
-          removeButton.textContent = 'Remove from Favorites'
+          removeButton.textContent = tr('Remove from Favorites', 'Favorilerden Kaldır')
         }
       })
 
@@ -274,7 +287,7 @@ async function loadCustomerFavorites() {
   } catch (loadError) {
     console.error('Failed to load customer favorites', loadError)
     loading.hidden = true
-    showError('Unable to load your favorites. Please try again.')
+    showError(tr('Unable to load your favorites. Please try again.', 'Favorileriniz yüklenemedi. Lütfen tekrar deneyin.'))
   }
 
   form.addEventListener('submit', async (event) => {
@@ -284,19 +297,19 @@ async function loadCustomerFavorites() {
     const craftsmanId = Number(craftsmanSelect.value)
 
     if (!Number.isInteger(craftsmanId) || craftsmanId < 1) {
-      showError('Please select a craftsman.')
+      showError(tr('Please select a craftsman.', 'Lütfen bir usta seçin.'))
       return
     }
 
     if (!csrfInput?.value) {
       showError(
-        'Unable to add the favorite. Please refresh the page and try again.'
+        tr('Unable to add the favorite. Please refresh the page and try again.', 'Favori eklenemedi. Lütfen sayfayı yenileyip tekrar deneyin.')
       )
       return
     }
 
     addButton.disabled = true
-    addButton.textContent = 'Adding...'
+    addButton.textContent = tr('Adding...', 'Ekleniyor...')
 
     try {
       const response = await fetch('/api/customer/favorites', {
@@ -326,19 +339,19 @@ async function loadCustomerFavorites() {
 
       await fetchFavorites()
       form.reset()
-      showSuccess('The craftsman has been added to your favorites.')
+      showSuccess(tr('The craftsman has been added to your favorites.', 'Usta favorilerinize eklendi.'))
     } catch (saveError) {
       console.error('Failed to add customer favorite', saveError)
 
       if (saveError.message === 'DUPLICATE_FAVORITE') {
-        showError('This craftsman is already in your favorites.')
+        showError(tr('This craftsman is already in your favorites.', 'Bu usta zaten favorilerinizde.'))
       } else if (saveError.message === 'VALIDATION_ERROR') {
-        showError('Please select a valid craftsman.')
+        showError(tr('Please select a valid craftsman.', 'Lütfen geçerli bir usta seçin.'))
       } else {
-        showError('Unable to add the favorite. Please try again.')
+        showError(tr('Unable to add the favorite. Please try again.', 'Favori eklenemedi. Lütfen tekrar deneyin.'))
       }
     } finally {
-      addButton.textContent = 'Add to Favorites'
+      addButton.textContent = tr('Add to Favorites', 'Favorilere Ekle')
 
       const favoriteCraftsmanIds = new Set(
         favorites.map((favorite) => favorite.craftsmanId)

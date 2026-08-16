@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="{{ lang || 'en' }}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ $props.get('title') ?? 'Craftsman Account' }} — UstaÇık</title>
+  <title>{{ $props.get('title') ?? t('craftsman.account') }} — UstaÇık</title>
 
   @vite([
     'resources/css/app.css',
@@ -22,34 +22,34 @@
 
       <div class="craftsman-account-topbar">
         <div class="craftsman-account-heading">
-          <p>Craftsman Account</p>
-          <h1>{{ $props.get('title') ?? 'Craftsman Account' }}</h1>
+          <p>{{ t('craftsman.account') }}</p>
+          <h1>{{ $props.get('title') ?? t('craftsman.account') }}</h1>
         </div>
 
         <nav class="craftsman-account-nav" aria-label="Craftsman account navigation">
           <a href="/craftsman">
-            Dashboard
+            {{ t('nav.dashboard') }}
           </a>
 
           <a
             href="/craftsman/profile"
             class="{{ $props.get('active') === 'profile' ? 'is-active' : '' }}"
           >
-            My Profile
+            {{ t('craftsman.my_profile') }}
           </a>
 
           <a
             href="/craftsman/work-photos"
             class="{{ $props.get('active') === 'work-photos' ? 'is-active' : '' }}"
           >
-            Work Photos
+            {{ t('nav.work_photos') }}
           </a>
 
           <a
             href="/craftsman/subscription"
             class="{{ $props.get('active') === 'subscription' ? 'is-active' : '' }}"
           >
-            Subscription
+            {{ t('craftsman.subscription') }}
           </a>
         </nav>
       </div>

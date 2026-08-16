@@ -1,70 +1,70 @@
-@dashboardLayout({ title: 'Craftsman Dashboard' })
+@dashboardLayout({ title: t('nav.dashboard', {}, 'Craftsman Dashboard') })
   <section class="craftsman-dashboard" data-dashboard>
     <div class="dashboard-intro">
       <div>
-        <p class="dashboard-kicker">Overview</p>
-        <h2 id="dashboard-welcome">Welcome back</h2>
-        <p id="dashboard-business" class="dashboard-subtitle">Loading your craftsman profile...</p>
+        <p class="dashboard-kicker">{{ t('craftsman.overview', {}, 'Overview') }}</p>
+        <h2 id="dashboard-welcome">{{ t('craftsman.welcome_back', {}, 'Welcome back') }}</h2>
+        <p id="dashboard-business" class="dashboard-subtitle">{{ t('btn.loading', {}, 'Loading your craftsman profile...') }}</p>
       </div>
-      <span id="dashboard-trust" class="trust-badge">Loading</span>
+      <span id="dashboard-trust" class="trust-badge">{{ t('btn.loading', {}, 'Loading') }}</span>
     </div>
 
     <div id="dashboard-error" class="dashboard-message dashboard-message-error" hidden></div>
-    <div id="dashboard-loading" class="dashboard-message">Loading dashboard data...</div>
+    <div id="dashboard-loading" class="dashboard-message">{{ t('btn.loading', {}, 'Loading dashboard data...') }}</div>
 
     <div id="dashboard-content" hidden>
       <div class="dashboard-stats">
         <article class="dashboard-stat">
-          <span>Pending requests</span><strong id="stat-pending">0</strong>
+          <span>{{ t('craftsman.pending_requests', {}, 'Pending requests') }}</span><strong id="stat-pending">0</strong>
         </article>
         <article class="dashboard-stat">
-          <span>Completed jobs</span><strong id="stat-completed">0</strong>
+          <span>{{ t('craftsman.completed_jobs', {}, 'Completed jobs') }}</span><strong id="stat-completed">0</strong>
         </article>
         <article class="dashboard-stat">
-          <span>Active jobs</span><strong id="stat-active">0</strong>
+          <span>{{ t('craftsman.active_jobs', {}, 'Active jobs') }}</span><strong id="stat-active">0</strong>
         </article>
         <article class="dashboard-stat">
-          <span>Average rating</span><strong id="stat-rating">—</strong>
+          <span>{{ t('craftsman.avg_rating', {}, 'Average rating') }}</span><strong id="stat-rating">—</strong>
         </article>
         <article class="dashboard-stat dashboard-stat-alert">
-          <span>Disputes</span><strong id="stat-disputes">0</strong>
+          <span>{{ t('craftsman.disputes', {}, 'Disputes') }}</span><strong id="stat-disputes">0</strong>
         </article>
       </div>
 
       <div class="dashboard-profile-grid">
         <article class="dashboard-panel dashboard-about">
           <div class="dashboard-panel-heading">
-            <h3>About</h3>
-            <a href="/craftsman/service-prices" class="action-link">Manage prices</a>
+            <h3>{{ t('craftsman.about', {}, 'About') }}</h3>
+            <a href="/craftsman/service-prices" class="action-link">{{ t('craftsman.manage_prices', {}, 'Manage prices') }}</a>
           </div>
           <p id="dashboard-about-text">No description provided.</p>
         </article>
         <article class="dashboard-panel">
-          <h3>Price ranges</h3>
+          <h3>{{ t('craftsman.price_ranges', {}, 'Price ranges') }}</h3>
           <div id="dashboard-prices" class="dashboard-price-list">
-            <p class="dashboard-muted">No active price entries.</p>
+            <p class="dashboard-muted">{{ t('craftsman.no_prices', {}, 'No active price entries.') }}</p>
           </div>
         </article>
       </div>
 
       <section class="dashboard-panel">
         <div class="dashboard-panel-heading">
-          <h3>Recent job requests</h3>
+          <h3>{{ t('craftsman.recent_job_requests', {}, 'Recent job requests') }}</h3>
           <div class="dashboard-heading-actions">
             <span id="dashboard-job-count" class="dashboard-muted"></span>
-            <a href="/craftsman/jobs" class="action-link">Manage requests</a>
+            <a href="/craftsman/jobs" class="action-link">{{ t('craftsman.manage_requests', {}, 'Manage requests') }}</a>
           </div>
         </div>
         <div class="dashboard-table-wrap">
           <table class="dashboard-table">
             <thead>
               <tr>
-                <th>Customer</th>
-                <th>Category</th>
-                <th>Region</th>
-                <th>Date requested</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th>{{ t('craftsman.customer', {}, 'Customer') }}</th>
+                <th>{{ t('craftsman.category', {}, 'Category') }}</th>
+                <th>{{ t('craftsman.region', {}, 'Region') }}</th>
+                <th>{{ t('craftsman.date_requested', {}, 'Date requested') }}</th>
+                <th>{{ t('admin.status', {}, 'Status') }}</th>
+                <th>{{ t('admin.account_actions', {}, 'Action') }}</th>
               </tr>
             </thead>
             <tbody id="dashboard-jobs"></tbody>
@@ -75,7 +75,7 @@
 
       <section class="dashboard-panel">
         <div class="dashboard-panel-heading">
-          <h3>Ratings</h3>
+          <h3>{{ t('craftsman.ratings', {}, 'Ratings') }}</h3>
           <span id="dashboard-review-count" class="dashboard-muted"></span>
         </div>
         <div id="dashboard-scores" class="dashboard-score-grid"></div>
@@ -83,19 +83,19 @@
 
       <section class="dashboard-panel">
         <div class="dashboard-panel-heading">
-          <h3>Previous work</h3>
-          <a href="/craftsman/work-photos" class="action-link">Manage photos</a>
+          <h3>{{ t('craftsman.previous_work', {}, 'Previous work') }}</h3>
+          <a href="/craftsman/work-photos" class="action-link">{{ t('craftsman.manage_photos', {}, 'Manage photos') }}</a>
         </div>
         <div id="dashboard-photos" class="dashboard-photo-grid"></div>
         <div id="dashboard-photos-empty" class="dashboard-empty" hidden>
-          No work photos uploaded yet.
+          {{ t('craftsman.no_photos', {}, 'No work photos uploaded yet.') }}
         </div>
       </section>
 
       <div class="dashboard-contact-row">
         <div>
-          <h3>Need a customer to contact you?</h3>
-          <p>Use WhatsApp with the phone number saved to your account.</p>
+          <h3>{{ t('craftsman.whatsapp_help', {}, 'Need a customer to contact you?') }}</h3>
+          <p>{{ t('craftsman.whatsapp_sub', {}, 'Use WhatsApp with the phone number saved to your account.') }}</p>
         </div>
         <a
           id="dashboard-whatsapp"
@@ -105,7 +105,7 @@
           rel="noopener"
           hidden
         >
-          Contact via WhatsApp
+          {{ t('craftsman.contact_whatsapp', {}, 'Contact via WhatsApp') }}
         </a>
       </div>
     </div>
@@ -137,7 +137,20 @@
       return ''
     }
 
-    const statusLabel = (status) => (status || '').replaceAll('_', ' ')
+    const statusLabel = (status) => {
+      if (window.APP_LOCALE !== 'tr') return (status || '').replaceAll('_', ' ')
+      const labels = {
+        pending: 'Beklemede',
+        accepted: 'Kabul Edildi',
+        declined: 'Reddedildi',
+        in_progress: 'Devam Ediyor',
+        completed: 'Tamamlandı',
+        cancelled: 'İptal Edildi',
+        expired: 'Süresi Doldu',
+        disputed: 'İtirazda',
+      }
+      return labels[status] || (status || '').replaceAll('_', ' ')
+    }
 
     const average = (reviews) => {
       if (!reviews.length) return null
@@ -156,7 +169,7 @@
     const renderPrices = (prices) => {
       const container = document.getElementById('dashboard-prices')
       if (!prices.length) {
-        container.innerHTML = '<p class="dashboard-muted">No active price entries.</p>'
+        container.innerHTML = `<p class="dashboard-muted">{{ t('craftsman.no_prices', {}, 'No active price entries.') }}</p>`
         return
       }
       container.innerHTML = prices
@@ -164,7 +177,7 @@
         .map(
           (price) => `
             <div class="dashboard-price-item">
-              <strong>${escapeHtml(price.subService?.nameEn || price.subService?.name || 'Service')}</strong>
+              <strong>${escapeHtml((window.APP_LOCALE === 'tr' ? price.subService?.nameTr : price.subService?.nameEn) || price.subService?.name || 'Service')}</strong>
               <span>${Number(price.minPrice).toFixed(0)} - ${Number(price.maxPrice).toFixed(0)} ${escapeHtml(price.currency || '')}</span>
             </div>`,
         )
@@ -174,7 +187,8 @@
     const renderJobs = (jobs) => {
       const tbody = document.getElementById('dashboard-jobs')
       const empty = document.getElementById('dashboard-jobs-empty')
-      document.getElementById('dashboard-job-count').textContent = `${jobs.length} recent request${jobs.length === 1 ? '' : 's'}`
+      const reqText = jobs.length === 1 ? "{{ t('craftsman.recent_request_single', {}, 'recent request') }}" : "{{ t('craftsman.recent_requests_plural', {}, 'recent requests') }}"
+      document.getElementById('dashboard-job-count').textContent = `${jobs.length} ${reqText}`
       if (!jobs.length) {
         tbody.innerHTML = ''
         empty.hidden = false
@@ -186,12 +200,12 @@
         .map(
           (job) => `
             <tr>
-              <td>${escapeHtml(job.customer?.fullName || 'Customer')}</td>
-              <td>${escapeHtml(job.category?.nameEn || job.category?.name || '—')}</td>
-              <td>${escapeHtml(job.region?.nameEn || job.region?.name || '—')}</td>
+              <td>${escapeHtml(job.customer?.fullName || "{{ t('craftsman.customer', {}, 'Customer') }}")}</td>
+              <td>${escapeHtml((window.APP_LOCALE === 'tr' ? job.category?.nameTr : job.category?.nameEn) || job.category?.name || '—')}</td>
+              <td>${escapeHtml((window.APP_LOCALE === 'tr' ? job.region?.nameTr : job.region?.nameEn) || job.region?.name || '—')}</td>
               <td>${formatDate(job.createdAt)}</td>
               <td><span class="status-badge ${statusClass(job.status)}">${escapeHtml(statusLabel(job.status))}</span></td>
-              <td><a class="action-link" href="/craftsman/jobs">Manage</a></td>
+              <td><a class="action-link" href="/craftsman/jobs">{{ t('craftsman.manage', {}, 'Manage') }}</a></td>
             </tr>`,
         )
         .join('')
@@ -200,13 +214,13 @@
     const renderScores = (reviews) => {
       const container = document.getElementById('dashboard-scores')
       const labels = [
-        ['Quality', 'workmanship'],
-        ['Punctuality', 'punctuality'],
-        ['Pricing', 'priceHonesty'],
-        ['Communication', 'communication'],
+        ["{{ t('craftsman.quality', {}, 'Quality') }}", 'workmanship'],
+        ["{{ t('craftsman.punctuality_rating', {}, 'Punctuality') }}", 'punctuality'],
+        ["{{ t('craftsman.pricing', {}, 'Pricing') }}", 'priceHonesty'],
+        ["{{ t('craftsman.communication_rating', {}, 'Communication') }}", 'communication'],
       ]
       if (!reviews.length) {
-        container.innerHTML = '<p class="dashboard-muted">No customer ratings yet.</p>'
+        container.innerHTML = `<p class="dashboard-muted">{{ t('craftsman.no_ratings_yet', {}, 'No customer ratings yet.') }}</p>`
         return
       }
       container.innerHTML = labels
@@ -228,7 +242,7 @@
       empty.hidden = true
       container.innerHTML = photos
         .slice(0, 6)
-        .map((photo) => `<img class="dashboard-work-photo" src="${escapeHtml(photo.imageUrl)}" alt="Previous work">`)
+        .map((photo) => `<img class="dashboard-work-photo" src="${escapeHtml(photo.imageUrl)}" alt="{{ t('craftsman.previous_work', {}, 'Previous work') }}">`)
         .join('')
     }
 
@@ -239,20 +253,31 @@
           credentials: 'same-origin',
         })
         const data = await response.json().catch(() => ({}))
-        if (!response.ok) throw new Error(data.message || 'Unable to load dashboard.')
+        if (!response.ok) throw new Error(data.message || "{{ t('dashboard.unable_to_load', {}, 'Unable to load dashboard.') }}")
 
         const { craftsman, jobs, reviews, stats } = data
         const rating = average(reviews)
-        document.getElementById('dashboard-welcome').textContent = `Welcome back${craftsman.businessName ? `, ${craftsman.businessName}` : ''}`
-        document.getElementById('dashboard-business').textContent = craftsman.category?.nameEn || 'Craftsman'
-        document.getElementById('dashboard-trust').textContent = craftsman.trustLevelLabel || 'Unverified'
+        const welcomeText = "{{ t('craftsman.welcome_back', {}, 'Welcome back') }}"
+        document.getElementById('dashboard-welcome').textContent = `${welcomeText}${craftsman.businessName ? `, ${craftsman.businessName}` : ''}`
+        document.getElementById('dashboard-business').textContent = (window.APP_LOCALE === 'tr' ? craftsman.category?.nameTr : craftsman.category?.nameEn) || "{{ t('craftsman.account', {}, 'Craftsman Account') }}"
+        // Trust label format logic
+        const rawTrust = craftsman.trustLevelLabel || 'unverified'
+        let trTrust = rawTrust.split('_').map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ')
+        if (window.APP_LOCALE === 'tr') {
+          if (rawTrust === 'unverified') trTrust = 'Doğrulanmamış'
+          if (rawTrust === 'registered') trTrust = 'Kayıtlı'
+          if (rawTrust === 'verified') trTrust = 'Doğrulanmış'
+          if (rawTrust === 'approved') trTrust = 'Onaylı'
+        }
+        document.getElementById('dashboard-trust').textContent = trTrust
         document.getElementById('stat-pending').textContent = stats.pending
         document.getElementById('stat-completed').textContent = stats.completed
         document.getElementById('stat-active').textContent = stats.active
         document.getElementById('stat-disputes').textContent = stats.disputed
         document.getElementById('stat-rating').textContent = rating === null ? '—' : `${rating.toFixed(1)}/5`
-        document.getElementById('dashboard-about-text').textContent = craftsman.bio || 'No description provided.'
-        document.getElementById('dashboard-review-count').textContent = `${reviews.length} review${reviews.length === 1 ? '' : 's'}`
+        document.getElementById('dashboard-about-text').textContent = craftsman.bio || "{{ t('craftsman.no_desc', {}, 'No description provided.') }}"
+        const revText = reviews.length === 1 ? "{{ t('craftsman.review_single', {}, 'review') }}" : "{{ t('craftsman.review_plural', {}, 'reviews') }}"
+        document.getElementById('dashboard-review-count').textContent = `${reviews.length} ${revText}`
         renderPrices(craftsman.servicePriceCatalogs || [])
         renderJobs(jobs || [])
         renderScores(reviews || [])
@@ -268,7 +293,7 @@
         content.hidden = false
       } catch (error) {
         loading.hidden = true
-        errorBox.textContent = error.message || 'Unable to load dashboard.'
+        errorBox.textContent = error.message || "{{ t('dashboard.unable_to_load', {}, 'Unable to load dashboard.') }}"
         errorBox.hidden = false
       }
     }

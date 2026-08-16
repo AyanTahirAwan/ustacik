@@ -45,10 +45,10 @@ async function loadJobMetrics(newJobRequests, activeJobs) {
 
     setReady(newJobRequests, pendingCount, `${pendingCount} new job requests`)
     setReady(activeJobs, inProgressCount, `${inProgressCount} active jobs`)
-  } catch {
+  } catch (error) {
     console.error('Failed to load dashboard job metrics')
-    setUnavailable(newJobRequests, 'New job requests unavailable')
-    setUnavailable(activeJobs, 'Active jobs unavailable')
+    setUnavailable(newJobRequests, 'new_jobs_unavailable', 'New job requests unavailable', 'Yeni iş talepleri mevcut değil')
+    setUnavailable(activeJobs, 'active_jobs_unavailable', 'Active jobs unavailable', 'Aktif işler mevcut değil')
   }
 }
 
@@ -75,7 +75,7 @@ async function loadAverageRating(averageRating, craftsmanId) {
       !Number.isSafeInteger(reviewCount) ||
       reviewCount < MINIMUM_REVIEWS_FOR_AVERAGE
     ) {
-      setUnavailable(averageRating, 'Average rating unavailable')
+      setUnavailable(averageRating, 'average_rating_unavailable', 'Average rating unavailable', 'Ortalama puan mevcut değil')
       return
     }
 
@@ -85,9 +85,9 @@ async function loadAverageRating(averageRating, craftsmanId) {
       `${formattedRating}/5`,
       `${formattedRating} out of 5 from ${reviewCount} reviews`
     )
-  } catch {
+  } catch (error) {
     console.error('Failed to load dashboard average rating')
-    setUnavailable(averageRating, 'Average rating unavailable')
+    setUnavailable(averageRating, 'average_rating_unavailable', 'Average rating unavailable', 'Ortalama puan mevcut değil')
   }
 }
 
@@ -97,8 +97,9 @@ function setReady(element, value, label) {
   element.setAttribute('aria-label', label)
 }
 
-function setUnavailable(element, label) {
+const setUnavailable = (element, messageKey, messageEn, messageTr) => {
+  const isTr = document.documentElement.lang === 'tr'
   element.textContent = '—'
   element.dataset.state = 'unavailable'
-  element.setAttribute('aria-label', label)
+  element.setAttribute('aria-label', isTr ? messageTr : messageEn)
 }

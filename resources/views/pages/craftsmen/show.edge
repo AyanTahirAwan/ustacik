@@ -5,68 +5,68 @@
     data-craftsman-id="{{ craftsmanId }}"
     data-user-role="{{ auth.user ? auth.user.role : 'guest' }}"
   >
-    <a class="back-link" href="/craftsmen">← Back to Craftsmen</a>
+    <a class="back-link" href="/craftsmen">{{ t('craftsmen.back_to_craftsmen') }}</a>
 
     <div id="public-profile-loading" class="empty-state">
-      <p>Loading craftsman profile…</p>
+      <p>{{ t('craftsmen.loading_profile') }}</p>
     </div>
     <div id="public-profile-error" class="empty-state error-state" hidden>
-      <p>We could not load this craftsman profile.</p>
-      <a class="card-link" href="/craftsmen">Browse other craftsmen →</a>
+      <p>{{ t('craftsmen.could_not_load') }}</p>
+      <a class="card-link" href="/craftsmen">{{ t('craftsmen.browse_others') }}</a>
     </div>
 
     <div id="public-profile-content" hidden>
       <section class="public-profile-summary" aria-labelledby="public-profile-name">
         <div>
-          <p class="public-profile-kicker">Craftsman Profile</p>
-          <h1 id="public-profile-name">Craftsman</h1>
+          <p class="public-profile-kicker">{{ t('craftsmen.profile_kicker') }}</p>
+          <h1 id="public-profile-name">{{ t('craftsmen.craftsman') }}</h1>
           <div id="public-profile-meta" class="craftsman-meta"></div>
           <p id="public-profile-bio" class="public-profile-bio"></p>
         </div>
         <aside class="public-profile-next-action" aria-labelledby="public-profile-next-heading">
-          <h2 id="public-profile-next-heading">Need this service?</h2>
+          <h2 id="public-profile-next-heading">{{ t('craftsmen.need_service') }}</h2>
           <p id="public-profile-next-copy"></p>
           <div id="public-profile-next-cta"></div>
         </aside>
       </section>
 
-      <section class="public-profile-facts" aria-label="Craftsman information">
+      <section class="public-profile-facts" aria-label="{{ t('craftsmen.craftsman_info') }}">
         <article>
-          <span>Trust status</span>
-          <strong id="public-profile-trust">Unverified</strong>
+          <span>{{ t('craftsmen.trust_status') }}</span>
+          <strong id="public-profile-trust">{{ t('craftsmen.unverified') }}</strong>
         </article>
         <article>
-          <span>Completed jobs</span>
+          <span>{{ t('craftsman.completed_jobs') }}</span>
           <strong id="public-profile-jobs">0</strong>
         </article>
         <article>
-          <span>Review count</span>
+          <span>{{ t('craftsmen.review_count') }}</span>
           <strong id="public-profile-review-count">0</strong>
         </article>
         <article>
-          <span>Average rating</span>
-          <strong id="public-profile-average">Not available</strong>
+          <span>{{ t('craftsman.avg_rating') }}</span>
+          <strong id="public-profile-average">{{ t('craftsmen.not_available') }}</strong>
         </article>
       </section>
 
       <section class="public-profile-section" aria-labelledby="public-profile-services-heading">
         <div class="section-header">
           <div>
-            <h2 id="public-profile-services-heading" class="section-heading">Services and pricing</h2>
-            <p class="section-subheading">Available public service information for this craftsman.</p>
+            <h2 id="public-profile-services-heading" class="section-heading">{{ t('craftsmen.services_pricing') }}</h2>
+            <p class="section-subheading">{{ t('craftsmen.services_sub') }}</p>
           </div>
         </div>
         <div class="public-profile-service-card">
-          <p><strong>Category:</strong> <span id="public-profile-category">Not specified</span></p>
-          <p class="public-profile-muted">Craftsman-specific service prices and regions are not publicly available yet.</p>
+          <p><strong>{{ t('craftsman.category') }}:</strong> <span id="public-profile-category">{{ t('craftsmen.not_specified') }}</span></p>
+          <p class="public-profile-muted">{{ t('craftsmen.prices_unavailable') }}</p>
         </div>
       </section>
 
       <section class="public-profile-section" aria-labelledby="public-profile-work-heading">
         <div class="section-header">
           <div>
-            <h2 id="public-profile-work-heading" class="section-heading">Previous work</h2>
-            <p class="section-subheading">Photos shared by this craftsman.</p>
+            <h2 id="public-profile-work-heading" class="section-heading">{{ t('craftsman.previous_work') }}</h2>
+            <p class="section-subheading">{{ t('craftsmen.photos_shared') }}</p>
           </div>
         </div>
         <div id="public-profile-photos" class="public-profile-photo-grid"></div>
@@ -75,8 +75,8 @@
       <section class="public-profile-section" aria-labelledby="public-profile-reviews-heading">
         <div class="section-header">
           <div>
-            <h2 id="public-profile-reviews-heading" class="section-heading">Customer reviews</h2>
-            <p id="public-profile-review-summary" class="section-subheading">Loading reviews…</p>
+            <h2 id="public-profile-reviews-heading" class="section-heading">{{ t('craftsmen.customer_reviews') }}</h2>
+            <p id="public-profile-review-summary" class="section-subheading">{{ t('craftsmen.loading_reviews') }}</p>
           </div>
         </div>
         <div id="public-profile-reviews" class="public-profile-review-list"></div>

@@ -1,8 +1,8 @@
 @layout()
   <div class="hero compact-hero">
-    <a class="back-link" href="/categories">← All categories</a>
-    <h1 id="category-title">Category services</h1>
-    <p id="category-intro">Browse available services in this category.</p>
+    <a class="back-link" href="/categories">{{ t('categories.all_categories') }}</a>
+    <h1 id="category-title">{{ t('categories.category_services') }}</h1>
+    <p id="category-intro">{{ t('categories.browse_sub') }}</p>
   </div>
 
   <section
@@ -10,10 +10,10 @@
     data-category-id="{{ categoryId }}"
     id="category-detail"
   >
-    <h2 id="services-heading" class="section-heading">Available services</h2>
+    <h2 id="services-heading" class="section-heading">{{ t('categories.available_services') }}</h2>
     <div id="sub-services-list" class="catalog-grid" aria-live="polite">
       <div class="empty-state">
-        <p>Loading services…</p>
+        <p>{{ t('btn.loading_services') }}</p>
       </div>
     </div>
   </section>

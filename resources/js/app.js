@@ -180,6 +180,12 @@ function showState(container, message, isError = false) {
   container.append(state)
 }
 
+function getItemName(item) {
+  if (!item) return ''
+  const isTr = window.APP_LOCALE === 'tr'
+  return isTr ? (item.nameTr || item.nameEn) : (item.nameEn || item.nameTr)
+}
+
 async function loadCategoriesPage() {
   const container = document.getElementById('categories-list')
   if (!container) return
@@ -192,11 +198,13 @@ async function loadCategoriesPage() {
     data.forEach((category) => {
       const card = element('a', 'catalog-card')
       card.href = `/categories/${category.id}`
-      card.append(element('h3', 'catalog-card-title', category.nameEn))
-      if (category.nameTr && category.nameTr !== category.nameEn) {
-        card.append(element('p', 'catalog-translation', category.nameTr))
+      const primaryName = getItemName(category)
+      const secondaryName = window.APP_LOCALE === 'tr' ? category.nameEn : category.nameTr
+      card.append(element('h3', 'catalog-card-title', primaryName))
+      if (secondaryName && secondaryName !== primaryName) {
+        card.append(element('p', 'catalog-translation', secondaryName))
       }
-      card.append(element('span', 'card-link', 'View services →'))
+      card.append(element('span', 'card-link', window.APP_LOCALE === 'tr' ? 'Hizmetleri gör →' : 'View services →'))
       container.append(card)
     })
   } catch (error) {
@@ -220,24 +228,27 @@ async function loadCategoryDetail() {
     const title = document.getElementById('category-title')
 
     if (!category) {
-      if (title) title.textContent = 'Category not found'
-      return showState(container, 'This category does not exist or is no longer available.', true)
+      if (title) title.textContent = window.APP_LOCALE === 'tr' ? 'Kategori bulunamadı' : 'Category not found'
+      return showState(container, window.APP_LOCALE === 'tr' ? 'Bu kategori mevcut değil.' : 'This category does not exist or is no longer available.', true)
     }
 
-    if (title) title.textContent = category.nameEn
-    document.title = `${category.nameEn} — Ustacik`
+    const catName = getItemName(category)
+    if (title) title.textContent = catName
+    document.title = `${catName} — Ustacik`
 
     if (!services.length)
-      return showState(container, 'No services have been added to this category yet.')
+      return showState(container, window.APP_LOCALE === 'tr' ? 'Bu kategoriye henüz hizmet eklenmedi.' : 'No services have been added to this category yet.')
 
     clear(container)
     services.forEach((service) => {
       const card = element('article', 'catalog-card')
-      card.append(element('h3', 'catalog-card-title', service.nameEn))
-      if (service.nameTr && service.nameTr !== service.nameEn) {
-        card.append(element('p', 'catalog-translation', service.nameTr))
+      const serviceName = getItemName(service)
+      const secondaryName = window.APP_LOCALE === 'tr' ? service.nameEn : service.nameTr
+      card.append(element('h3', 'catalog-card-title', serviceName))
+      if (secondaryName && secondaryName !== serviceName) {
+        card.append(element('p', 'catalog-translation', secondaryName))
       }
-      const link = element('a', 'card-link', 'Find this service →')
+      const link = element('a', 'card-link', window.APP_LOCALE === 'tr' ? 'Bu hizmeti bul →' : 'Find this service →')
       link.href = `/search?categoryId=${category.id}&subServiceId=${service.id}`
       card.append(link)
       container.append(card)
@@ -253,16 +264,18 @@ async function loadRegionsPage() {
 
   try {
     const { data = [] } = await fetchJson('/api/catalog/regions')
-    if (!data.length) return showState(container, 'No service regions are available yet.')
+    if (!data.length) return showState(container, window.APP_LOCALE === 'tr' ? 'Henüz bölge mevcut değil.' : 'No service regions are available yet.')
 
     clear(container)
     data.forEach((region) => {
       const card = element('article', 'catalog-card')
-      card.append(element('h3', 'catalog-card-title', region.nameEn))
-      if (region.nameTr && region.nameTr !== region.nameEn) {
-        card.append(element('p', 'catalog-translation', region.nameTr))
+      const regionName = getItemName(region)
+      const secondaryName = window.APP_LOCALE === 'tr' ? region.nameEn : region.nameTr
+      card.append(element('h3', 'catalog-card-title', regionName))
+      if (secondaryName && secondaryName !== regionName) {
+        card.append(element('p', 'catalog-translation', secondaryName))
       }
-      const link = element('a', 'card-link', 'Find services here →')
+      const link = element('a', 'card-link', window.APP_LOCALE === 'tr' ? 'Bölgedeki hizmetleri bul →' : 'Find services here →')
       link.href = `/search?regionId=${region.id}`
       card.append(link)
       container.append(card)
@@ -302,24 +315,35 @@ async function loadCraftsmenPage() {
       const heading = element(
         'h3',
         'craftsman-name',
-        craftsman.businessName || 'Independent craftsman'
+        craftsman.businessName || (window.APP_LOCALE === 'tr' ? 'Bağımsız usta' : 'Independent craftsman')
       )
       content.append(heading)
       const meta = element('div', 'craftsman-meta')
-      if (craftsman.category?.nameEn)
-        meta.append(element('span', 'status-badge', craftsman.category.nameEn))
+      if (craftsman.category)
+        meta.append(element('span', 'status-badge', getItemName(craftsman.category)))
+      let trustText = craftsman.trustLevelLabel || 'unverified'
+      if (window.APP_LOCALE === 'tr') {
+        if (trustText === 'unverified') trustText = 'doğrulanmamış'
+        if (trustText === 'registered') trustText = 'kayıtlı'
+        if (trustText === 'verified') trustText = 'doğrulanmış'
+        if (trustText === 'approved') trustText = 'onaylı'
+      }
+      
       meta.append(
         element(
           'span',
           `trust-badge trust-${craftsman.trustLevelLabel}`,
-          craftsman.trustLevelLabel || 'unverified'
+          trustText
         )
       )
       content.append(meta)
-      content.append(element('p', 'craftsman-bio', craftsman.bio || 'Profile details coming soon.'))
+      const defaultBio = window.APP_LOCALE === 'tr' ? 'Profil detayları yakında eklenecek.' : 'Profile details coming soon.'
+      content.append(element('p', 'craftsman-bio', craftsman.bio || defaultBio))
       const stats = element('div', 'craftsman-stats')
-      stats.append(element('span', 'jobs-completed', `${craftsman.totalJobs ?? 0} completed jobs`))
-      const profileLink = element('a', 'card-link marketplace-card-action', 'View Profile →')
+      const completedText = window.APP_LOCALE === 'tr' ? 'tamamlanan iş' : 'completed jobs'
+      stats.append(element('span', 'jobs-completed', `${craftsman.totalJobs ?? 0} ${completedText}`))
+      const viewText = window.APP_LOCALE === 'tr' ? 'Profili Görüntüle →' : 'View Profile →'
+      const profileLink = element('a', 'card-link marketplace-card-action', viewText)
       profileLink.href = `/craftsmen/${encodeURIComponent(craftsman.userId)}`
       content.append(stats, profileLink)
       card.append(media, content)
@@ -344,7 +368,7 @@ async function populateSubServices(categoryId, selectedValue = '') {
   clear(select)
 
   if (!categoryId) {
-    addOption(select, '', 'Choose a category first', '')
+    addOption(select, '', window.APP_LOCALE === 'tr' ? 'Önce bir kategori seçin' : 'Choose a category first', '')
     select.disabled = true
     return
   }
@@ -354,13 +378,13 @@ async function populateSubServices(categoryId, selectedValue = '') {
   try {
     const { data = [] } = await fetchJson(`/api/catalog/categories/${categoryId}/sub-services`)
     clear(select)
-    addOption(select, '', 'All services', selectedValue)
-    data.forEach((service) => addOption(select, service.id, service.nameEn, selectedValue))
+    addOption(select, '', window.APP_LOCALE === 'tr' ? 'Tüm hizmetler' : 'All services', selectedValue)
+    data.forEach((service) => addOption(select, service.id, getItemName(service), selectedValue))
     select.value = selectedValue || ''
     select.disabled = false
   } catch {
     clear(select)
-    addOption(select, '', 'Unable to load services', '')
+    addOption(select, '', window.APP_LOCALE === 'tr' ? 'Hizmetler yüklenemedi' : 'Unable to load services', '')
   }
 }
 
@@ -373,15 +397,20 @@ function renderSearchResults(results) {
   clear(container)
   results.forEach((result) => {
     const card = element('article', 'result-card')
-    card.append(element('h3', 'catalog-card-title', result.subService?.nameEn || 'Service'))
+    card.append(element('h3', 'catalog-card-title', getItemName(result.subService) || 'Service'))
     card.append(
-      element('p', 'result-business', result.craftsman?.businessName || 'Independent craftsman')
+      element('p', 'result-business', result.craftsman?.businessName || (window.APP_LOCALE === 'tr' ? 'Bağımsız usta' : 'Independent craftsman'))
     )
     const details = element('dl', 'result-details')
+    
+    const catLabel = window.APP_LOCALE === 'tr' ? 'Kategori' : 'Category'
+    const regLabel = window.APP_LOCALE === 'tr' ? 'Bölge' : 'Region'
+    const priceLabel = window.APP_LOCALE === 'tr' ? 'Fiyat' : 'Price'
+    
     const rows = [
-      ['Category', result.subService?.category?.nameEn],
-      ['Region', result.region?.nameEn],
-      ['Price', `${result.minPrice}–${result.maxPrice} ${result.currency}`],
+      [catLabel, getItemName(result.subService?.category)],
+      [regLabel, getItemName(result.region)],
+      [priceLabel, `${result.minPrice}–${result.maxPrice} ${result.currency}`],
     ]
     rows.forEach(([label, value]) => {
       if (value === undefined || value === null) return
@@ -389,7 +418,8 @@ function renderSearchResults(results) {
     })
     card.append(details)
     if (result.craftsman?.userId) {
-      const profileLink = element('a', 'card-link marketplace-card-action', 'View Craftsman →')
+      const viewText = window.APP_LOCALE === 'tr' ? 'Ustayı Görüntüle →' : 'View Craftsman →'
+      const profileLink = element('a', 'card-link marketplace-card-action', viewText)
       profileLink.href = `/craftsmen/${encodeURIComponent(result.craftsman.userId)}`
       card.append(profileLink)
     }
@@ -433,9 +463,9 @@ async function initSearch() {
   try {
     const { data: categories = [] } = await fetchJson('/api/catalog/categories')
     clear(categorySelect)
-    addOption(categorySelect, '', 'All categories', selectedCategoryId)
+    addOption(categorySelect, '', window.APP_LOCALE === 'tr' ? 'Tüm kategoriler' : 'All categories', selectedCategoryId)
     categories.forEach((category) =>
-      addOption(categorySelect, category.id, category.nameEn, selectedCategoryId)
+      addOption(categorySelect, category.id, getItemName(category), selectedCategoryId)
     )
     categorySelect.value = selectedCategoryId
 
@@ -443,8 +473,8 @@ async function initSearch() {
 
     const { data: regions = [] } = await fetchJson('/api/catalog/regions')
     clear(regionSelect)
-    addOption(regionSelect, '', 'All regions', selectedRegionId)
-    regions.forEach((region) => addOption(regionSelect, region.id, region.nameEn, selectedRegionId))
+    addOption(regionSelect, '', window.APP_LOCALE === 'tr' ? 'Tüm bölgeler' : 'All regions', selectedRegionId)
+    regions.forEach((region) => addOption(regionSelect, region.id, getItemName(region), selectedRegionId))
     regionSelect.value = selectedRegionId
   } catch (error) {
     showState(results, error.message || apiMessage, true)
@@ -505,13 +535,13 @@ async function initSignup() {
   try {
     const { data: categories = [] } = await fetchJson('/api/catalog/categories')
     clear(categorySelect)
-    addOption(categorySelect, '', 'Choose a category', '')
+    addOption(categorySelect, '', window.APP_LOCALE === 'tr' ? 'Bir kategori seçin' : 'Choose a category', '')
     categories.forEach((category) =>
-      addOption(categorySelect, category.id, category.nameEn, categorySelect.dataset.oldValue)
+      addOption(categorySelect, category.id, getItemName(category), categorySelect.dataset.oldValue)
     )
   } catch {
     clear(categorySelect)
-    addOption(categorySelect, '', 'Unable to load categories', '')
+    addOption(categorySelect, '', window.APP_LOCALE === 'tr' ? 'Kategoriler yüklenemedi' : 'Unable to load categories', '')
   }
 
   const passwordInput = document.getElementById('password')
@@ -527,12 +557,15 @@ async function initSignup() {
       /[A-Z]/.test(value),
       /\d/.test(value),
     ].filter(Boolean).length
-    const labels = ['not entered', 'weak', 'fair', 'good', 'strong']
+    const isTr = window.APP_LOCALE === 'tr'
+    const labels = isTr 
+      ? ['girilmedi', 'zayıf', 'orta', 'iyi', 'güçlü']
+      : ['not entered', 'weak', 'fair', 'good', 'strong']
 
     strengthTrack?.setAttribute('aria-valuenow', String(score))
     strengthFill?.style.setProperty('--password-strength', `${score * 25}%`)
     if (strengthTrack) strengthTrack.dataset.strength = String(score)
-    if (strengthLabel) strengthLabel.textContent = `Password strength: ${labels[score]}`
+    if (strengthLabel) strengthLabel.textContent = isTr ? `Şifre gücü: ${labels[score]}` : `Password strength: ${labels[score]}`
   }
 
   passwordInput?.addEventListener('input', updatePasswordStrength)

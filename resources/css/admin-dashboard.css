@@ -48,6 +48,40 @@ html {
 }
 
 .admin-dashboard-body button,
+
+/* Admin Language Switcher */
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--admin-surface, #fbf6f0);
+  border: 1.5px solid var(--admin-rust, #8a3a29);
+  border-radius: 20px;
+  padding: 2px;
+}
+
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  font-family: var(--admin-font-body);
+  text-decoration: none;
+  color: var(--admin-rust, #8a3a29);
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.lang-btn:hover {
+  color: var(--admin-ember, #d8551e);
+  background: rgba(216, 85, 30, 0.1);
+}
+
+.lang-btn.active {
+  background: var(--admin-rust, #8a3a29);
+  color: #ffffff;
+  font-weight: 700;
+}
 .admin-dashboard-body input,
 .admin-dashboard-body select,
 .admin-dashboard-body summary {

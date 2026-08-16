@@ -1,3 +1,6 @@
+const isTr = window.APP_LOCALE === 'tr'
+const tr = (en, trText) => (isTr ? trText : en)
+
 async function loadCustomerProfile() {
   const profilePage = document.getElementById('customer-profile-page')
 
@@ -64,14 +67,14 @@ async function loadCustomerProfile() {
     const emptyOption = document.createElement('option')
 
     emptyOption.value = ''
-    emptyOption.textContent = 'Not selected'
+    emptyOption.textContent = tr('Not selected', 'Seçilmedi')
     region.replaceChildren(emptyOption)
 
     regions.forEach((regionItem) => {
       const option = document.createElement('option')
 
       option.value = String(regionItem.id)
-      option.textContent = regionItem.nameEn
+      option.textContent = isTr ? regionItem.nameTr : regionItem.nameEn
       region.appendChild(option)
     })
   }
@@ -116,7 +119,7 @@ async function loadCustomerProfile() {
     console.error('Failed to load customer profile', loadError)
 
     loading.hidden = true
-    showError('Unable to load your profile. Please try again.')
+    showError(tr('Unable to load your profile. Please try again.', 'Profiliniz yüklenemedi. Lütfen tekrar deneyin.'))
   }
 
   editButton.addEventListener('click', () => {
@@ -139,14 +142,14 @@ async function loadCustomerProfile() {
     hideMessages()
 
     if (!csrfInput?.value) {
-      showError('Unable to save your profile. Please refresh the page and try again.')
+      showError(tr('Unable to save your profile. Please refresh the page and try again.', 'Profiliniz kaydedilemedi. Lütfen sayfayı yenileyip tekrar deneyin.'))
       return
     }
 
     saveButton.disabled = true
     cancelButton.disabled = true
-    saveButton.textContent = 'Saving...'
-    let failureMessage = 'Unable to save your profile. Please try again.'
+    saveButton.textContent = tr('Saving...', 'Kaydediliyor...')
+    let failureMessage = tr('Unable to save your profile. Please try again.', 'Profiliniz kaydedilemedi. Lütfen tekrar deneyin.')
 
     try {
       const response = await fetch('/api/customer/profile', {
@@ -167,7 +170,7 @@ async function loadCustomerProfile() {
 
       if (!response.ok) {
         if (response.status === 422) {
-          failureMessage = 'Please check your profile details and try again.'
+          failureMessage = tr('Please check your profile details and try again.', 'Lütfen profil bilgilerinizi kontrol edip tekrar deneyin.')
         }
 
         throw new Error('Profile update request failed')
@@ -182,14 +185,14 @@ async function loadCustomerProfile() {
       savedCustomer = customer
       applyCustomer(savedCustomer)
       setEditing(false)
-      showSuccess('Your profile has been updated successfully.')
+      showSuccess(tr('Your profile has been updated successfully.', 'Profiliniz başarıyla güncellendi.'))
     } catch (saveError) {
       console.error('Failed to save customer profile', saveError)
       showError(failureMessage)
     } finally {
       saveButton.disabled = false
       cancelButton.disabled = false
-      saveButton.textContent = 'Save Changes'
+      saveButton.textContent = tr('Save Changes', 'Değişiklikleri Kaydet')
     }
   })
 }

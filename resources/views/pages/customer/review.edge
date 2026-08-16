@@ -4,56 +4,56 @@
     class="customer-review-page"
     data-job-id="{{ jobId }}"
   >
-    <a class="back-link" href="/customer/requests">← Back to My Requests</a>
+    <a class="back-link" href="/customer/requests">{{ t('customer.back_to_requests', {}, '← Back to My Requests') }}</a>
 
-    <div id="customer-review-loading" class="dashboard-message">Loading completed job…</div>
+    <div id="customer-review-loading" class="dashboard-message">{{ t('btn.loading', {}, 'Loading completed job…') }}</div>
     <div id="customer-review-error" class="dashboard-message dashboard-message-error" role="alert" hidden></div>
 
     <div id="customer-review-content" hidden>
       <div class="section-header">
         <div>
-          <h1 class="section-heading">Leave a Review</h1>
-          <p class="section-subheading">Share feedback about your completed service.</p>
+          <h1 class="section-heading">{{ t('customer.leave_review', {}, 'Leave a Review') }}</h1>
+          <p class="section-subheading">{{ t('customer.share_feedback', {}, 'Share feedback about your completed service.') }}</p>
         </div>
       </div>
 
       <article class="customer-review-context">
-        <span>Completed service</span>
-        <h2 id="customer-review-craftsman">Craftsman</h2>
-        <p><strong>Category:</strong> <span id="customer-review-category">—</span></p>
+        <span>{{ t('customer.completed_service', {}, 'Completed service') }}</span>
+        <h2 id="customer-review-craftsman">{{ t('customer.craftsman', {}, 'Craftsman') }}</h2>
+        <p><strong>{{ t('search.category', {}, 'Category') }}:</strong> <span id="customer-review-category">—</span></p>
         <span class="request-status request-status-completed">Completed</span>
       </article>
 
       @form({ action: '/api/reviews', method: 'POST', id: 'customer-review-form', class: 'customer-review-form' })
         <div class="customer-review-ratings">
           @each(field in [
-            { name: 'punctuality', label: 'Punctuality' },
-            { name: 'workmanship', label: 'Workmanship' },
-            { name: 'priceHonesty', label: 'Price Honesty' },
-            { name: 'communication', label: 'Communication' }
+            { name: 'punctuality', label: t('customer.punctuality', {}, 'Punctuality') },
+            { name: 'workmanship', label: t('customer.workmanship', {}, 'Workmanship') },
+            { name: 'priceHonesty', label: t('customer.price_honesty', {}, 'Price Honesty') },
+            { name: 'communication', label: t('customer.communication', {}, 'Communication') }
           ])
             <label>
               <span>{{ field.label }}</span>
               <select class="form-control" name="{{ field.name }}" required>
-                <option value="">Choose 1–5</option>
-                <option value="1">1 — Poor</option>
-                <option value="2">2 — Fair</option>
-                <option value="3">3 — Good</option>
-                <option value="4">4 — Very good</option>
-                <option value="5">5 — Excellent</option>
+                <option value="">{{ t('customer.choose_rating', {}, 'Choose 1–5') }}</option>
+                <option value="1">1 — {{ lang === 'tr' ? 'Zayıf' : 'Poor' }}</option>
+                <option value="2">2 — {{ lang === 'tr' ? 'Orta' : 'Fair' }}</option>
+                <option value="3">3 — {{ lang === 'tr' ? 'İyi' : 'Good' }}</option>
+                <option value="4">4 — {{ lang === 'tr' ? 'Çok iyi' : 'Very good' }}</option>
+                <option value="5">5 — {{ lang === 'tr' ? 'Mükemmel' : 'Excellent' }}</option>
               </select>
             </label>
           @end
         </div>
 
         <label class="customer-review-comment">
-          <span>Comment <small>(optional)</small></span>
-          <textarea class="form-control" name="comment" maxlength="2000" rows="6" placeholder="Tell others about your experience."></textarea>
+          <span>{{ t('customer.comment', {}, 'Comment') }} <small>{{ t('customer.optional', {}, '(optional)') }}</small></span>
+          <textarea class="form-control" name="comment" maxlength="2000" rows="6" placeholder="{{ t('customer.comment_placeholder', {}, 'Tell others about your experience.') }}"></textarea>
         </label>
 
         <div class="customer-review-actions">
-          <button class="btn-primary" type="submit">Submit Review</button>
-          <a class="btn-back" href="/customer/requests">Cancel</a>
+          <button class="btn-primary" type="submit">{{ t('customer.submit_review', {}, 'Submit Review') }}</button>
+          <a class="btn-back" href="/customer/requests">{{ t('btn.cancel', {}, 'Cancel') }}</a>
         </div>
       @end
     </div>

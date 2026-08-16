@@ -1,7 +1,7 @@
-@customerAccountLayout({ title: 'My Favorites', active: 'favorites' })
+@customerAccountLayout({ title: t('customer.favorites', {}, 'My Favorites'), active: 'favorites' })
   <div id="customer-favorites-page">
     <p id="customer-favorites-loading" class="customer-favorites-loading">
-      Loading favorites...
+      {{ t('btn.loading', {}, 'Loading favorites...') }}
     </p>
 
     <div
@@ -10,7 +10,7 @@
       hidden
     >
       <p id="customer-favorites-error-message">
-        Unable to load your favorites. Please try again.
+        {{ t('notifications.error_load', {}, 'Unable to load your favorites. Please try again.') }}
       </p>
     </div>
 
@@ -26,9 +26,9 @@
       <section class="card customer-favorites-add-card">
         <div class="customer-favorites-section-header">
           <div>
-            <h2 class="card-title">Add Favorite</h2>
+            <h2 class="card-title">{{ t('customer.add_favorite', {}, 'Add Favorite') }}</h2>
             <p class="card-description">
-              Select a craftsman to save to your favorites.
+              {{ t('customer.select_craftsman', {}, 'Select a craftsman to save to your favorites.') }}
             </p>
           </div>
         </div>
@@ -41,7 +41,7 @@
         })
           <div class="form-group customer-favorite-select-field">
             <label class="form-label" for="customer-favorite-craftsman">
-              Craftsman
+              {{ t('customer.craftsman', {}, 'Craftsman') }}
             </label>
 
             <select
@@ -49,12 +49,12 @@
               class="form-control"
               required
             >
-              <option value="">Select a craftsman</option>
+              <option value="">{{ t('customer.select_craftsman', {}, 'Select a craftsman') }}</option>
             </select>
           </div>
 
           <button id="customer-favorite-add" class="btn-primary" type="submit">
-            Add to Favorites
+            {{ t('customer.add_to_favorites', {}, 'Add to Favorites') }}
           </button>
         @end
 
@@ -63,22 +63,22 @@
           class="customer-favorites-no-available"
           hidden
         >
-          There are no additional craftsmen available to add.
+          {{ t('customer.no_available_craftsmen', {}, 'There are no additional craftsmen available to add.') }}
         </p>
       </section>
 
       <section class="card customer-favorites-list-card">
         <div class="customer-favorites-section-header">
           <div>
-            <h2 class="card-title">Saved Craftsmen</h2>
+            <h2 class="card-title">{{ t('customer.saved_craftsmen', {}, 'Saved Craftsmen') }}</h2>
             <p class="card-description">
-              Review and manage the craftsmen saved to your account.
+              {{ t('customer.manage_favorites', {}, 'Review and manage the craftsmen saved to your account.') }}
             </p>
           </div>
         </div>
 
         <p id="customer-favorites-empty" class="customer-favorites-empty" hidden>
-          You have not saved any craftsmen yet.
+          {{ t('customer.no_favorites', {}, 'You have not saved any craftsmen yet.') }}
         </p>
 
         <div

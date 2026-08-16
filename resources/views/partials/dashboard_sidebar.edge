@@ -2,7 +2,7 @@
 @if(auth.user && auth.user.role === 'craftsman')
   <details class="dashboard-sidebar craftsman-workspace-menu" open>
     <summary aria-expanded="true">
-      <span>Craftsman Workspace</span>
+      <span>{{ t('nav.craftsman_workspace', {}, 'Craftsman Workspace') }}</span>
       <svg
         class="dropdown-chevron"
         width="16"
@@ -27,14 +27,14 @@
         class="{{ currentPath === '/craftsman' ? 'current' : '' }}"
         aria-current="{{ currentPath === '/craftsman' ? 'page' : 'false' }}"
       >
-        Dashboard
+        {{ t('nav.dashboard') }}
       </a>
       <a
         href="/craftsman/jobs"
         class="{{ currentPath.startsWith('/craftsman/jobs') ? 'current' : '' }}"
         aria-current="{{ currentPath.startsWith('/craftsman/jobs') ? 'page' : 'false' }}"
       >
-        Jobs
+        {{ t('nav.jobs') }}
       </a>
       <a
         href="/craftsman/service-prices"
@@ -45,32 +45,32 @@
             : 'false'
         }}"
       >
-        Prices
+        {{ t('nav.prices') }}
       </a>
       <a
         href="/craftsman/work-photos"
         class="{{ currentPath.startsWith('/craftsman/work-photos') ? 'current' : '' }}"
         aria-current="{{ currentPath.startsWith('/craftsman/work-photos') ? 'page' : 'false' }}"
       >
-        Work Photos
+        {{ t('nav.work_photos') }}
       </a>
       <a
         href="/craftsman/profile"
         class="{{ currentPath.startsWith('/craftsman/profile') ? 'current' : '' }}"
         aria-current="{{ currentPath.startsWith('/craftsman/profile') ? 'page' : 'false' }}"
       >
-        Profile
+        {{ t('nav.profile') }}
       </a>
     </nav>
   </details>
 @elseif(auth.user && auth.user.role === 'admin')
   <aside class="dashboard-sidebar">
     <nav class="dashboard-nav" aria-label="Admin workspace">
-      <p class="nav-group-label">Admin</p>
-      <a href="/admin">Dashboard</a>
-      <a href="/admin/categories">Categories</a>
-      <a href="/admin/regions">Regions</a>
-      <a href="/admin/sub-services">Sub Services</a>
+      <p class="nav-group-label">{{ t('admin.admin') }}</p>
+      <a href="/admin">{{ t('admin.dashboard') }}</a>
+      <a href="/admin/categories">{{ t('admin.categories') }}</a>
+      <a href="/admin/regions">{{ t('admin.regions') }}</a>
+      <a href="/admin/sub-services">{{ t('admin.sub_services') }}</a>
     </nav>
   </aside>
 @end

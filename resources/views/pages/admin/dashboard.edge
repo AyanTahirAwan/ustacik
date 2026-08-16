@@ -1,23 +1,23 @@
-@adminUserLayout({ title: 'Craftsmen Performance', active: 'dashboard' })
+@adminUserLayout({ title: t('admin.craftsmen_performance', {}, 'Craftsmen Performance'), active: 'dashboard' })
   <div id="admin-dashboard" class="admin-dashboard" aria-busy="true">
     <section class="admin-dashboard-heading" aria-labelledby="admin-dashboard-title">
       <div>
-        <p class="admin-eyebrow">Platform analytics</p>
-        <h1 id="admin-dashboard-title">Craftsmen Performance</h1>
+        <p class="admin-eyebrow">{{ t('admin.platform_analytics', {}, 'Platform analytics') }}</p>
+        <h1 id="admin-dashboard-title">{{ t('admin.craftsmen_performance', {}, 'Craftsmen Performance') }}</h1>
         <p class="admin-heading-copy">
-          How craftsman participation, trust, and job activity are progressing across ustacik.
+          {{ t('admin.performance_sub', {}, 'How craftsman participation, trust, and job activity are progressing across ustacik.') }}
         </p>
       </div>
 
       <div class="admin-range-control">
-        <label class="admin-visually-hidden" for="admin-date-range">Date range</label>
+        <label class="admin-visually-hidden" for="admin-date-range">{{ t('admin.date_range', {}, 'Date range') }}</label>
         <select id="admin-date-range" name="dateRange">
-          <option value="30">Last 30 days</option>
-          <option value="90">Last 90 days</option>
-          <option value="year">This year</option>
-          <option value="all" selected>All time</option>
+          <option value="30">{{ t('admin.last_30_days', {}, 'Last 30 days') }}</option>
+          <option value="90">{{ t('admin.last_90_days', {}, 'Last 90 days') }}</option>
+          <option value="year">{{ t('admin.this_year', {}, 'This year') }}</option>
+          <option value="all" selected>{{ t('admin.all_time', {}, 'All time') }}</option>
         </select>
-        <p id="admin-cohort-note">Current platform snapshot</p>
+        <p id="admin-cohort-note">{{ t('admin.dashboard.snapshot') }}</p>
       </div>
     </section>
 
@@ -26,13 +26,13 @@
       aria-labelledby="phone-verification-setting-title"
     >
       <div>
-        <p class="admin-eyebrow">Feature controls</p>
-        <h2 id="phone-verification-setting-title">Phone verification</h2>
+        <p class="admin-eyebrow">{{ t('admin.feature_controls', {}, 'Feature controls') }}</p>
+        <h2 id="phone-verification-setting-title">{{ t('admin.phone_verification', {}, 'Phone verification') }}</h2>
         <p>
           {{
             phoneVerificationEnabled
-              ? 'Enabled. Users may request a code when SMS delivery is configured.'
-              : 'Disabled. Enable this after an SMS provider has been configured.'
+              ? t('admin.phone_enabled', {}, 'Enabled. Users may request a code when SMS delivery is configured.')
+              : t('admin.phone_disabled', {}, 'Disabled. Enable this after an SMS provider has been configured.')
           }}
         </p>
       </div>
@@ -49,8 +49,8 @@
         <button class="admin-secondary-button" type="submit">
           {{
             phoneVerificationEnabled
-              ? 'Disable phone verification'
-              : 'Enable phone verification'
+              ? t('admin.disable_phone_verification', {}, 'Disable phone verification')
+              : t('admin.enable_phone_verification', {}, 'Enable phone verification')
           }}
         </button>
       @end
@@ -59,8 +59,8 @@
     <section id="admin-dashboard-loading" class="admin-state-card" aria-live="polite">
       <span class="admin-loading-spinner" aria-hidden="true"></span>
       <div>
-        <h2>Loading platform analytics</h2>
-        <p>Gathering the latest craftsman, job, and dispute data.</p>
+        <h2>{{ t('admin.dashboard.loading_analytics') }}</h2>
+        <p>{{ t('admin.dashboard.gathering_data') }}</p>
       </div>
     </section>
 
@@ -72,121 +72,121 @@
     >
       <span class="admin-state-symbol" aria-hidden="true">!</span>
       <div>
-        <h2>Dashboard data could not be loaded</h2>
-        <p>Please try again. Your existing admin tools are still available from the navigation.</p>
+        <h2>{{ t('admin.dashboard.error_loading') }}</h2>
+        <p>{{ t('admin.dashboard.error_desc') }}</p>
       </div>
       <button id="admin-dashboard-retry" class="admin-secondary-button" type="button">
-        Try again
+        {{ t('admin.dashboard.try_again') }}
       </button>
     </section>
 
     <div id="admin-dashboard-content" hidden>
-      <section class="admin-kpi-grid" aria-label="Craftsman performance overview">
+      <section class="admin-kpi-grid" aria-label="{{ t('admin.dashboard.overview_label') }}">
         <article class="admin-kpi-card">
-          <p class="admin-kpi-label">Total craftsmen</p>
+          <p class="admin-kpi-label">{{ t('admin.dashboard.total_craftsmen') }}</p>
           <strong id="kpi-total-craftsmen" class="admin-kpi-value">0</strong>
           <span id="kpi-total-craftsmen-note" class="admin-kpi-delta admin-kpi-delta-up">
-            All registered craftsmen
+            {{ t('admin.dashboard.all_registered') }}
           </span>
         </article>
 
         <article class="admin-kpi-card">
-          <p class="admin-kpi-label">Approved tier</p>
+          <p class="admin-kpi-label">{{ t('admin.dashboard.approved_tier') }}</p>
           <strong id="kpi-approved-tier" class="admin-kpi-value">0%</strong>
           <span id="kpi-approved-tier-note" class="admin-kpi-delta admin-kpi-delta-up">
-            Current trust snapshot
+            {{ t('admin.dashboard.trust_snapshot') }}
           </span>
         </article>
 
         <article class="admin-kpi-card">
-          <p class="admin-kpi-label">Avg. rating</p>
+          <p class="admin-kpi-label">{{ t('admin.dashboard.avg_rating') }}</p>
           <strong class="admin-kpi-value">—</strong>
-          <span class="admin-kpi-delta">Aggregate rating unavailable</span>
+          <span class="admin-kpi-delta">{{ t('admin.dashboard.aggregate_rating_unavailable') }}</span>
         </article>
 
         <article class="admin-kpi-card">
-          <p class="admin-kpi-label">Jobs completed</p>
+          <p class="admin-kpi-label">{{ t('admin.dashboard.jobs_completed') }}</p>
           <strong id="kpi-jobs-completed" class="admin-kpi-value">0</strong>
-          <span class="admin-kpi-delta">All-time craftsman counters</span>
+          <span class="admin-kpi-delta">{{ t('admin.dashboard.all_time_counters') }}</span>
         </article>
 
         <article class="admin-kpi-card">
-          <p class="admin-kpi-label">Open disputes</p>
+          <p class="admin-kpi-label">{{ t('admin.dashboard.open_disputes') }}</p>
           <strong id="kpi-open-disputes" class="admin-kpi-value">0</strong>
-          <span id="kpi-open-disputes-note" class="admin-kpi-delta">Currently open • all time</span>
+          <span id="kpi-open-disputes-note" class="admin-kpi-delta">{{ t('admin.dashboard.currently_open') }}</span>
         </article>
       </section>
 
       <section class="admin-trust-panel" aria-labelledby="trust-distribution-title">
         <div class="admin-trust-panel-heading">
-          <h2 id="trust-distribution-title">Trust level distribution</h2>
-          <span id="trust-distribution-summary">0 craftsmen</span>
+          <h2 id="trust-distribution-title">{{ t('admin.dashboard.trust_level_distribution') }}</h2>
+          <span id="trust-distribution-summary">{{ t('admin.dashboard.zero_craftsmen') }}</span>
         </div>
 
         <div
           id="trust-distribution-bar"
           class="admin-trust-bar"
           role="img"
-          aria-label="No craftsman trust data available"
+          aria-label="{{ t('admin.dashboard.no_trust_data') }}"
         ></div>
 
         <div id="trust-distribution-legend" class="admin-trust-legend"></div>
 
         <p id="trust-distribution-empty" class="admin-inline-empty" hidden>
-          No craftsmen are available for this joined-date range.
+          {{ t('admin.dashboard.no_craftsmen_range') }}
         </p>
       </section>
 
       <section class="admin-panel admin-craftsmen-panel" aria-labelledby="all-craftsmen-title">
         <div class="admin-panel-heading">
-          <h2 id="all-craftsmen-title">All craftsmen</h2>
+          <h2 id="all-craftsmen-title">{{ t('admin.dashboard.all_craftsmen') }}</h2>
 
           <form id="craftsmen-filters" class="admin-filter-bar" role="search">
-            <label class="admin-visually-hidden" for="craftsmen-search">Search craftsmen</label>
+            <label class="admin-visually-hidden" for="craftsmen-search">{{ t('admin.dashboard.search_craftsmen') }}</label>
             <input
               id="craftsmen-search"
               type="search"
-              placeholder="Search by name…"
+              placeholder="{{ t('admin.dashboard.search_placeholder') }}"
               autocomplete="off"
             />
 
-            <label class="admin-visually-hidden" for="craftsmen-category">Category</label>
-            <select id="craftsmen-category"><option value="">All categories</option></select>
+            <label class="admin-visually-hidden" for="craftsmen-category">{{ t('craftsman.category') }}</label>
+            <select id="craftsmen-category"><option value="">{{ t('admin.dashboard.all_categories') }}</option></select>
 
-            <label class="admin-visually-hidden" for="craftsmen-region">Region</label>
-            <select id="craftsmen-region" disabled><option>Region unavailable</option></select>
+            <label class="admin-visually-hidden" for="craftsmen-region">{{ t('craftsman.region') }}</label>
+            <select id="craftsmen-region" disabled><option>{{ t('admin.dashboard.region_unavailable') }}</option></select>
 
-            <label class="admin-visually-hidden" for="craftsmen-trust">Trust level</label>
+            <label class="admin-visually-hidden" for="craftsmen-trust">{{ t('admin.dashboard.trust_level') }}</label>
             <select id="craftsmen-trust">
-              <option value="">All trust levels</option>
-              <option value="0">Unverified</option>
-              <option value="1">Registered</option>
-              <option value="2">Verified</option>
-              <option value="3">Approved</option>
+              <option value="">{{ t('admin.dashboard.all_trust_levels') }}</option>
+              <option value="0">{{ t('admin.dashboard.unverified') }}</option>
+              <option value="1">{{ t('admin.dashboard.registered') }}</option>
+              <option value="2">{{ t('admin.dashboard.verified') }}</option>
+              <option value="3">{{ t('admin.dashboard.approved') }}</option>
             </select>
           </form>
 
           <p id="craftsmen-table-summary" class="admin-visually-hidden" aria-live="polite">
-            0 craftsmen
+            {{ t('admin.dashboard.zero_craftsmen') }}
           </p>
         </div>
 
         <p id="craftsmen-table-empty" class="admin-table-empty" hidden>
-          No craftsmen match the selected filters.
+          {{ t('admin.dashboard.no_craftsmen_match') }}
         </p>
 
         <div id="craftsmen-table-container" class="admin-table-container">
           <table class="admin-craftsmen-table">
             <thead>
               <tr>
-                <th scope="col">Craftsman</th>
-                <th scope="col">Category</th>
-                <th scope="col">Region</th>
-                <th scope="col">Trust</th>
-                <th scope="col">Jobs done</th>
-                <th scope="col">Rating</th>
-                <th scope="col">Price honesty</th>
-                <th scope="col">Status</th>
+                <th scope="col">{{ t('admin.dashboard.craftsman') }}</th>
+                <th scope="col">{{ t('craftsman.category') }}</th>
+                <th scope="col">{{ t('craftsman.region') }}</th>
+                <th scope="col">{{ t('admin.dashboard.trust') }}</th>
+                <th scope="col">{{ t('admin.dashboard.jobs_done') }}</th>
+                <th scope="col">{{ t('admin.dashboard.rating') }}</th>
+                <th scope="col">{{ t('admin.dashboard.price_honesty') }}</th>
+                <th scope="col">{{ t('admin.status') }}</th>
               </tr>
             </thead>
             <tbody id="craftsmen-table-body"></tbody>
@@ -197,8 +197,8 @@
       <div class="admin-bottom-grid">
         <section class="admin-panel admin-category-panel" aria-labelledby="jobs-by-category-title">
           <div class="admin-bottom-panel-heading">
-            <h2 id="jobs-by-category-title">Jobs completed by category</h2>
-            <p>Current completed status • all time</p>
+            <h2 id="jobs-by-category-title">{{ t('admin.dashboard.jobs_by_category') }}</h2>
+            <p>{{ t('admin.dashboard.current_completed_status') }}</p>
           </div>
 
           <div id="jobs-by-category-list" class="admin-category-bars"></div>
@@ -207,13 +207,13 @@
 
         <section class="admin-panel admin-disputes-panel" aria-labelledby="recent-disputes-title">
           <div class="admin-bottom-panel-heading">
-            <h2 id="recent-disputes-title">Recent disputes</h2>
-            <p id="recent-disputes-summary">Newest first</p>
+            <h2 id="recent-disputes-title">{{ t('admin.dashboard.recent_disputes') }}</h2>
+            <p id="recent-disputes-summary">{{ t('admin.dashboard.newest_first') }}</p>
           </div>
 
           <div id="recent-disputes-list" class="admin-disputes-list"></div>
           <p id="recent-disputes-empty" class="admin-inline-empty" hidden>
-            No disputes were opened in this date range.
+            {{ t('admin.dashboard.no_disputes_range') }}
           </p>
         </section>
       </div>

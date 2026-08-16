@@ -2,15 +2,15 @@
   <div class="auth-wrapper">
     <div class="auth-card">
       <div class="auth-card-header">
-        <h1>Login</h1>
-        <p>Enter your email and password below to log in</p>
+        <h1>{{ t('nav.login', {}, 'Login') }}</h1>
+        <p>{{ t('auth.login_sub', {}, 'Enter your email and password below to log in') }}</p>
       </div>
 
       <div>
         @form({ route: 'session.store', method: 'POST' })
           <div class="auth-field">
             @field.root({ name: 'email' })
-              @!field.label({ text: 'Email' })
+              @!field.label({ text: t('auth.email', {}, 'Email') })
               @!input.control({ type: 'email' })
               @!field.error()
             @end
@@ -18,16 +18,16 @@
 
           <div class="auth-field">
             @field.root({ name: 'password' })
-              @!field.label({ text: 'Password' })
+              @!field.label({ text: t('auth.password', {}, 'Password') })
               @!input.control({ type: 'password' })
               @!field.error()
             @end
           </div>
 
           <div class="auth-actions">
-            @!button({ text: 'Login', type: 'submit', class: 'btn-primary' })
+            @!button({ text: t('nav.login', {}, 'Login'), type: 'submit', class: 'btn-primary' })
           </div>
-          <p><a href="/forgot-password">Forgot password?</a></p>
+          <p><a href="/forgot-password">{{ t('auth.forgot_password_link', {}, 'Forgot password?') }}</a></p>
         @end
       </div>
     </div>

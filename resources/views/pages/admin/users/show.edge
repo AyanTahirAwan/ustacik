@@ -1,4 +1,4 @@
-@adminUserLayout({ title: 'User Details', active: 'users' })
+@adminUserLayout({ title: t('admin.user_details', {}, 'User Details'), active: 'users' })
   <div
     id="admin-user-detail-page"
     class="admin-user-detail-page"
@@ -6,15 +6,15 @@
   >
     <section class="admin-user-detail-intro">
       <div>
-        <p class="admin-users-kicker">User Management</p>
-        <h2>User Details</h2>
+        <p class="admin-users-kicker">{{ t('admin.user_management', {}, 'User Management') }}</p>
+        <h2>{{ t('admin.user_details', {}, 'User Details') }}</h2>
         <p>
-          Review account information and role-specific profile data.
+          {{ t('admin.user_management_sub', {}, 'Review account information and role-specific profile data.') }}
         </p>
       </div>
 
       <a href="/admin/users" class="btn-back admin-user-back">
-        Back to Users
+        {{ t('admin.back_to_users', {}, 'Back to Users') }}
       </a>
     </section>
 
@@ -35,7 +35,7 @@
     </div>
 
     <p id="admin-user-detail-loading" class="admin-users-loading">
-      Loading user...
+      {{ t('btn.loading', {}, 'Loading user...') }}
     </p>
 
     <section
@@ -57,27 +57,27 @@
 
       <div class="admin-user-section">
         <div class="admin-user-section-heading">
-          <h3>Account Information</h3>
+          <h3>{{ t('admin.account_info', {}, 'Account Information') }}</h3>
         </div>
 
         <dl class="admin-user-detail-grid">
           <div>
-            <dt>User ID</dt>
+            <dt>{{ t('admin.user_id', {}, 'User ID') }}</dt>
             <dd id="admin-user-id"></dd>
           </div>
 
           <div>
-            <dt>Phone</dt>
+            <dt>{{ t('admin.phone', {}, 'Phone') }}</dt>
             <dd id="admin-user-phone"></dd>
           </div>
 
           <div>
-            <dt>Created</dt>
+            <dt>{{ t('admin.created', {}, 'Created') }}</dt>
             <dd id="admin-user-created"></dd>
           </div>
 
           <div>
-            <dt>Updated</dt>
+            <dt>{{ t('admin.updated', {}, 'Updated') }}</dt>
             <dd id="admin-user-updated"></dd>
           </div>
         </dl>
@@ -85,9 +85,9 @@
 
       <div class="admin-user-section">
         <div class="admin-user-section-heading">
-          <h3>Role Details</h3>
+          <h3>{{ t('admin.role_details', {}, 'Role Details') }}</h3>
           <p>
-            Information associated with this user's current role.
+            {{ t('admin.role_info_sub', {}, 'Information associated with this user\'s current role.') }}
           </p>
         </div>
 
@@ -99,9 +99,9 @@
 
       <div class="admin-user-section admin-user-action-section">
         <div class="admin-user-section-heading">
-          <h3>Account Actions</h3>
+          <h3>{{ t('admin.account_actions') }}</h3>
           <p>
-            Suspend this account when administrative access should be restricted.
+            {{ t('admin.manage_access', {}, 'Manage administrative status and access restrictions for this account.') }}
           </p>
         </div>
 
@@ -115,7 +115,16 @@
             class="btn-primary"
             type="button"
           >
-            Suspend User
+            {{ t('admin.suspend_user') }}
+          </button>
+          <button
+            id="admin-user-unsuspend"
+            class="btn-primary"
+            style="background-color: #059669;"
+            type="button"
+            hidden
+          >
+            {{ t('admin.unsuspend_user') }}
           </button>
         @end
 
@@ -124,7 +133,7 @@
           class="admin-user-suspended-note"
           hidden
         >
-          This account is already suspended.
+          {{ t('admin.account_suspended') }}
         </p>
       </div>
     </section>
