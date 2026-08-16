@@ -58,7 +58,7 @@ export default class NewAccountController {
 
         await Subscription.create(
           {
-            craftsmanId: newUser.id,
+            craftsmanId: createdUser.id,
             planType: 'free',
             status: 'active',
             periodStart: DateTime.now(),
