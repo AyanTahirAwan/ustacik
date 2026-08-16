@@ -1,6 +1,7 @@
 import app from '@adonisjs/core/services/app'
 import { type HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import type { StatusPageRange, StatusPageRenderer } from '@adonisjs/core/types/http'
+import { translate } from '#services/i18n'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
@@ -21,10 +22,14 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * to return the HTML contents to send as a response.
    */
   protected statusPages: Record<StatusPageRange, StatusPageRenderer> = {
-    '404': (error, { view }) => {
+    '404': (error, { view, request }) => {
+      const lang = (request as any).lang ?? 'en'
+      view.share({ lang, t: (key: string, params?: Record<string, string | number>) => translate(key, lang, params), translations: translate })
       return view.render('pages/errors/not_found', { error })
     },
-    '500..599': (error, { view }) => {
+    '500..599': (error, { view, request }) => {
+      const lang = (request as any).lang ?? 'en'
+      view.share({ lang, t: (key: string, params?: Record<string, string | number>) => translate(key, lang, params), translations: translate })
       return view.render('pages/errors/server_error', { error })
     },
   }
