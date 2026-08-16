@@ -27,7 +27,7 @@ const encryptionConfig = defineConfig({
        * Multiple keys can be provided for key rotation.
        * The first key is used for encryption, all keys are tried for decryption.
        */
-      keys: [env.get('APP_KEY')],
+      keys: [env.get('APP_KEY')!],
 
       /**
        * Unique identifier for this encryption driver.

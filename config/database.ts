@@ -1,7 +1,7 @@
 import env from '#start/env'
 import { defineConfig } from '@adonisjs/lucid'
 
-const rawDbUrl = env.get('DATABASE_URL')
+const rawDbUrl = env.get('DATABASE_URL') ?? ''
 
 let dbConfig
 
