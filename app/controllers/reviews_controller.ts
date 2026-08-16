@@ -110,13 +110,41 @@ export default class ReviewsController {
     const payload = await request.validateUsing(replyReviewValidator)
     const review = await Review.findOrFail(params.id)
 
+    if (review.craftsmanId !== user.id) {
+      return response.forbidden({ message: 'Only the reviewed craftsman can reply to this review.' })
+    }
+
+    if (review.craftsmanReply !== null && review.craftsmanReply.trim() !== '') {
+      return response.badRequest({ message: 'You have already replied to this review. Replies cannot be edited.' })
+    }
+
     try {
-      await review.reply(user.id, payload.message)
+      await review.reply(user.id, payload.message.trim())
       return response.ok({ review })
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Review reply could not be saved'
       return response.badRequest({ message })
     }
+  }
+
+  async replyDirect({ auth, request, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const reviewId = request.input('reviewId') || request.input('review_id') || request.input('id')
+    const message = request.input('message')
+
+    if (reviewId && message && typeof message === 'string' && message.trim() !== '') {
+      const review = await Review.find(reviewId)
+      if (review && review.craftsmanId === user.id) {
+        if (review.craftsmanReply === null || review.craftsmanReply.trim() === '') {
+          await review.reply(user.id, message.trim())
+        }
+      }
+    }
+
+    if (request.header('accept')?.includes('application/json')) {
+      return response.ok({ success: true })
+    }
+    return response.redirect('/craftsman')
   }
 
   async markHelpful({ auth, params, response }: HttpContext) {

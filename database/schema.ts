@@ -72,7 +72,7 @@ export class CraftsmanVerificationLogSchema extends BaseModel {
 }
 
 export class CraftsmanSchema extends BaseModel {
-  static $columns = ['bio', 'bizRegNo', 'businessName', 'categoryId', 'createdAt', 'totalJobs', 'trustLevel', 'userId', 'verbalConsent'] as const
+  static $columns = ['bio', 'bizRegNo', 'businessName', 'categoryId', 'createdAt', 'idCardImageUrl', 'totalJobs', 'trustLevel', 'userId', 'verbalConsent', 'verificationStatus'] as const
   $columns = CraftsmanSchema.$columns
   @column()
   declare bio: string | null
@@ -85,6 +85,8 @@ export class CraftsmanSchema extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
+  declare idCardImageUrl: string | null
+  @column()
   declare totalJobs: number
   @column()
   declare trustLevel: number
@@ -92,6 +94,8 @@ export class CraftsmanSchema extends BaseModel {
   declare userId: number
   @column()
   declare verbalConsent: boolean
+  @column()
+  declare verificationStatus: string
 }
 
 export class CustomerAddressSchema extends BaseModel {

@@ -44,10 +44,10 @@ export default class Review extends BaseModel {
   @belongsTo(() => JobRequest, { foreignKey: 'jobId' })
   declare job: BelongsTo<typeof JobRequest>
 
-  @belongsTo(() => Customer, { foreignKey: 'customerId' })
+  @belongsTo(() => Customer, { foreignKey: 'customerId', localKey: 'userId' })
   declare customer: BelongsTo<typeof Customer>
 
-  @belongsTo(() => Craftsman, { foreignKey: 'craftsmanId' })
+  @belongsTo(() => Craftsman, { foreignKey: 'craftsmanId', localKey: 'userId' })
   declare craftsman: BelongsTo<typeof Craftsman>
 
   @hasMany(() => ReviewHelpfulVote)

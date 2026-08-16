@@ -1,19 +1,114 @@
-@dashboard_layout({ title: 'Edit Region' })
-  <div class="page-placeholder">
-    <h2>Edit Region #{{ regionId }} — Placeholder</h2>
-    {{--
-      TODO: API integration
-      Update a region via:
-        PATCH /api/admin/regions/:id
-      The route param :id is available as {{ regionId }}.
-      Load the record first with:
-        GET /api/admin/regions/:id
-      Optional update fields:
-        nameEn (string) — trimmed, min 2, max 120 chars, unique
-        nameTr (string) — trimmed, min 2, max 120 chars, unique
-      Also available: DELETE /api/admin/regions/:id (409 if referenced by price catalog)
-    --}}
-    <p>The edit region form will go here.</p>
-  </div>
-@end
+@adminUserLayout({ title: t('admin.edit_region', {}, 'Edit Region'), active: 'regions' })
+  <div id="admin-region-edit-page" class="admin-dashboard" style="max-width: 680px; margin: 0 auto;" data-region-id="{{ regionId }}">
+    <section class="admin-dashboard-heading" style="margin-bottom: 24px;">
+      <div>
+        <p class="admin-eyebrow">{{ t('admin.regions_management', {}, 'Regions Management') }}</p>
+        <h1>{{ t('admin.edit_region', {}, 'Edit Region') }} #{{ regionId }}</h1>
+      </div>
+      <a href="/admin/regions" class="btn-back">{{ t('btn.back', {}, '← Back to Regions') }}</a>
+    </section>
 
+    <div id="region-form-error" class="alert alert-destructive admin-users-message" hidden>
+      <p id="region-form-error-message"></p>
+    </div>
+
+    <section id="region-loading" class="admin-state-card" aria-live="polite">
+      <span class="admin-loading-spinner" aria-hidden="true"></span>
+      <div>
+        <h2>{{ t('btn.loading', {}, 'Loading region…') }}</h2>
+      </div>
+    </section>
+
+    <section id="region-panel" class="admin-panel" style="padding: 32px;" hidden>
+      @form({ action: '/api/admin/regions/' + regionId, method: 'POST', id: 'edit-region-form' })
+        <div class="auth-field" style="margin-bottom: 20px;">
+          <label for="nameEn" style="display: block; font-weight: 700; margin-bottom: 8px;">
+            {{ t('admin.region_name_en', {}, 'Region Name (English)') }} *
+          </label>
+          <input type="text" name="nameEn" id="nameEn" class="form-control" required minlength="2" maxlength="120" style="width: 100%;" />
+        </div>
+
+        <div class="auth-field" style="margin-bottom: 24px;">
+          <label for="nameTr" style="display: block; font-weight: 700; margin-bottom: 8px;">
+            {{ t('admin.region_name_tr', {}, 'Region Name (Turkish)') }} *
+          </label>
+          <input type="text" name="nameTr" id="nameTr" class="form-control" required minlength="2" maxlength="120" style="width: 100%;" />
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <a href="/admin/regions" class="btn-back">{{ t('btn.cancel', {}, 'Cancel') }}</a>
+          <button type="submit" class="btn-primary" style="background-color: var(--brand-rust, #c85a32); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 700; cursor: pointer;">
+            {{ t('btn.save', {}, 'Save Changes') }}
+          </button>
+        </div>
+      @end
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const page = document.getElementById('admin-region-edit-page')
+      const regionId = page.dataset.regionId
+      const loading = document.getElementById('region-loading')
+      const panel = document.getElementById('region-panel')
+      const form = document.getElementById('edit-region-form')
+      const errorBox = document.getElementById('region-form-error')
+      const errorMessage = document.getElementById('region-form-error-message')
+      const nameEnInput = document.getElementById('nameEn')
+      const nameTrInput = document.getElementById('nameTr')
+      const csrf = form.querySelector('input[name="_csrf"]')?.value || ''
+
+      try {
+        const res = await fetch(`/api/admin/regions/${regionId}`, {
+          headers: { Accept: 'application/json' },
+          credentials: 'same-origin',
+        })
+        const data = await res.json().catch(() => ({}))
+        if (!res.ok || !data.region) throw new Error(data.message || 'Failed to load region')
+
+        nameEnInput.value = data.region.nameEn || ''
+        nameTrInput.value = data.region.nameTr || ''
+        loading.hidden = true
+        panel.hidden = false
+      } catch (err) {
+        loading.hidden = true
+        errorMessage.textContent = err.message
+        errorBox.hidden = false
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        errorBox.hidden = true
+        const submitBtn = form.querySelector('button[type="submit"]')
+        submitBtn.disabled = true
+
+        const nameEn = nameEnInput.value.trim()
+        const nameTr = nameTrInput.value.trim()
+
+        try {
+          const res = await fetch(`/api/admin/regions/${regionId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'x-csrf-token': csrf,
+            },
+            body: JSON.stringify({ nameEn, nameTr }),
+            credentials: 'same-origin',
+          })
+
+          const data = await res.json().catch(() => ({}))
+          if (!res.ok) {
+            throw new Error(data.errors?.[0]?.message || data.message || 'Failed to update region')
+          }
+
+          window.location.assign('/admin/regions')
+        } catch (err) {
+          errorMessage.textContent = err.message
+          errorBox.hidden = false
+          submitBtn.disabled = false
+        }
+      })
+    })
+  </script>
+@end

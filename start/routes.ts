@@ -25,6 +25,8 @@ const ReviewsController = () => import('#controllers/reviews_controller')
 const JobDisputesController = () => import('#controllers/job_disputes_controller')
 const AccountController = () => import('#controllers/account_controller')
 const PlatformSettingsController = () => import('#controllers/platform_settings_controller')
+const AdminVerificationsController = () =>
+  import('#controllers/admin_verifications_controller')
 
 router.on('/').render('pages/home').as('home')
 
@@ -163,6 +165,7 @@ router
       ServicePriceCatalogsController,
       'toggleActive',
     ])
+    router.post('api/craftsman/sub-services', [SubServicesController, 'store']).as('craftsman.sub_services.store')
 
     router.patch('api/jobs/:id/accept', [JobRequestsController, 'accept'])
     router.patch('api/jobs/:id/decline', [JobRequestsController, 'decline'])
@@ -170,6 +173,8 @@ router
     router.patch('api/jobs/:id/complete', [JobRequestsController, 'complete'])
 
     router.patch('api/reviews/:id/reply', [ReviewsController, 'reply'])
+    router.patch('craftsman', [ReviewsController, 'replyDirect']).as('craftsman.dashboard.patch')
+    router.post('craftsman', [ReviewsController, 'replyDirect']).as('craftsman.dashboard.post')
 
     router.get('craftsman', ({ view }) => view.render('pages/craftsman/dashboard'))
     router.get('craftsman/profile', ({ view }) => view.render('pages/craftsman/profile'))
@@ -191,17 +196,23 @@ router
 
 router
   .group(() => {
+    router.get('api/admin/verifications', [AdminVerificationsController, 'index'])
+    router.patch('api/admin/craftsmen/:id/verify/approve', [AdminVerificationsController, 'approve'])
+    router.patch('api/admin/craftsmen/:id/verify/reject', [AdminVerificationsController, 'reject'])
+
     router.get('api/admin/users', [UsersController, 'index'])
     router.get('api/admin/users/:id', [UsersController, 'show'])
     router.patch('api/admin/users/:id/suspend', [UsersController, 'suspend'])
     router.patch('api/admin/users/:id/unsuspend', [UsersController, 'unsuspend'])
 
     router.get('api/admin/categories', [CategoriesController, 'index'])
+    router.post('api/admin/categories', [CategoriesController, 'store'])
     router.get('api/admin/categories/:id', [CategoriesController, 'show'])
     router.patch('api/admin/categories/:id', [CategoriesController, 'update'])
+    router.delete('api/admin/categories/:id', [CategoriesController, 'destroy'])
 
     router.get('api/admin/sub-services', [SubServicesController, 'index'])
-    router.post('api/admin/sub-services', [SubServicesController, 'store'])
+    router.post('api/admin/sub-services', [SubServicesController, 'store']).as('admin.sub_services.store')
     router.get('api/admin/sub-services/:id', [SubServicesController, 'show'])
     router.patch('api/admin/sub-services/:id', [SubServicesController, 'update'])
     router.delete('api/admin/sub-services/:id', [SubServicesController, 'destroy'])
@@ -233,12 +244,14 @@ router
       'updatePhoneVerification',
     ])
 
+    router.get('admin/verifications', ({ view }) => view.render('pages/admin/verifications/index'))
     router.get('admin/users', ({ view }) => view.render('pages/admin/users/index'))
     router.get('admin/users/:userId', ({ params, view }) =>
       view.render('pages/admin/users/show', { userId: params.userId })
     )
 
     router.get('admin/categories', ({ view }) => view.render('pages/admin/categories/index'))
+    router.get('admin/categories/create', ({ view }) => view.render('pages/admin/categories/create'))
     router.get('admin/categories/:categoryId/edit', ({ params, view }) =>
       view.render('pages/admin/categories/edit', { categoryId: params.categoryId })
     )

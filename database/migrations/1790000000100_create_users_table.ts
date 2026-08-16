@@ -13,7 +13,7 @@ export default class extends BaseSchema {
 
       table.enum('role', ['customer', 'craftsman', 'admin']).notNullable()
 
-      table.enum('status', ['active', 'suspended']).notNullable().defaultTo('active')
+      table.enum('status', ['active', 'suspended', 'pending']).notNullable().defaultTo('active')
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

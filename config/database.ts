@@ -45,6 +45,13 @@ if (rawDbUrl.startsWith('sqlite')) {
 
         connection: {
           connectionString: rawDbUrl,
+          ssl:
+            rawDbUrl.includes('neon.tech') ||
+            rawDbUrl.includes('sslmode=require') ||
+            rawDbUrl.includes('ssl=true') ||
+            nodeEnv === 'production'
+              ? { rejectUnauthorized: false }
+              : false,
         },
 
         migrations: {

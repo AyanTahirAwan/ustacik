@@ -66,20 +66,28 @@ export type ScannedRoutes = {
     'service_price_catalogs.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'service_price_catalogs.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'service_price_catalogs.toggle_active': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'craftsman.sub_services.store': { paramsTuple?: []; params?: {} }
     'job_requests.accept': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'job_requests.decline': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'job_requests.start': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'job_requests.complete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'reviews.reply': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'craftsman.dashboard.patch': { paramsTuple?: []; params?: {} }
+    'craftsman.dashboard.post': { paramsTuple?: []; params?: {} }
+    'admin_verifications.index': { paramsTuple?: []; params?: {} }
+    'admin_verifications.approve': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin_verifications.reject': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.index': { paramsTuple?: []; params?: {} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.suspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.unsuspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.index': { paramsTuple?: []; params?: {} }
+    'categories.store': { paramsTuple?: []; params?: {} }
     'categories.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'sub_services.index': { paramsTuple?: []; params?: {} }
-    'sub_services.store': { paramsTuple?: []; params?: {} }
+    'admin.sub_services.store': { paramsTuple?: []; params?: {} }
     'sub_services.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'sub_services.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'sub_services.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -126,6 +134,7 @@ export type ScannedRoutes = {
     'verification_logs.own': { paramsTuple?: []; params?: {} }
     'craftsmen.dashboard': { paramsTuple?: []; params?: {} }
     'service_price_catalogs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin_verifications.index': { paramsTuple?: []; params?: {} }
     'users.index': { paramsTuple?: []; params?: {} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.index': { paramsTuple?: []; params?: {} }
@@ -167,6 +176,7 @@ export type ScannedRoutes = {
     'verification_logs.own': { paramsTuple?: []; params?: {} }
     'craftsmen.dashboard': { paramsTuple?: []; params?: {} }
     'service_price_catalogs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin_verifications.index': { paramsTuple?: []; params?: {} }
     'users.index': { paramsTuple?: []; params?: {} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.index': { paramsTuple?: []; params?: {} }
@@ -198,7 +208,10 @@ export type ScannedRoutes = {
     'job_disputes.store': { paramsTuple: [ParamValue]; params: {'jobId': ParamValue} }
     'work_photos.store': { paramsTuple?: []; params?: {} }
     'service_price_catalogs.store': { paramsTuple?: []; params?: {} }
-    'sub_services.store': { paramsTuple?: []; params?: {} }
+    'craftsman.sub_services.store': { paramsTuple?: []; params?: {} }
+    'craftsman.dashboard.post': { paramsTuple?: []; params?: {} }
+    'categories.store': { paramsTuple?: []; params?: {} }
+    'admin.sub_services.store': { paramsTuple?: []; params?: {} }
     'regions.store': { paramsTuple?: []; params?: {} }
     'verification_logs.store': { paramsTuple: [ParamValue]; params: {'craftsmanId': ParamValue} }
     'platform_settings.update_phone_verification': { paramsTuple?: []; params?: {} }
@@ -220,6 +233,9 @@ export type ScannedRoutes = {
     'job_requests.start': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'job_requests.complete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'reviews.reply': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'craftsman.dashboard.patch': { paramsTuple?: []; params?: {} }
+    'admin_verifications.approve': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin_verifications.reject': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.suspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.unsuspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -233,6 +249,7 @@ export type ScannedRoutes = {
     'customer_favorites.destroy': { paramsTuple: [ParamValue]; params: {'craftsmanId': ParamValue} }
     'work_photos.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'service_price_catalogs.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'sub_services.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'regions.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'job_disputes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

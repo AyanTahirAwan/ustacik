@@ -1,7 +1,55 @@
-@dashboard_layout({ title: 'Manage Categories' })
-  <div class="page-placeholder">
-    <h2>Categories Management — Placeholder</h2>
-    <p>Categories are fixed at 8 and cannot be created or deleted. This page lists them via GET /api/admin/categories and allows editing only, via PATCH /api/admin/categories/:id -> /admin/categories/:id/edit.</p>
-    <p>Categories management table will go here.</p>
+@adminUserLayout({ title: t('admin.categories_management', {}, 'Categories Management'), active: 'categories' })
+  <div id="admin-categories-page" class="admin-dashboard">
+    <section class="admin-dashboard-heading" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <p class="admin-eyebrow">{{ t('admin.kicker', {}, 'Platform Administration') }}</p>
+        <h1>{{ t('admin.categories_management', {}, 'Categories Management') }}</h1>
+        <p class="admin-heading-copy">
+          {{ t('admin.categories_sub', {}, 'Manage service categories available across the platform.') }}
+        </p>
+      </div>
+      <a href="/admin/categories/create" class="btn-primary" style="background-color: var(--brand-rust, #c85a32); color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+        + {{ t('admin.add_category', {}, 'Add New Category') }}
+      </a>
+    </section>
+
+    <div id="categories-error" class="alert alert-destructive admin-users-message" hidden>
+      <p id="categories-error-message"></p>
+    </div>
+
+    <div id="categories-success" class="alert alert-success admin-users-message" hidden>
+      <p id="categories-success-message"></p>
+    </div>
+
+    <section id="categories-loading" class="admin-state-card" aria-live="polite">
+      <span class="admin-loading-spinner" aria-hidden="true"></span>
+      <div>
+        <h2>{{ t('btn.loading', {}, 'Loading categories…') }}</h2>
+      </div>
+    </section>
+
+    <div id="categories-content" hidden>
+      <section class="admin-panel">
+        <div id="categories-table-container" class="admin-table-container">
+          <table class="admin-craftsmen-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">{{ t('admin.category_name_en', {}, 'Category Name (English)') }}</th>
+                <th scope="col">{{ t('admin.category_name_tr', {}, 'Category Name (Turkish)') }}</th>
+                <th scope="col">{{ t('admin.sub_services_count', {}, 'Sub-Services') }}</th>
+                <th scope="col" style="text-align: right;">{{ t('admin.account_actions', {}, 'Actions') }}</th>
+              </tr>
+            </thead>
+            <tbody id="categories-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </div>
+
+  @form({ action: '/api/admin/categories/0', method: 'DELETE', id: 'categories-csrf-form', style: 'display:none;' })
+  @end
+
+  @vite(['resources/js/admin-categories.js'])
 @end

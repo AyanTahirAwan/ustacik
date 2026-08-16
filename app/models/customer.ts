@@ -35,15 +35,15 @@ export default class Customer extends BaseModel {
   @belongsTo(() => Region, { foreignKey: 'defaultRegionId' })
   declare defaultRegion: BelongsTo<typeof Region>
 
-  @hasMany(() => CustomerAddress, { foreignKey: 'customerId' })
+  @hasMany(() => CustomerAddress, { foreignKey: 'customerId', localKey: 'userId' })
   declare addresses: HasMany<typeof CustomerAddress>
 
-  @hasMany(() => CustomerFavorite, { foreignKey: 'customerId' })
+  @hasMany(() => CustomerFavorite, { foreignKey: 'customerId', localKey: 'userId' })
   declare favorites: HasMany<typeof CustomerFavorite>
 
-  @hasMany(() => JobRequest, { foreignKey: 'customerId' })
+  @hasMany(() => JobRequest, { foreignKey: 'customerId', localKey: 'userId' })
   declare jobRequests: HasMany<typeof JobRequest>
 
-  @hasMany(() => Review, { foreignKey: 'customerId' })
+  @hasMany(() => Review, { foreignKey: 'customerId', localKey: 'userId' })
   declare reviews: HasMany<typeof Review>
 }

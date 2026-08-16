@@ -1,20 +1,54 @@
-@dashboard_layout({ title: 'Manage Regions' })
-  <div class="page-actions">
-    <a class="button" href="/admin/regions/create">+ Create Region</a>
+@adminUserLayout({ title: t('admin.regions_management', {}, 'Regions Management'), active: 'regions' })
+  <div id="admin-regions-page" class="admin-dashboard">
+    <section class="admin-dashboard-heading" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <p class="admin-eyebrow">{{ t('admin.kicker', {}, 'Platform Administration') }}</p>
+        <h1>{{ t('admin.regions_management', {}, 'Regions Management') }}</h1>
+        <p class="admin-heading-copy">
+          {{ t('admin.regions_sub', {}, 'Manage geographic service regions available across the platform.') }}
+        </p>
+      </div>
+      <a href="/admin/regions/create" class="btn-primary" style="background-color: var(--brand-rust, #c85a32); color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+        + {{ t('admin.add_region', {}, 'Add New Region') }}
+      </a>
+    </section>
+
+    <div id="regions-error" class="alert alert-destructive admin-users-message" hidden>
+      <p id="regions-error-message"></p>
+    </div>
+
+    <div id="regions-success" class="alert alert-success admin-users-message" hidden>
+      <p id="regions-success-message"></p>
+    </div>
+
+    <section id="regions-loading" class="admin-state-card" aria-live="polite">
+      <span class="admin-loading-spinner" aria-hidden="true"></span>
+      <div>
+        <h2>{{ t('btn.loading', {}, 'Loading regions…') }}</h2>
+      </div>
+    </section>
+
+    <div id="regions-content" hidden>
+      <section class="admin-panel">
+        <div id="regions-table-container" class="admin-table-container">
+          <table class="admin-craftsmen-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">{{ t('admin.region_name_en', {}, 'Region Name (English)') }}</th>
+                <th scope="col">{{ t('admin.region_name_tr', {}, 'Region Name (Turkish)') }}</th>
+                <th scope="col" style="text-align: right;">{{ t('admin.account_actions', {}, 'Actions') }}</th>
+              </tr>
+            </thead>
+            <tbody id="regions-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </div>
 
-  <div class="page-placeholder">
-    <h2>Regions Management — Placeholder</h2>
-    {{--
-      TODO: API integration
-      List regions via:
-        GET /api/admin/regions
-      Expected response: { regions: [{ id, nameEn, nameTr, createdAt }] }
-      Actions per row:
-        - Edit   -> /admin/regions/:id/edit
-        - Delete -> DELETE /api/admin/regions/:id (409 if referenced by price catalog)
-    --}}
-    <p>Regions management table will go here.</p>
-  </div>
+  @form({ action: '/api/admin/regions/0', method: 'DELETE', id: 'regions-csrf-form', style: 'display:none;' })
+  @end
+
+  @vite(['resources/js/admin-regions.js'])
 @end
-

@@ -1,5 +1,6 @@
 import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
 import Craftsman from '#models/craftsman'
 import Admin from '#models/admin'
@@ -12,35 +13,14 @@ export default class VerificationLog extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
+  @column({ columnName: 'target_user_id' })
   declare craftsmanId: number
 
-  @column()
+  @column({ columnName: 'checked_by_id' })
   declare checkedById: number
 
-  @column()
+  @column({ columnName: 'status' })
   declare levelGranted: TrustLevelGrant
-
-  @column()
-  declare idCardVerified: boolean | null
-
-  @column()
-  declare pastCustomer1Called: boolean | null
-
-  @column()
-  declare pastCustomer2Called: boolean | null
-
-  @column()
-  declare bizRegDocUrl: string | null
-
-  @column()
-  declare guaranteeDocUrl: string | null
-
-  @column()
-  declare verbalConsentAudited: boolean | null
-
-  @column()
-  declare notes: string | null
 
   @column.dateTime()
   declare verifiedAt: DateTime
@@ -51,7 +31,6 @@ export default class VerificationLog extends BaseModel {
   @belongsTo(() => Admin, { foreignKey: 'checkedById' })
   declare checkedBy: BelongsTo<typeof Admin>
 
-  
   static async record(data: {
     craftsmanId: number
     checkedById: number
@@ -65,9 +44,25 @@ export default class VerificationLog extends BaseModel {
     notes?: string
   }) {
     const log = await VerificationLog.create({
-      ...data,
+      craftsmanId: data.craftsmanId,
+      checkedById: data.checkedById,
+      levelGranted: data.levelGranted,
       verifiedAt: DateTime.now(),
     })
+
+    const trustTier = data.levelGranted === 'approved' ? 3 : data.levelGranted === 'verified' ? 2 : 1
+
+    await db.table('craftsman_verification_logs').insert({
+      log_id: log.id,
+      id_card_verified: Boolean(data.idCardVerified),
+      past_customer_1_called: Boolean(data.pastCustomer1Called),
+      past_customer_2_called: Boolean(data.pastCustomer2Called),
+      biz_reg_doc_url: data.bizRegDocUrl ?? null,
+      guarantee_doc_url: data.guaranteeDocUrl ?? null,
+      verbal_consent_audited: Boolean(data.verbalConsentAudited),
+      trust_tier_granted: trustTier,
+    })
+
     await Craftsman.recomputeTrustLevel(data.craftsmanId)
     return log
   }

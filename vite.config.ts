@@ -35,6 +35,10 @@ export default defineConfig({
         'resources/js/admin-user-detail.js',
         'resources/css/admin-dashboard.css',
         'resources/js/admin-dashboard.js',
+        'resources/js/admin-verifications.js',
+        'resources/js/admin-categories.js',
+        'resources/js/admin-regions.js',
+        'resources/js/admin-sub-services.js',
       ],
 
       /**

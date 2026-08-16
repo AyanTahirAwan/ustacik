@@ -56,7 +56,7 @@ async function createCraftsmanUser() {
 }
 
 async function createVerificationLog(admin: InstanceType<typeof User>, craftsman: InstanceType<typeof Craftsman>) {
-  return VerificationLog.create({
+  return VerificationLog.record({
     craftsmanId: craftsman.userId,
     checkedById: admin.id,
     levelGranted: 'verified',

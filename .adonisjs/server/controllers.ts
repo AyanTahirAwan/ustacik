@@ -5,6 +5,7 @@
 
 export const controllers = {
   Account: () => import('#controllers/account_controller'),
+  AdminVerifications: () => import('#controllers/admin_verifications_controller'),
   Catalog: () => import('#controllers/catalog_controller'),
   Categories: () => import('#controllers/categories_controller'),
   Craftsmen: () => import('#controllers/craftsmen_controller'),

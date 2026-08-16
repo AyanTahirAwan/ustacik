@@ -119,9 +119,9 @@ export default class JobRequestsController {
       return response.ok({
         jobs: jobs.map((job) => ({
           id: job.id,
-          craftsman: { businessName: job.craftsman.businessName },
-          category: { nameEn: job.category.nameEn, nameTr: job.category.nameTr },
-          region: { nameEn: job.region.nameEn, nameTr: job.region.nameTr },
+          craftsman: { businessName: job.craftsman?.businessName || 'Craftsman' },
+          category: { nameEn: job.category?.nameEn || '', nameTr: job.category?.nameTr || '' },
+          region: { nameEn: job.region?.nameEn || '', nameTr: job.region?.nameTr || '' },
           description: job.description,
           status: job.status,
           reviewed: Boolean(job.review),
@@ -134,9 +134,9 @@ export default class JobRequestsController {
       return response.ok({
         jobs: jobs.map((job) => ({
           id: job.id,
-          customer: { fullName: job.customer.fullName },
-          category: { nameEn: job.category.nameEn, nameTr: job.category.nameTr },
-          region: { nameEn: job.region.nameEn, nameTr: job.region.nameTr },
+          customer: { fullName: job.customer?.fullName || 'Customer' },
+          category: { nameEn: job.category?.nameEn || '', nameTr: job.category?.nameTr || '' },
+          region: { nameEn: job.region?.nameEn || '', nameTr: job.region?.nameTr || '' },
           description: job.description,
           status: job.status,
           createdAt: job.createdAt,
@@ -187,7 +187,8 @@ export default class JobRequestsController {
       })
     }
 
-    const number = whatsappNumber(job.craftsman.user.phoneNormalised)
+    const phoneNormalised = job.craftsman?.user?.phoneNormalised
+    const number = phoneNormalised ? whatsappNumber(phoneNormalised) : null
     if (!number) {
       return response.unprocessableEntity({
         message: 'Craftsman contact is currently unavailable.',
@@ -195,8 +196,8 @@ export default class JobRequestsController {
     }
 
     return response.ok({
-      craftsmanName: job.craftsman.businessName,
-      phone: job.craftsman.user.phoneNormalised,
+      craftsmanName: job.craftsman?.businessName || 'Craftsman',
+      phone: phoneNormalised,
       whatsappUrl: `https://wa.me/${number}?text=${encodeURIComponent(whatsappMessage)}`,
     })
   }
@@ -272,7 +273,7 @@ export default class JobRequestsController {
           .where('id', params.id)
           .where('craftsman_id', user.id)
           .firstOrFail()
-        await transitioningJob.transitionTo(status)
+        await transitioningJob.transitionTo(status, trx)
         const notification = transitionNotifications[status]
         await UserNotification.firstOrCreate(
           {

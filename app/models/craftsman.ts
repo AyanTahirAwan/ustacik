@@ -40,6 +40,12 @@ export default class Craftsman extends BaseModel {
   @column()
   declare totalJobs: number
 
+  @column()
+  declare idCardImageUrl: string | null
+
+  @column()
+  declare verificationStatus: 'pending' | 'approved' | 'rejected'
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
@@ -49,22 +55,22 @@ export default class Craftsman extends BaseModel {
   @belongsTo(() => Category, { foreignKey: 'categoryId' })
   declare category: BelongsTo<typeof Category>
 
-  @hasMany(() => ServicePriceCatalog, { foreignKey: 'craftsmanId' })
+  @hasMany(() => ServicePriceCatalog, { foreignKey: 'craftsmanId', localKey: 'userId' })
   declare servicePriceCatalogs: HasMany<typeof ServicePriceCatalog>
 
-  @hasMany(() => VerificationLog, { foreignKey: 'craftsmanId' })
+  @hasMany(() => VerificationLog, { foreignKey: 'craftsmanId', localKey: 'userId' })
   declare verificationLogs: HasMany<typeof VerificationLog>
 
-  @hasOne(() => Subscription, { foreignKey: 'craftsmanId' })
+  @hasOne(() => Subscription, { foreignKey: 'craftsmanId', localKey: 'userId' })
   declare subscription: HasOne<typeof Subscription>
 
-  @hasMany(() => WorkPhoto, { foreignKey: 'craftsmanId' })
+  @hasMany(() => WorkPhoto, { foreignKey: 'craftsmanId', localKey: 'userId' })
   declare workPhotos: HasMany<typeof WorkPhoto>
 
-  @hasMany(() => JobRequest, { foreignKey: 'craftsmanId' })
+  @hasMany(() => JobRequest, { foreignKey: 'craftsmanId', localKey: 'userId' })
   declare jobRequests: HasMany<typeof JobRequest>
 
-  @hasMany(() => Review, { foreignKey: 'craftsmanId' })
+  @hasMany(() => Review, { foreignKey: 'craftsmanId', localKey: 'userId' })
   declare reviews: HasMany<typeof Review>
 
   get trustLevelLabel() {
@@ -74,7 +80,7 @@ export default class Craftsman extends BaseModel {
  
   static async recomputeTrustLevel(craftsmanId: number) {
     const craftsman = await Craftsman.findOrFail(craftsmanId)
-    const logs = await VerificationLog.query().where('craftsman_id', craftsmanId)
+    const logs = await VerificationLog.query().where('target_user_id', craftsmanId)
 
     const granted = new Set(logs.map((log) => log.levelGranted))
     let level = 0

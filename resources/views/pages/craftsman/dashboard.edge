@@ -70,7 +70,7 @@
             <tbody id="dashboard-jobs"></tbody>
           </table>
         </div>
-        <div id="dashboard-jobs-empty" class="dashboard-empty" hidden>No job requests yet.</div>
+        <div id="dashboard-jobs-empty" class="dashboard-empty" hidden>{{ t('craftsman.no_jobs_yet', {}, 'No job requests yet.') }}</div>
       </section>
 
       <section class="dashboard-panel">
@@ -79,6 +79,12 @@
           <span id="dashboard-review-count" class="dashboard-muted"></span>
         </div>
         <div id="dashboard-scores" class="dashboard-score-grid"></div>
+
+        <div id="dashboard-reviews-section" style="margin-top: 24px;">
+          <h4 style="margin: 0 0 14px 0; font-size: 1.05rem; color: #1e293b;">{{ t('craftsman.customer_reviews', {}, 'Customer Reviews & Dispute Responses') }}</h4>
+          <div id="dashboard-reviews-list" style="display: flex; flex-direction: column; gap: 16px;"></div>
+          <div id="dashboard-reviews-empty" class="dashboard-empty" hidden>{{ t('craftsman.no_ratings_yet', {}, 'No customer ratings yet.') }}</div>
+        </div>
       </section>
 
       <section class="dashboard-panel">
@@ -231,6 +237,61 @@
         .join('')
     }
 
+    const renderReviews = (reviews) => {
+      const list = document.getElementById('dashboard-reviews-list')
+      const empty = document.getElementById('dashboard-reviews-empty')
+      if (!reviews.length) {
+        list.innerHTML = ''
+        empty.hidden = false
+        return
+      }
+      empty.hidden = true
+      list.innerHTML = reviews.map((review) => {
+        const hasReply = Boolean(review.craftsmanReply && review.craftsmanReply.trim() !== '')
+        const replyHtml = hasReply
+          ? `<div class="craftsman-final-reply" style="margin-top: 12px; padding: 12px 16px; background-color: #f8fafc; border-left: 4px solid var(--brand-rust, #c85a32); border-radius: 4px;">
+               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                 <strong style="font-size: 0.85rem; color: var(--brand-rust, #c85a32); display: flex; align-items: center; gap: 4px;">
+                   ✓ {{ t('craftsman.your_reply', {}, 'Your Response (Final & Published)') }}
+                 </strong>
+               </div>
+               <p style="margin: 0; font-size: 0.9rem; color: #334155; white-space: pre-wrap;">${escapeHtml(review.craftsmanReply)}</p>
+             </div>`
+          : `<div id="reply-container-${review.id}" style="margin-top: 10px;">
+               <button type="button" class="action-link toggle-reply-btn" data-review-id="${review.id}" style="background: none; border: none; font-size: 0.88rem; font-weight: 600; cursor: pointer; color: var(--brand-rust, #c85a32); display: inline-flex; align-items: center; gap: 4px; padding: 0;">
+                 💬 {{ t('craftsman.reply_to_review', {}, 'Reply to this review') }}
+               </button>
+               <div id="reply-form-${review.id}" class="review-reply-form" data-review-id="${review.id}" style="margin-top: 10px; padding: 14px; background: #fff8f5; border: 1px dashed var(--brand-rust, #c85a32); border-radius: 8px;" hidden>
+                 <p style="margin-top: 0; margin-bottom: 8px; font-size: 0.82rem; color: #8a5239; font-weight: 600;">
+                   ⚠️ {{ t('craftsman.one_reply_warning', {}, 'Note: You can submit only ONE reply per review. Once submitted, it cannot be edited.') }}
+                 </p>
+                 <div id="reply-error-${review.id}" class="dashboard-message-error" style="font-size: 0.85rem; padding: 6px 10px; margin-bottom: 8px;" hidden></div>
+                 <textarea id="reply-text-${review.id}" class="form-control" rows="3" required placeholder="{{ t('craftsman.reply_placeholder', {}, 'Write your response to this review...') }}" style="margin-bottom: 10px; font-size: 0.9rem; width: 100%; box-sizing: border-box;"></textarea>
+                 <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                   <button type="button" class="btn-back cancel-reply-btn" data-review-id="${review.id}" style="padding: 6px 12px; font-size: 0.85rem;">{{ t('btn.cancel', {}, 'Cancel') }}</button>
+                   <button type="button" class="btn-primary submit-reply-btn" data-review-id="${review.id}" onclick="window.handleReplySubmit(event, ${review.id})" style="padding: 6px 14px; font-size: 0.85rem;">{{ t('craftsman.submit_reply', {}, 'Submit Response') }}</button>
+                 </div>
+               </div>
+             </div>`
+
+        return `
+          <article class="dashboard-review-card" style="padding: 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <strong style="color: #0f172a; font-size: 0.95rem;">${escapeHtml(review.customer?.fullName || "{{ t('craftsman.customer', {}, 'Customer') }}")}</strong>
+                <span style="font-size: 0.8rem; color: #64748b; margin-left: 8px;">${formatDate(review.createdAt)}</span>
+              </div>
+              <span style="font-weight: 700; color: #b45309; background: #fef3c7; padding: 2px 8px; border-radius: 6px; font-size: 0.85rem;">
+                ★ ${Number(review.average || 0).toFixed(1)} / 5.0
+              </span>
+            </div>
+            <p style="margin: 0 0 8px 0; font-size: 0.92rem; color: #475569; line-height: 1.5;">${escapeHtml(review.comment || "{{ t('craftsman.no_comment', {}, 'No written comment.') }}")}</p>
+            ${replyHtml}
+          </article>
+        `
+      }).join('')
+    }
+
     const renderPhotos = (photos) => {
       const container = document.getElementById('dashboard-photos')
       const empty = document.getElementById('dashboard-photos-empty')
@@ -260,7 +321,7 @@
         const welcomeText = "{{ t('craftsman.welcome_back', {}, 'Welcome back') }}"
         document.getElementById('dashboard-welcome').textContent = `${welcomeText}${craftsman.businessName ? `, ${craftsman.businessName}` : ''}`
         document.getElementById('dashboard-business').textContent = (window.APP_LOCALE === 'tr' ? craftsman.category?.nameTr : craftsman.category?.nameEn) || "{{ t('craftsman.account', {}, 'Craftsman Account') }}"
-        // Trust label format logic
+        
         const rawTrust = craftsman.trustLevelLabel || 'unverified'
         let trTrust = rawTrust.split('_').map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ')
         if (window.APP_LOCALE === 'tr') {
@@ -281,6 +342,7 @@
         renderPrices(craftsman.servicePriceCatalogs || [])
         renderJobs(jobs || [])
         renderScores(reviews || [])
+        renderReviews(reviews || [])
         renderPhotos(craftsman.workPhotos || [])
 
         const phone = (craftsman.phone || '').replace(/[^\d]/g, '')
@@ -297,6 +359,92 @@
         errorBox.hidden = false
       }
     }
+
+    window.handleReplySubmit = async (e, reviewId) => {
+      if (e) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+      const form = document.getElementById(`reply-form-${reviewId}`)
+      if (!form) return
+      const textarea = document.getElementById(`reply-text-${reviewId}`) || form.querySelector('textarea')
+      const submitBtn = document.querySelector(`.submit-reply-btn[data-review-id="${reviewId}"]`)
+      const replyError = document.getElementById(`reply-error-${reviewId}`)
+      const message = textarea ? textarea.value.trim() : ''
+      
+      if (!message) {
+        textarea?.focus()
+        return
+      }
+
+      if (submitBtn) submitBtn.disabled = true
+      if (replyError) replyError.hidden = true
+      errorBox.hidden = true
+
+      const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                   document.querySelector('input[name="_csrf"]')?.value || ''
+
+      try {
+        const response = await fetch(`/api/reviews/${reviewId}/reply`, {
+          method: 'PATCH',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrf,
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({ message, _csrf: csrf }),
+        })
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok) {
+          throw new Error(data.message || data.errors?.[0]?.message || "{{ t('dashboard.unable_to_save', {}, 'Unable to submit reply.') }}")
+        }
+        await loadDashboard()
+      } catch (err) {
+        const errMsg = err.message || "{{ t('dashboard.unable_to_save', {}, 'Unable to submit reply.') }}"
+        if (replyError) {
+          replyError.textContent = errMsg
+          replyError.hidden = false
+        } else {
+          errorBox.textContent = errMsg
+          errorBox.hidden = false
+        }
+        if (submitBtn) submitBtn.disabled = false
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      const toggleBtn = e.target.closest('.toggle-reply-btn')
+      if (toggleBtn) {
+        const id = toggleBtn.dataset.reviewId
+        const form = document.getElementById(`reply-form-${id}`)
+        if (form) {
+          form.hidden = !form.hidden
+          toggleBtn.hidden = !form.hidden
+          if (!form.hidden) form.querySelector('textarea')?.focus()
+        }
+        return
+      }
+
+      const cancelBtn = e.target.closest('.cancel-reply-btn')
+      if (cancelBtn) {
+        const id = cancelBtn.dataset.reviewId
+        const form = document.getElementById(`reply-form-${id}`)
+        const toggle = document.querySelector(`.toggle-reply-btn[data-review-id="${id}"]`)
+        if (form) form.hidden = true
+        if (toggle) toggle.hidden = false
+      }
+    })
+
+    document.addEventListener('submit', (e) => {
+      const form = e.target.closest('.review-reply-form')
+      if (form) {
+        e.preventDefault()
+        e.stopPropagation()
+        const id = form.dataset.reviewId
+        window.handleReplySubmit(e, id)
+      }
+    })
 
     loadDashboard()
   </script>

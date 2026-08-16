@@ -6,6 +6,8 @@ import {
 import { catalogPricesValidator } from '#validators/catalog_filters'
 import type { HttpContext } from '@adonisjs/core/http'
 
+import SubService from '#models/sub_service'
+
 export default class ServicePriceCatalogsController {
   async index({ request, response }: HttpContext) {
     const filters = await request.validateUsing(catalogPricesValidator)
@@ -59,6 +61,13 @@ export default class ServicePriceCatalogsController {
 
     const payload = await request.validateUsing(createServicePriceCatalogValidator)
 
+    const subService = await SubService.findOrFail(payload.subServiceId)
+    if (user.role === 'craftsman' && subService.categoryId !== user.craftsman.categoryId) {
+      return response.forbidden({
+        message: 'You can only create price listings for services under your registered category.',
+      })
+    }
+
     try {
       const servicePriceCatalog = await ServicePriceCatalog.create({
         craftsmanId: user.id,
@@ -110,10 +119,20 @@ export default class ServicePriceCatalogsController {
 
     const payload = await request.validateUsing(updateServicePriceCatalogValidator)
 
+    if (payload.subServiceId !== undefined) {
+      const subService = await SubService.findOrFail(payload.subServiceId)
+      await user.load('craftsman')
+      if (user.role === 'craftsman' && user.craftsman && subService.categoryId !== user.craftsman.categoryId) {
+        return response.forbidden({
+          message: 'You can only assign sub-services under your registered category.',
+        })
+      }
+      servicePriceCatalog.subServiceId = payload.subServiceId
+    }
+
     if (payload.minPrice !== undefined) servicePriceCatalog.minPrice = payload.minPrice
     if (payload.maxPrice !== undefined) servicePriceCatalog.maxPrice = payload.maxPrice
     if (payload.currency !== undefined) servicePriceCatalog.currency = payload.currency
-    if (payload.subServiceId !== undefined) servicePriceCatalog.subServiceId = payload.subServiceId
     if (payload.regionId !== undefined) servicePriceCatalog.regionId = payload.regionId
     if (payload.isActive !== undefined) servicePriceCatalog.isActive = payload.isActive
 

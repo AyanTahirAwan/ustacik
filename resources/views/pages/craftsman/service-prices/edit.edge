@@ -2,18 +2,53 @@
   <section class="service-price-page" data-price-id="{{ priceId }}" id="service-price-edit">
     <div class="service-price-toolbar"><a class="btn-back" href="/craftsman/service-prices">{{ t('craftsman.back_to_prices', {}, 'Back to My Service Prices') }}</a></div>
     <div id="service-price-form-error" class="dashboard-message dashboard-message-error" hidden></div>
+    <div id="service-price-form-success" class="dashboard-message" style="background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;" hidden></div>
     <div id="service-price-form-loading" class="dashboard-message">{{ t('btn.loading', {}, 'Loading service price...') }}</div>
     <div id="service-price-form-card" class="dashboard-panel service-price-form-card" hidden>
       @form({ method: 'POST', action: '/api/craftsman/service-prices', id: 'service-price-form' })
         <div class="service-price-form-grid">
-          <label>{{ t('search.category', {}, 'Category') }}<select id="price-category" class="form-control" required></select></label>
-          <label>{{ t('search.service', {}, 'Service') }}<select id="price-sub-service" name="subServiceId" class="form-control" required></select></label>
+          <div>
+            <label>{{ t('search.category', {}, 'Category / Profession') }}</label>
+            <input id="price-category-display" class="form-control" type="text" readonly style="background-color: var(--gray-2, #f3f4f6); cursor: not-allowed; font-weight: 600;" />
+            <input type="hidden" id="price-category-id" name="categoryId" value="" />
+            <small class="dashboard-muted" style="display: block; margin-top: 4px;">{{ t('craftsman.category_locked_note', {}, 'Your profession is locked to your registered category.') }}</small>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label style="margin-bottom: 0;">{{ t('search.service', {}, 'Service') }}</label>
+              <button id="toggle-custom-service-btn" type="button" class="action-link" style="background: none; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--brand-rust, #c85a32);">
+                + {{ t('craftsman.add_custom_sub_service', {}, 'Add Custom Sub-Service') }}
+              </button>
+            </div>
+            <select id="price-sub-service" name="subServiceId" class="form-control" required></select>
+          </div>
+
           <label>{{ t('search.region', {}, 'Region') }}<select id="price-region" name="regionId" class="form-control" required></select></label>
           <label>{{ t('craftsman.currency', {}, 'Currency') }}<select id="price-currency" name="currency" class="form-control" required><option value="TRY">TRY</option><option value="GBP">GBP</option><option value="EUR">EUR</option><option value="USD">USD</option></select></label>
           <label>{{ t('search.min_price', {}, 'Minimum Price') }}<input id="price-min" name="minPrice" class="form-control" type="number" min="0" step="0.01" required /></label>
           <label>{{ t('search.max_price', {}, 'Maximum Price') }}<input id="price-max" name="maxPrice" class="form-control" type="number" min="0" step="0.01" required /></label>
         </div>
-        <label class="service-price-checkbox"><input id="price-active" name="isActive" type="checkbox" value="true" /> {{ t('craftsman.active_listing', {}, 'Active listing') }}</label>
+
+        <!-- Inline Custom Sub-Service Creator -->
+        <div id="custom-service-card" style="margin-top: 16px; padding: 16px; background-color: #f8fafc; border: 1px dashed var(--brand-rust, #c85a32); border-radius: 8px;" hidden>
+          <h4 style="margin-top: 0; margin-bottom: 8px; color: #1e293b; font-size: 0.95rem;">{{ t('craftsman.add_custom_sub_service', {}, 'Add Custom Sub-Service') }}</h4>
+          <p class="dashboard-muted" style="margin-top: 0; margin-bottom: 12px; font-size: 0.85rem;">{{ t('craftsman.custom_sub_service_desc', {}, 'Create a new sub-service for your category.') }}</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+            <label style="font-size: 0.85rem;">{{ t('admin.service_name_en', {}, 'Sub-Service Name (English)') }}
+              <input id="custom-service-name-en" class="form-control" type="text" placeholder="e.g. Custom Fixture Repair" />
+            </label>
+            <label style="font-size: 0.85rem;">{{ t('admin.service_name_tr', {}, 'Sub-Service Name (Turkish)') }}
+              <input id="custom-service-name-tr" class="form-control" type="text" placeholder="örn. Özel Tesisat Onarımı" />
+            </label>
+          </div>
+          <div style="display: flex; gap: 8px; justify-content: flex-end;">
+            <button id="cancel-custom-service-btn" type="button" class="btn-back" style="padding: 6px 12px; font-size: 0.85rem;">{{ t('btn.cancel', {}, 'Cancel') }}</button>
+            <button id="save-custom-service-btn" type="button" class="btn-primary" style="padding: 6px 14px; font-size: 0.85rem;">{{ t('craftsman.create_sub_service_btn', {}, 'Create Sub-Service') }}</button>
+          </div>
+        </div>
+
+        <label class="service-price-checkbox" style="margin-top: 16px;"><input id="price-active" name="isActive" type="checkbox" value="true" /> {{ t('craftsman.active_listing', {}, 'Active listing') }}</label>
         <div class="service-price-actions"><button id="delete-service-price" class="service-price-delete" type="button">{{ t('craftsman.delete', {}, 'Delete') }}</button><a class="btn-back" href="/craftsman/service-prices">{{ t('btn.cancel', {}, 'Cancel') }}</a><button class="btn-primary" type="submit">{{ t('btn.save', {}, 'Save Changes') }}</button></div>
       @end
     </div>
@@ -23,45 +58,63 @@
       const root = document.getElementById('service-price-edit')
       const priceId = root.dataset.priceId
       const form = document.getElementById('service-price-form')
-      const category = document.getElementById('price-category')
+      const categoryDisplay = document.getElementById('price-category-display')
+      const categoryIdInput = document.getElementById('price-category-id')
       const service = document.getElementById('price-sub-service')
       const region = document.getElementById('price-region')
       const errorBox = document.getElementById('service-price-form-error')
+      const successBox = document.getElementById('service-price-form-success')
+      const customCard = document.getElementById('custom-service-card')
+      const toggleCustomBtn = document.getElementById('toggle-custom-service-btn')
+      const cancelCustomBtn = document.getElementById('cancel-custom-service-btn')
+      const saveCustomBtn = document.getElementById('save-custom-service-btn')
+      const customNameEn = document.getElementById('custom-service-name-en')
+      const customNameTr = document.getElementById('custom-service-name-tr')
       const csrf = form.querySelector('input[name="_csrf"]').value
       const option = (value, label) => new Option(label, value)
 
+      let currentCategoryId = null
+
       const loadServices = async (selected = '') => {
+        if (!currentCategoryId) return
         service.replaceChildren(option('', "{{ t('btn.loading', {}, 'Loading services...') }}"))
         service.disabled = true
-        const response = await fetch(`/api/catalog/categories/${category.value}/sub-services`, { headers: { Accept: 'application/json' } })
+        const response = await fetch(`/api/catalog/categories/${currentCategoryId}/sub-services`, { headers: { Accept: 'application/json' } })
         const data = await response.json().catch(() => ({}))
         if (!response.ok) throw new Error(data.message || "{{ t('dashboard.unable_to_load', {}, 'Unable to load services.') }}")
         service.replaceChildren(option('', "{{ t('search.choose_service', {}, 'Choose a service') }}"))
-        data.data.forEach((item) => service.append(option(item.id, window.APP_LOCALE === 'tr' ? item.nameTr : item.nameEn)))
-        service.value = String(selected)
+        data.data.forEach((item) => service.append(option(item.id, window.APP_LOCALE === 'tr' ? (item.nameTr || item.nameEn) : (item.nameEn || item.nameTr))))
+        if (selected) {
+          service.value = String(selected)
+        }
         service.disabled = false
       }
 
       const loadForm = async () => {
         try {
-          const [priceResponse, categoriesResponse, regionsResponse] = await Promise.all([
+          const [priceResponse, regionsResponse] = await Promise.all([
             fetch(`/api/craftsman/service-prices/${priceId}`, { headers: { Accept: 'application/json' }, credentials: 'same-origin' }),
-            fetch('/api/catalog/categories', { headers: { Accept: 'application/json' } }),
             fetch('/api/catalog/regions', { headers: { Accept: 'application/json' } }),
           ])
           const priceData = await priceResponse.json().catch(() => ({}))
-          const categories = await categoriesResponse.json()
           const regions = await regionsResponse.json()
           if (!priceResponse.ok) throw new Error(priceData.message || "{{ t('dashboard.unable_to_load', {}, 'Unable to load this service price.') }}")
-          if (!categoriesResponse.ok || !regionsResponse.ok) throw new Error("{{ t('dashboard.unable_to_load', {}, 'Unable to load form options.') }}")
+          if (!regionsResponse.ok) throw new Error("{{ t('dashboard.unable_to_load', {}, 'Unable to load regions.') }}")
+          
           const price = priceData.servicePriceCatalog
-          category.replaceChildren(option('', "{{ t('search.choose_category', {}, 'Choose a category') }}"))
-          categories.data.forEach((item) => category.append(option(item.id, window.APP_LOCALE === 'tr' ? item.nameTr : item.nameEn)))
-          category.value = String(price.subService.categoryId)
+          currentCategoryId = price.subService.categoryId
+          categoryIdInput.value = currentCategoryId
+
+          const catName = window.APP_LOCALE === 'tr'
+            ? (price.craftsman?.category?.nameTr || price.craftsman?.category?.nameEn || price.subService?.category?.nameTr || 'Kategori')
+            : (price.craftsman?.category?.nameEn || price.craftsman?.category?.nameTr || price.subService?.category?.nameEn || 'Category')
+          categoryDisplay.value = catName
+
           region.replaceChildren(option('', "{{ t('search.choose_region', {}, 'Choose a region') }}"))
-          regions.data.forEach((item) => region.append(option(item.id, window.APP_LOCALE === 'tr' ? item.nameTr : item.nameEn)))
+          regions.data.forEach((item) => region.append(option(item.id, window.APP_LOCALE === 'tr' ? (item.nameTr || item.nameEn) : (item.nameEn || item.nameTr))))
           region.value = String(price.regionId)
           await loadServices(price.subServiceId)
+
           document.getElementById('price-currency').value = price.currency
           document.getElementById('price-min').value = price.minPrice
           document.getElementById('price-max').value = price.maxPrice
@@ -75,10 +128,63 @@
         }
       }
 
-      category.addEventListener('change', () => loadServices().catch((failure) => {
-        errorBox.textContent = failure.message
-        errorBox.hidden = false
-      }))
+      toggleCustomBtn.addEventListener('click', () => {
+        customCard.hidden = !customCard.hidden
+        if (!customCard.hidden) customNameEn.focus()
+      })
+
+      cancelCustomBtn.addEventListener('click', () => {
+        customCard.hidden = true
+        customNameEn.value = ''
+        customNameTr.value = ''
+      })
+
+      saveCustomBtn.addEventListener('click', async () => {
+        errorBox.hidden = true
+        successBox.hidden = true
+        const nameEn = customNameEn.value.trim()
+        const nameTr = customNameTr.value.trim() || nameEn
+        if (!nameEn) {
+          errorBox.textContent = window.APP_LOCALE === 'tr' ? 'Lütfen alt hizmet adını girin.' : 'Please enter a sub-service name.'
+          errorBox.hidden = false
+          return
+        }
+
+        saveCustomBtn.disabled = true
+        try {
+          const response = await fetch('/api/craftsman/sub-services', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'x-csrf-token': csrf,
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              nameEn,
+              nameTr,
+              categoryId: currentCategoryId,
+            }),
+          })
+          const payload = await response.json().catch(() => ({}))
+          if (!response.ok || !payload.subService) {
+            throw new Error(payload.errors?.[0]?.message || payload.message || "{{ t('dashboard.unable_to_save', {}, 'Unable to create sub-service.') }}")
+          }
+
+          await loadServices(payload.subService.id)
+          customCard.hidden = true
+          customNameEn.value = ''
+          customNameTr.value = ''
+          successBox.textContent = "{{ t('craftsman.sub_service_created', {}, 'Custom sub-service added successfully.') }}"
+          successBox.hidden = false
+        } catch (err) {
+          errorBox.textContent = err.message || "{{ t('dashboard.unable_to_save', {}, 'Unable to create sub-service.') }}"
+          errorBox.hidden = false
+        } finally {
+          saveCustomBtn.disabled = false
+        }
+      })
+
       form.addEventListener('submit', async (event) => {
         event.preventDefault()
         errorBox.hidden = true
@@ -97,6 +203,7 @@
           submit.disabled = false
         }
       })
+
       document.getElementById('delete-service-price').addEventListener('click', async () => {
         if (!window.confirm("{{ t('dashboard.confirm_delete', {}, 'Delete this service price?') }}")) return
         const response = await fetch(`/api/craftsman/service-prices/${priceId}`, { method: 'DELETE', headers: { Accept: 'application/json', 'x-csrf-token': csrf }, credentials: 'same-origin' })
@@ -105,6 +212,7 @@
         errorBox.textContent = data.message || "{{ t('dashboard.unable_to_delete', {}, 'Unable to delete service price.') }}"
         errorBox.hidden = false
       })
+
       loadForm()
   </script>
 @end

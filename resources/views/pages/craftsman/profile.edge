@@ -23,12 +23,15 @@
             <input id="craftsman-business-name" name="businessName" class="form-control craftsman-profile-control" type="text" minlength="2" maxlength="160" required disabled />
           </label>
 
-          <label for="craftsman-category">
-            {{ t('craftsman.category', {}, 'Category') }}
-            <select id="craftsman-category" name="categoryId" class="form-control craftsman-profile-control" required disabled>
-              <option value="">{{ t('btn.loading', {}, 'Loading categories...') }}</option>
-            </select>
-          </label>
+          <div>
+            <label for="craftsman-category-display">
+              {{ t('craftsman.category', {}, 'Profession / Category') }}
+            </label>
+            <input id="craftsman-category-display" class="form-control" type="text" readonly style="background-color: var(--gray-2, #f3f4f6); cursor: not-allowed; font-weight: 600;" />
+            <small class="dashboard-muted" style="display: block; margin-top: 4px;">
+              {{ t('craftsman.category_locked_note', {}, 'Your profession is locked to your registered category.') }}
+            </small>
+          </div>
 
           <label for="craftsman-registration-number">
             {{ t('craftsman.biz_reg_no', {}, 'Business Registration Number') }}

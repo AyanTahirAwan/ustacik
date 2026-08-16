@@ -182,18 +182,48 @@ main {
   padding: 10px 16px;
 }
 
-/* Hero Ad Banner (from prototype) */
+/* Hero Ad Banner */
 .hero-ad-banner {
-  background-color: var(--bg-white);
-  border: 2px dashed var(--brand-brown);
-  border-radius: 12px;
-  padding: 50px;
-  text-align: center;
+  position: relative;
+  background-image: url('/images/hero-banner.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  overflow: hidden;
   margin-bottom: 40px;
+  box-shadow: 0 12px 32px rgba(138, 82, 57, 0.16);
+  border: 1px solid rgba(138, 82, 57, 0.2);
 }
+
+.hero-ad-overlay {
+  background: linear-gradient(135deg, rgba(26, 16, 11, 0.78) 0%, rgba(48, 25, 14, 0.68) 50%, rgba(20, 15, 10, 0.82) 100%);
+  padding: 60px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-ad-content {
+  max-width: 780px;
+}
+
 .hero-ad-banner h2 {
-  font-size: 2.2rem;
-  margin-bottom: 10px;
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  letter-spacing: -0.02em;
+}
+
+.hero-ad-banner p {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  margin: 0 auto;
 }
 
 /* Cards grid (existing element style) */

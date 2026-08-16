@@ -14,13 +14,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const csrf = form.querySelector('input[name="_csrf"]')?.value
 
   const businessName = document.getElementById('craftsman-business-name')
-  const category = document.getElementById('craftsman-category')
+  const categoryDisplay = document.getElementById('craftsman-category-display')
   const registrationNumber = document.getElementById('craftsman-registration-number')
   const bio = document.getElementById('craftsman-bio')
   const saveButton = document.getElementById('craftsman-profile-save')
   const resetButton = document.getElementById('craftsman-profile-reset')
 
-  const controls = [businessName, category, registrationNumber, bio]
+  const controls = [businessName, registrationNumber, bio]
   let savedCraftsman = null
 
   const clearMessages = () => {
@@ -42,7 +42,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const applyCraftsman = (craftsman) => {
     businessName.value = craftsman.businessName ?? ''
-    category.value = String(craftsman.categoryId ?? craftsman.category?.id ?? '')
+    const categoryName = isTr
+      ? (craftsman.category?.nameTr || craftsman.category?.nameEn)
+      : (craftsman.category?.nameEn || craftsman.category?.nameTr)
+    if (categoryDisplay) {
+      categoryDisplay.value = categoryName || tr('Category not set', 'Kategori belirtilmemiş')
+    }
     registrationNumber.value = craftsman.bizRegNo ?? ''
     bio.value = craftsman.bio ?? ''
   }
@@ -70,19 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   try {
-    const [craftsman, categoriesResponse] = await Promise.all([
-      fetchProfile(),
-      fetch('/api/catalog/categories', { headers: { Accept: 'application/json' } }),
-    ])
-
-    const categoriesPayload = await categoriesResponse.json().catch(() => ({}))
-    if (!categoriesResponse.ok || !Array.isArray(categoriesPayload.data)) {
-      throw new Error(tr('Unable to load categories.', 'Kategoriler yüklenemedi.'))
-    }
-
-    category.replaceChildren(new Option(tr('Choose a category', 'Kategori seçin'), ''))
-    categoriesPayload.data.forEach((item) => category.append(new Option(isTr ? item.nameTr : item.nameEn, item.id)))
-
+    const craftsman = await fetchProfile()
     savedCraftsman = craftsman
     applyCraftsman(savedCraftsman)
     setBusy(false)
@@ -117,8 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         credentials: 'same-origin',
         body: JSON.stringify({
-          businessName: businessName.value,
-          categoryId: Number(category.value),
+          businessName: businessName.value.trim(),
           bio: bio.value.trim() ? bio.value : null,
           bizRegNo: registrationNumber.value.trim() ? registrationNumber.value : null,
         }),

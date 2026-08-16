@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60" fill="none">
+  <!-- Brand Icon Badge -->
+  <g transform="translate(4, 6)">
+    <!-- Rounded Background Icon Shield -->
+    <rect width="48" height="48" rx="12" fill="url(#brandGrad)" />
+    <!-- Craftsman Tool / House Emblem -->
+    <path d="M24 12L36 22V36H12V22L24 12Z" fill="#FFFFFF" fill-opacity="0.95" />
+    <path d="M20 25H28V36H20V25Z" fill="#8A5239" />
+    <circle cx="24" cy="18" r="2.5" fill="#C85A32" />
+  </g>
+
+  <!-- Typography: ustaçık -->
+  <text x="62" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="800" fill="#1E293B" letter-spacing="-0.03em">
+    usta<tspan fill="#C85A32">çık</tspan>
+  </text>
+  <text x="184" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" fill="#8A5239" letter-spacing="0.05em">KTC</text>
+
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="brandGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C85A32" />
+      <stop offset="1" stop-color="#8A5239" />
+    </linearGradient>
+  </defs>
+</svg>

@@ -66,11 +66,13 @@
 @elseif(auth.user && auth.user.role === 'admin')
   <aside class="dashboard-sidebar">
     <nav class="dashboard-nav" aria-label="Admin workspace">
-      <p class="nav-group-label">{{ t('admin.admin') }}</p>
-      <a href="/admin">{{ t('admin.dashboard') }}</a>
-      <a href="/admin/categories">{{ t('admin.categories') }}</a>
-      <a href="/admin/regions">{{ t('admin.regions') }}</a>
-      <a href="/admin/sub-services">{{ t('admin.sub_services') }}</a>
+      <p class="nav-group-label">{{ t('admin.admin', {}, 'Admin') }}</p>
+      <a href="/admin" class="{{ currentPath === '/admin' ? 'current' : '' }}">{{ t('admin.dashboard', {}, 'Dashboard') }}</a>
+      <a href="/admin/verifications" class="{{ currentPath.startsWith('/admin/verifications') ? 'current' : '' }}">{{ t('admin.id_verifications', {}, 'ID Verifications') }}</a>
+      <a href="/admin/users" class="{{ currentPath.startsWith('/admin/users') ? 'current' : '' }}">{{ t('admin.user_management', {}, 'Users') }}</a>
+      <a href="/admin/categories" class="{{ currentPath.startsWith('/admin/categories') ? 'current' : '' }}">{{ t('admin.categories', {}, 'Categories') }}</a>
+      <a href="/admin/regions" class="{{ currentPath.startsWith('/admin/regions') ? 'current' : '' }}">{{ t('admin.regions', {}, 'Regions') }}</a>
+      <a href="/admin/sub-services" class="{{ currentPath.startsWith('/admin/sub-services') ? 'current' : '' }}">{{ t('admin.sub_services', {}, 'Sub Services') }}</a>
     </nav>
   </aside>
 @end

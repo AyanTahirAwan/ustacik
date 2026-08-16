@@ -16,8 +16,17 @@ export default class SubServicesController {
     return response.ok({ subServices })
   }
 
-  async store({ request, response }: HttpContext) {
-    const { nameEn, nameTr, categoryId } = await request.validateUsing(createSubServiceValidator)
+  async store({ auth, request, response }: HttpContext) {
+    let { nameEn, nameTr, categoryId } = await request.validateUsing(createSubServiceValidator)
+    const user = auth.user
+
+    if (user && user.role === 'craftsman') {
+      await user.load('craftsman')
+      if (!user.craftsman) {
+        return response.forbidden({ message: 'Craftsman profile required.' })
+      }
+      categoryId = user.craftsman.categoryId
+    }
 
     try {
       const subService = await SubService.create({ nameEn, nameTr, categoryId })

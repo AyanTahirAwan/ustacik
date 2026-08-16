@@ -7,7 +7,7 @@
       </div>
 
       <div>
-        @form({ route: 'new_account.store', method: 'POST' })
+        @form({ route: 'new_account.store', method: 'POST', enctype: 'multipart/form-data' })
           <div class="auth-field">
             @field.root({ name: 'fullName' })
               @!field.label({ text: t('auth.full_name', {}, 'Full name') })
@@ -73,6 +73,24 @@
                 })
                 @!field.error()
               @end
+            </div>
+
+            <div class="auth-field">
+              @field.root({ name: 'idPhoto' })
+                @!field.label({ text: t('auth.id_photo', {}, 'ID Card / License Photo') })
+                <input
+                  type="file"
+                  name="idPhoto"
+                  id="signup-id-photo"
+                  class="form-control"
+                  accept="image/jpeg,image/png,image/webp"
+                  style="padding: 8px 12px; height: auto;"
+                />
+                @!field.error()
+              @end
+              <p class="signup-help">
+                {{ t('auth.id_photo_help', {}, 'Please upload a photo of your ID card or work certificate for verification.') }}
+              </p>
             </div>
           </div>
 

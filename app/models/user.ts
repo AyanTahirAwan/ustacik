@@ -32,7 +32,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare role: 'customer' | 'craftsman' | 'admin'
 
   @column()
-  declare status: 'active' | 'suspended'
+  declare status: 'active' | 'suspended' | 'pending'
 
   @column.dateTime()
   declare emailVerifiedAt: DateTime | null

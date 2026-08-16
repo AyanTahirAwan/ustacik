@@ -1,20 +1,55 @@
-@dashboard_layout({ title: 'Manage Sub Services' })
-  <div class="page-actions">
-    <a class="button" href="/admin/sub-services/create">+ Create Sub Service</a>
+@adminUserLayout({ title: t('admin.sub_services_management', {}, 'Sub-Services Management'), active: 'sub-services' })
+  <div id="admin-sub-services-page" class="admin-dashboard">
+    <section class="admin-dashboard-heading" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <p class="admin-eyebrow">{{ t('admin.kicker', {}, 'Platform Administration') }}</p>
+        <h1>{{ t('admin.sub_services_management', {}, 'Sub-Services Management') }}</h1>
+        <p class="admin-heading-copy">
+          {{ t('admin.sub_services_sub', {}, 'Manage specific services listed under each category.') }}
+        </p>
+      </div>
+      <a href="/admin/sub-services/create" class="btn-primary" style="background-color: var(--brand-rust, #c85a32); color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+        + {{ t('admin.add_sub_service', {}, 'Add New Sub-Service') }}
+      </a>
+    </section>
+
+    <div id="subservices-error" class="alert alert-destructive admin-users-message" hidden>
+      <p id="subservices-error-message"></p>
+    </div>
+
+    <div id="subservices-success" class="alert alert-success admin-users-message" hidden>
+      <p id="subservices-success-message"></p>
+    </div>
+
+    <section id="subservices-loading" class="admin-state-card" aria-live="polite">
+      <span class="admin-loading-spinner" aria-hidden="true"></span>
+      <div>
+        <h2>{{ t('btn.loading', {}, 'Loading sub-services…') }}</h2>
+      </div>
+    </section>
+
+    <div id="subservices-content" hidden>
+      <section class="admin-panel">
+        <div id="subservices-table-container" class="admin-table-container">
+          <table class="admin-craftsmen-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">{{ t('craftsman.category', {}, 'Category') }}</th>
+                <th scope="col">{{ t('admin.service_name_en', {}, 'Sub-Service (English)') }}</th>
+                <th scope="col">{{ t('admin.service_name_tr', {}, 'Sub-Service (Turkish)') }}</th>
+                <th scope="col" style="text-align: right;">{{ t('admin.account_actions', {}, 'Actions') }}</th>
+              </tr>
+            </thead>
+            <tbody id="subservices-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </div>
 
-  <div class="page-placeholder">
-    <h2>Sub Services Management — Placeholder</h2>
-    {{--
-      TODO: API integration
-      List sub-services (optional categoryId filter) via:
-        GET /api/admin/sub-services?categoryId=
-      Expected response: { subServices: [{ id, categoryId, nameEn, nameTr, createdAt }] }
-      Actions per row:
-        - Edit   -> /admin/sub-services/:id/edit
-        - Delete -> DELETE /api/admin/sub-services/:id (409 on FK restriction)
-    --}}
-    <p>Sub services management table will go here.</p>
-  </div>
+  @form({ action: '/api/admin/sub-services/0', method: 'DELETE', id: 'subservices-csrf-form', style: 'display:none;' })
+  @end
+
+  @vite(['resources/js/admin-sub-services.js'])
 @end
-

@@ -63,10 +63,10 @@ export default class JobRequest extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 
-  @belongsTo(() => Customer, { foreignKey: 'customerId' })
+  @belongsTo(() => Customer, { foreignKey: 'customerId', localKey: 'userId' })
   declare customer: BelongsTo<typeof Customer>
 
-  @belongsTo(() => Craftsman, { foreignKey: 'craftsmanId' })
+  @belongsTo(() => Craftsman, { foreignKey: 'craftsmanId', localKey: 'userId' })
   declare craftsman: BelongsTo<typeof Craftsman>
 
   @belongsTo(() => Category)
@@ -109,18 +109,29 @@ export default class JobRequest extends BaseModel {
     return ALLOWED_TRANSITIONS[this.status].includes(next)
   }
 
-  async transitionTo(next: JobStatus) {
+  async transitionTo(next: JobStatus, trx?: TransactionClientContract) {
     if (!this.canTransitionTo(next)) {
       throw new Error(`Cannot move job ${this.id} from ${this.status} to ${next}`)
     }
     this.status = next
+    if (trx) {
+      this.useTransaction(trx)
+    }
     await this.save()
 
     if (next === 'completed') {
-      // Use direct lookup to keep typings accurate
-      const craftsman = await Craftsman.findOrFail(this.craftsmanId)
-      craftsman.totalJobs = (craftsman.totalJobs ?? 0) + 1
-      await craftsman.save()
+      const craftsmanQuery = Craftsman.query()
+      if (trx) {
+        craftsmanQuery.useTransaction(trx)
+      }
+      const craftsman = await craftsmanQuery.where('user_id', this.craftsmanId).first()
+      if (craftsman) {
+        craftsman.totalJobs = (craftsman.totalJobs ?? 0) + 1
+        if (trx) {
+          craftsman.useTransaction(trx)
+        }
+        await craftsman.save()
+      }
     }
 
     return this

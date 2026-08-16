@@ -1,20 +1,141 @@
-@dashboard_layout({ title: 'Edit Sub Service' })
-  <div class="page-placeholder">
-    <h2>Edit Sub Service #{{ subServiceId }} — Placeholder</h2>
-    {{--
-      TODO: API integration
-      Update a sub-service via:
-        PATCH /api/admin/sub-services/:id
-      The route param :id is available as {{ subServiceId }}.
-      Load the record first with:
-        GET /api/admin/sub-services/:id
-      Optional update fields:
-        categoryId (number) — must exist in categories
-        nameEn     (string) — trimmed, min 2, max 120 chars
-        nameTr     (string) — trimmed, min 2, max 120 chars
-      Also available: DELETE /api/admin/sub-services/:id (409 on FK restriction)
-    --}}
-    <p>The edit sub-service form will go here.</p>
-  </div>
-@end
+@adminUserLayout({ title: t('admin.edit_sub_service', {}, 'Edit Sub-Service'), active: 'sub-services' })
+  <div id="admin-subservice-edit-page" class="admin-dashboard" style="max-width: 680px; margin: 0 auto;" data-subservice-id="{{ subServiceId }}">
+    <section class="admin-dashboard-heading" style="margin-bottom: 24px;">
+      <div>
+        <p class="admin-eyebrow">{{ t('admin.sub_services_management', {}, 'Sub-Services Management') }}</p>
+        <h1>{{ t('admin.edit_sub_service', {}, 'Edit Sub-Service') }} #{{ subServiceId }}</h1>
+      </div>
+      <a href="/admin/sub-services" class="btn-back">{{ t('btn.back', {}, '← Back to Sub-Services') }}</a>
+    </section>
 
+    <div id="subservice-form-error" class="alert alert-destructive admin-users-message" hidden>
+      <p id="subservice-form-error-message"></p>
+    </div>
+
+    <section id="subservice-loading" class="admin-state-card" aria-live="polite">
+      <span class="admin-loading-spinner" aria-hidden="true"></span>
+      <div>
+        <h2>{{ t('btn.loading', {}, 'Loading sub-service…') }}</h2>
+      </div>
+    </section>
+
+    <section id="subservice-panel" class="admin-panel" style="padding: 32px;" hidden>
+      @form({ action: '/api/admin/sub-services/' + subServiceId, method: 'POST', id: 'edit-subservice-form' })
+        <div class="auth-field" style="margin-bottom: 20px;">
+          <label for="categoryId" style="display: block; font-weight: 700; margin-bottom: 8px;">
+            {{ t('craftsman.category', {}, 'Parent Category') }} *
+          </label>
+          <select name="categoryId" id="categoryId" class="form-control" required style="width: 100%;">
+            <option value="">{{ t('search.choose_category', {}, 'Choose a category') }}</option>
+          </select>
+        </div>
+
+        <div class="auth-field" style="margin-bottom: 20px;">
+          <label for="nameEn" style="display: block; font-weight: 700; margin-bottom: 8px;">
+            {{ t('admin.service_name_en', {}, 'Sub-Service Name (English)') }} *
+          </label>
+          <input type="text" name="nameEn" id="nameEn" class="form-control" required minlength="2" maxlength="120" style="width: 100%;" />
+        </div>
+
+        <div class="auth-field" style="margin-bottom: 24px;">
+          <label for="nameTr" style="display: block; font-weight: 700; margin-bottom: 8px;">
+            {{ t('admin.service_name_tr', {}, 'Sub-Service Name (Turkish)') }} *
+          </label>
+          <input type="text" name="nameTr" id="nameTr" class="form-control" required minlength="2" maxlength="120" style="width: 100%;" />
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <a href="/admin/sub-services" class="btn-back">{{ t('btn.cancel', {}, 'Cancel') }}</a>
+          <button type="submit" class="btn-primary" style="background-color: var(--brand-rust, #c85a32); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 700; cursor: pointer;">
+            {{ t('btn.save', {}, 'Save Changes') }}
+          </button>
+        </div>
+      @end
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const page = document.getElementById('admin-subservice-edit-page')
+      const subServiceId = page.dataset.subserviceId
+      const loading = document.getElementById('subservice-loading')
+      const panel = document.getElementById('subservice-panel')
+      const form = document.getElementById('edit-subservice-form')
+      const categorySelect = document.getElementById('categoryId')
+      const nameEnInput = document.getElementById('nameEn')
+      const nameTrInput = document.getElementById('nameTr')
+      const errorBox = document.getElementById('subservice-form-error')
+      const errorMessage = document.getElementById('subservice-form-error-message')
+      const csrf = form.querySelector('input[name="_csrf"]')?.value || ''
+
+      try {
+        const [catRes, serviceRes] = await Promise.all([
+          fetch('/api/admin/categories', { headers: { Accept: 'application/json' } }),
+          fetch(`/api/admin/sub-services/${subServiceId}`, { headers: { Accept: 'application/json' } }),
+        ])
+
+        const catData = await catRes.json().catch(() => ({}))
+        const serviceData = await serviceRes.json().catch(() => ({}))
+
+        if (!serviceRes.ok || !serviceData.subService) {
+          throw new Error(serviceData.message || 'Failed to load sub-service')
+        }
+
+        const service = serviceData.subService
+        if (catRes.ok && Array.isArray(catData.categories)) {
+          catData.categories.forEach((cat) => {
+            const opt = document.createElement('option')
+            opt.value = cat.id
+            opt.textContent = window.APP_LOCALE === 'tr' ? cat.nameTr : cat.nameEn
+            if (cat.id === service.categoryId) opt.selected = true
+            categorySelect.appendChild(opt)
+          })
+        }
+
+        nameEnInput.value = service.nameEn || ''
+        nameTrInput.value = service.nameTr || ''
+        loading.hidden = true
+        panel.hidden = false
+      } catch (err) {
+        loading.hidden = true
+        errorMessage.textContent = err.message
+        errorBox.hidden = false
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        errorBox.hidden = true
+        const submitBtn = form.querySelector('button[type="submit"]')
+        submitBtn.disabled = true
+
+        const categoryId = Number(categorySelect.value)
+        const nameEn = nameEnInput.value.trim()
+        const nameTr = nameTrInput.value.trim()
+
+        try {
+          const res = await fetch(`/api/admin/sub-services/${subServiceId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'x-csrf-token': csrf,
+            },
+            body: JSON.stringify({ categoryId, nameEn, nameTr }),
+            credentials: 'same-origin',
+          })
+
+          const data = await res.json().catch(() => ({}))
+          if (!res.ok) {
+            throw new Error(data.errors?.[0]?.message || data.message || 'Failed to update sub-service')
+          }
+
+          window.location.assign('/admin/sub-services')
+        } catch (err) {
+          errorMessage.textContent = err.message
+          errorBox.hidden = false
+          submitBtn.disabled = false
+        }
+      })
+    })
+  </script>
+@end

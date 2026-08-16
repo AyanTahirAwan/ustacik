@@ -7,7 +7,7 @@ export default class VerificationLogsController {
     const user = auth.getUserOrFail()
 
     const logs = await VerificationLog.query()
-      .where('craftsman_id', user.id)
+      .where('target_user_id', user.id)
       .orderBy('verified_at', 'desc')
 
     return response.ok({ logs })
@@ -15,7 +15,7 @@ export default class VerificationLogsController {
 
   async forCraftsman({ params, response }: HttpContext) {
     const logs = await VerificationLog.query()
-      .where('craftsman_id', params.craftsmanId)
+      .where('target_user_id', params.craftsmanId)
       .preload('checkedBy')
       .orderBy('verified_at', 'desc')
 

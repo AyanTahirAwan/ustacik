@@ -18,6 +18,7 @@ export const signupValidator = vine.create({
   fullName: vine.string().trim().minLength(2).maxLength(160).optional(),
   businessName: vine.string().trim().minLength(2).maxLength(160).optional(),
   categoryId: vine.number().optional(),
+  idPhoto: vine.file({ size: '5mb', extnames: ['jpg', 'jpeg', 'png', 'webp'] }).optional(),
 })
 
 export const loginValidator = vine.create({

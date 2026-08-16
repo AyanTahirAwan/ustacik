@@ -1,18 +1,109 @@
-@dashboard_layout({ title: 'Create Sub Service' })
-  <div class="page-placeholder">
-    <h2>Create Sub Service — Placeholder</h2>
-    {{--
-      TODO: API integration
-      Create a sub-service via:
-        POST /api/admin/sub-services
-      Request body:
-        categoryId (number, required) — must exist in categories
-        nameEn     (string, required) — trimmed, min 2, max 120 chars
-        nameTr     (string, required) — trimmed, min 2, max 120 chars
-      Duplicate (categoryId, nameEn) -> 409.
-      Category selector data from: GET /api/admin/categories
-    --}}
-    <p>The create sub-service form will go here.</p>
-  </div>
-@end
+@adminUserLayout({ title: t('admin.add_sub_service', {}, 'Add New Sub-Service'), active: 'sub-services' })
+  <div id="admin-subservice-create-page" class="admin-dashboard" style="max-width: 680px; margin: 0 auto;">
+    <section class="admin-dashboard-heading" style="margin-bottom: 24px;">
+      <div>
+        <p class="admin-eyebrow">{{ t('admin.sub_services_management', {}, 'Sub-Services Management') }}</p>
+        <h1>{{ t('admin.add_sub_service', {}, 'Add New Sub-Service') }}</h1>
+      </div>
+      <a href="/admin/sub-services" class="btn-back">{{ t('btn.back', {}, '← Back to Sub-Services') }}</a>
+    </section>
 
+    <div id="subservice-form-error" class="alert alert-destructive admin-users-message" hidden>
+      <p id="subservice-form-error-message"></p>
+    </div>
+
+    <section class="admin-panel" style="padding: 32px;">
+      @form({ action: '/api/admin/sub-services', method: 'POST', id: 'create-subservice-form' })
+        <div class="auth-field" style="margin-bottom: 20px;">
+          <label for="categoryId" style="display: block; font-weight: 700; margin-bottom: 8px;">
+            {{ t('craftsman.category', {}, 'Parent Category') }} *
+          </label>
+          <select name="categoryId" id="categoryId" class="form-control" required style="width: 100%;">
+            <option value="">{{ t('search.choose_category', {}, 'Choose a category') }}</option>
+          </select>
+        </div>
+
+        <div class="auth-field" style="margin-bottom: 20px;">
+          <label for="nameEn" style="display: block; font-weight: 700; margin-bottom: 8px;">
+            {{ t('admin.service_name_en', {}, 'Sub-Service Name (English)') }} *
+          </label>
+          <input type="text" name="nameEn" id="nameEn" class="form-control" required minlength="2" maxlength="120" placeholder="e.g. Pipe Installation" style="width: 100%;" />
+        </div>
+
+        <div class="auth-field" style="margin-bottom: 24px;">
+          <label for="nameTr" style="display: block; font-weight: 700; margin-bottom: 8px;">
+            {{ t('admin.service_name_tr', {}, 'Sub-Service Name (Turkish)') }} *
+          </label>
+          <input type="text" name="nameTr" id="nameTr" class="form-control" required minlength="2" maxlength="120" placeholder="e.g. Boru Montajı" style="width: 100%;" />
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <a href="/admin/sub-services" class="btn-back">{{ t('btn.cancel', {}, 'Cancel') }}</a>
+          <button type="submit" class="btn-primary" style="background-color: var(--brand-rust, #c85a32); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 700; cursor: pointer;">
+            {{ t('btn.save', {}, 'Create Sub-Service') }}
+          </button>
+        </div>
+      @end
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const form = document.getElementById('create-subservice-form')
+      const categorySelect = document.getElementById('categoryId')
+      const errorBox = document.getElementById('subservice-form-error')
+      const errorMessage = document.getElementById('subservice-form-error-message')
+      const csrf = form.querySelector('input[name="_csrf"]')?.value || ''
+
+      try {
+        const catRes = await fetch('/api/admin/categories', { headers: { Accept: 'application/json' } })
+        const catData = await catRes.json().catch(() => ({}))
+        if (catRes.ok && Array.isArray(catData.categories)) {
+          catData.categories.forEach((cat) => {
+            const opt = document.createElement('option')
+            opt.value = cat.id
+            opt.textContent = window.APP_LOCALE === 'tr' ? cat.nameTr : cat.nameEn
+            categorySelect.appendChild(opt)
+          })
+        }
+      } catch (err) {
+        console.error(err)
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        errorBox.hidden = true
+        const submitBtn = form.querySelector('button[type="submit"]')
+        submitBtn.disabled = true
+
+        const categoryId = Number(categorySelect.value)
+        const nameEn = document.getElementById('nameEn').value.trim()
+        const nameTr = document.getElementById('nameTr').value.trim()
+
+        try {
+          const res = await fetch('/api/admin/sub-services', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'x-csrf-token': csrf,
+            },
+            body: JSON.stringify({ categoryId, nameEn, nameTr }),
+            credentials: 'same-origin',
+          })
+
+          const data = await res.json().catch(() => ({}))
+          if (!res.ok) {
+            throw new Error(data.errors?.[0]?.message || data.message || 'Failed to create sub-service')
+          }
+
+          window.location.assign('/admin/sub-services')
+        } catch (err) {
+          errorMessage.textContent = err.message
+          errorBox.hidden = false
+          submitBtn.disabled = false
+        }
+      })
+    })
+  </script>
+@end

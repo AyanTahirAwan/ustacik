@@ -2,13 +2,17 @@
 <header class="site-header" data-site-header>
   <div class="site-header-inner">
     <div class="brand">
-      @link({ route: 'home' })
+      @link({ route: 'home', style: 'display: inline-flex; align-items: center; gap: 10px; text-decoration: none;' })
         <img
           src="/ustacik-icon.svg"
-          alt="Ustacik home"
-          width="auto"
-          height="70"
+          alt="Ustacik"
+          width="42"
+          height="42"
+          style="height: 42px; width: 42px; display: block; object-fit: contain;"
         />
+        <span class="brand-text" style="font-size: 1.55rem; font-weight: 800; color: #1e293b; letter-spacing: -0.03em; line-height: 1;">
+          usta<span style="color: var(--brand-rust, #c85a32);">çık</span>
+        </span>
       @end
     </div>
 

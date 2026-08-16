@@ -10,32 +10,34 @@
 }
 
 .ustacik-confirmation[hidden] {
-  display: none;
+  display: none !important;
 }
 
 .ustacik-confirmation__dialog {
-  width: min(100%, 460px);
+  width: min(100%, 480px);
   max-height: calc(100dvh - 48px);
   padding: 32px;
   overflow-y: auto;
   border: 1px solid rgb(138 82 57 / 24%);
-  border-radius: 12px;
+  border-radius: 14px;
   background: var(--bg-white, #ffffff);
   box-shadow: 0 24px 64px rgb(17 17 17 / 28%);
 }
 
 .ustacik-confirmation__title {
   margin: 0;
-  color: var(--text-black, #111111);
+  color: var(--text-black, #111111) !important;
   font-family: var(--font-serif, Georgia, 'Times New Roman', serif);
   font-size: 1.65rem;
   line-height: 1.2;
+  font-weight: 700;
 }
 
 .ustacik-confirmation__description {
   margin: 14px 0 0;
-  color: var(--text-grey, #444444);
+  color: var(--text-grey, #444444) !important;
   line-height: 1.6;
+  font-size: 1rem;
 }
 
 .ustacik-confirmation__actions {
@@ -47,13 +49,19 @@
 
 .ustacik-confirmation__button {
   width: auto;
-  min-width: 116px;
+  min-width: 120px;
   min-height: 44px;
-  padding: 10px 20px;
+  padding: 10px 22px;
   border-radius: 999px;
   font: inherit;
   font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease,
@@ -66,25 +74,26 @@
 }
 
 .ustacik-confirmation__button--cancel {
-  border: 2px solid var(--brand-brown, #8a5239);
-  background: transparent;
-  color: var(--brand-brown, #8a5239);
+  border: 2px solid var(--brand-brown, #8a5239) !important;
+  background: #ffffff !important;
+  color: var(--brand-brown, #8a5239) !important;
 }
 
 .ustacik-confirmation__button--cancel:hover {
-  background: var(--brand-brown, #8a5239);
-  color: var(--bg-white, #ffffff);
+  background: var(--brand-brown, #8a5239) !important;
+  color: #ffffff !important;
 }
 
 .ustacik-confirmation__button--confirm {
-  border: 2px solid var(--brand-rust, #c85a32);
-  background: var(--brand-rust, #c85a32);
-  color: var(--bg-white, #ffffff);
+  border: 2px solid var(--brand-rust, #c85a32) !important;
+  background: var(--brand-rust, #c85a32) !important;
+  color: #ffffff !important;
 }
 
 .ustacik-confirmation__button--confirm:hover {
-  border-color: var(--btn-brown, #834731);
-  background: var(--btn-brown, #834731);
+  border-color: var(--btn-brown, #834731) !important;
+  background: var(--btn-brown, #834731) !important;
+  color: #ffffff !important;
 }
 
 @media (max-width: 520px) {

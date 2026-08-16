@@ -10,16 +10,36 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 export default class extends BaseSeeder {
   async run() {
     const plumbing = await Category.updateOrCreate(
-      { nameEn: 'Plumbing' },
-      { nameEn: 'Plumbing', nameTr: 'Tesisat' }
+      { nameEn: 'Plumbing & Water Systems' },
+      { nameEn: 'Plumbing & Water Systems', nameTr: 'Su Tesisatı' }
     )
     const electrical = await Category.updateOrCreate(
       { nameEn: 'Electrical' },
       { nameEn: 'Electrical', nameTr: 'Elektrik' }
     )
+    const hvac = await Category.updateOrCreate(
+      { nameEn: 'HVAC & Refrigeration' },
+      { nameEn: 'HVAC & Refrigeration', nameTr: 'Klima & Soğutma' }
+    )
+    const appliance = await Category.updateOrCreate(
+      { nameEn: 'Appliance & Electronics Repair' },
+      { nameEn: 'Appliance & Electronics Repair', nameTr: 'Beyaz Eşya & Elektronik Tamir' }
+    )
+    const painting = await Category.updateOrCreate(
+      { nameEn: 'Painting & Plastering' },
+      { nameEn: 'Painting & Plastering', nameTr: 'Boya & Alçı' }
+    )
     const carpentry = await Category.updateOrCreate(
-      { nameEn: 'Carpentry' },
-      { nameEn: 'Carpentry', nameTr: 'Marangozluk' }
+      { nameEn: 'Carpentry & Furniture' },
+      { nameEn: 'Carpentry & Furniture', nameTr: 'Marangoz & Mobilya' }
+    )
+    const aluminium = await Category.updateOrCreate(
+      { nameEn: 'Aluminium, PVC & Glass' },
+      { nameEn: 'Aluminium, PVC & Glass', nameTr: 'Alüminyum, PVC & Cam' }
+    )
+    const garden = await Category.updateOrCreate(
+      { nameEn: 'Garden & Pool Maintenance' },
+      { nameEn: 'Garden & Pool Maintenance', nameTr: 'Bahçe & Havuz Bakımı' }
     )
 
     const leakRepair = await SubService.updateOrCreate(
@@ -35,8 +55,28 @@ export default class extends BaseSeeder {
       { categoryId: electrical.id, nameEn: 'Electrical Wiring', nameTr: 'Elektrik Tesisatı' }
     )
     await SubService.updateOrCreate(
+      { categoryId: hvac.id, nameEn: 'AC Installation & Repair' },
+      { categoryId: hvac.id, nameEn: 'AC Installation & Repair', nameTr: 'Klima Montajı ve Tamiri' }
+    )
+    await SubService.updateOrCreate(
+      { categoryId: appliance.id, nameEn: 'Washing Machine Repair' },
+      { categoryId: appliance.id, nameEn: 'Washing Machine Repair', nameTr: 'Çamaşır Makinesi Tamiri' }
+    )
+    await SubService.updateOrCreate(
+      { categoryId: painting.id, nameEn: 'Interior Painting' },
+      { categoryId: painting.id, nameEn: 'Interior Painting', nameTr: 'İç Cephe Boyama' }
+    )
+    await SubService.updateOrCreate(
       { categoryId: carpentry.id, nameEn: 'Furniture Repair' },
       { categoryId: carpentry.id, nameEn: 'Furniture Repair', nameTr: 'Mobilya Tamiri' }
+    )
+    await SubService.updateOrCreate(
+      { categoryId: aluminium.id, nameEn: 'Window Frame Repair' },
+      { categoryId: aluminium.id, nameEn: 'Window Frame Repair', nameTr: 'Pencere Doğrama Tamiri' }
+    )
+    await SubService.updateOrCreate(
+      { categoryId: garden.id, nameEn: 'Pool Maintenance' },
+      { categoryId: garden.id, nameEn: 'Pool Maintenance', nameTr: 'Havuz Bakımı' }
     )
 
     const nicosia = await Region.updateOrCreate(
@@ -51,8 +91,20 @@ export default class extends BaseSeeder {
       { nameEn: 'Famagusta' },
       { nameEn: 'Famagusta', nameTr: 'Gazimağusa' }
     )
+    await Region.updateOrCreate(
+      { nameEn: 'Iskele' },
+      { nameEn: 'Iskele', nameTr: 'İskele' }
+    )
+    await Region.updateOrCreate(
+      { nameEn: 'Guzelyurt' },
+      { nameEn: 'Guzelyurt', nameTr: 'Güzelyurt' }
+    )
+    await Region.updateOrCreate(
+      { nameEn: 'Lefke' },
+      { nameEn: 'Lefke', nameTr: 'Lefke' }
+    )
 
-    // Local-development administrator. Change this credential before any deployment.
+    // Local-development administrator.
     const adminUser = await User.updateOrCreate(
       { email: 'admin@ustacik.test' },
       {

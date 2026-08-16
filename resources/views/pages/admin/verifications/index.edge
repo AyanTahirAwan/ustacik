@@ -1,0 +1,77 @@
+@adminUserLayout({ title: t('admin.id_verifications', {}, 'Craftsman ID Verifications'), active: 'verifications' })
+  <div id="admin-verifications-page" class="admin-dashboard">
+    <section class="admin-dashboard-heading">
+      <div>
+        <p class="admin-eyebrow">{{ t('admin.kicker', {}, 'Platform Administration') }}</p>
+        <h1>{{ t('admin.id_verifications', {}, 'Craftsman ID Verifications') }}</h1>
+        <p class="admin-heading-copy">
+          {{ t('admin.verifications_sub', {}, 'Review uploaded identification documents from craftsmen and approve or reject account activation.') }}
+        </p>
+      </div>
+    </section>
+
+    <div id="verifications-error" class="alert alert-destructive admin-users-message" hidden>
+      <p id="verifications-error-message"></p>
+    </div>
+
+    <div id="verifications-success" class="alert alert-success admin-users-message" hidden>
+      <p id="verifications-success-message"></p>
+    </div>
+
+    <section id="verifications-loading" class="admin-state-card" aria-live="polite">
+      <span class="admin-loading-spinner" aria-hidden="true"></span>
+      <div>
+        <h2>{{ t('btn.loading', {}, 'Loading verifications…') }}</h2>
+      </div>
+    </section>
+
+    <div id="verifications-content" hidden>
+      <section class="admin-panel">
+        <div class="admin-panel-heading" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2>{{ t('admin.pending_verifications', {}, 'Pending Craftsman Verifications') }}</h2>
+          <span id="verifications-count" class="badge" style="background: var(--brand-rust, #c85a32); color: #fff; padding: 4px 12px; border-radius: 999px; font-weight: 700;"></span>
+        </div>
+
+        <p id="verifications-empty" class="admin-table-empty" hidden>
+          {{ t('admin.no_pending_verifications', {}, 'No pending craftsman verifications found.') }}
+        </p>
+
+        <div id="verifications-table-container" class="admin-table-container">
+          <table class="admin-craftsmen-table">
+            <thead>
+              <tr>
+                <th scope="col">{{ t('craftsman.biz_name', {}, 'Business Name') }}</th>
+                <th scope="col">{{ t('auth.email', {}, 'Email') }} / {{ t('auth.phone_number', {}, 'Phone') }}</th>
+                <th scope="col">{{ t('craftsman.category', {}, 'Category') }}</th>
+                <th scope="col">{{ t('admin.id_photo', {}, 'ID Photo') }}</th>
+                <th scope="col">{{ t('admin.status', {}, 'Status') }}</th>
+                <th scope="col" style="text-align: right;">{{ t('admin.account_actions', {}, 'Actions') }}</th>
+              </tr>
+            </thead>
+            <tbody id="verifications-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Image Preview Modal -->
+  <div id="id-photo-modal" class="ustacik-confirmation" hidden>
+    <div class="ustacik-confirmation__dialog" style="max-width: 680px; text-align: center;">
+      <h2 id="modal-craftsman-name" class="ustacik-confirmation__title" style="margin-bottom: 16px;"></h2>
+      <div style="max-height: 70vh; overflow: auto; border-radius: 8px; background: #000; display: flex; align-items: center; justify-content: center; padding: 12px;">
+        <img id="modal-photo-img" src="" alt="ID Verification Photo" style="max-width: 100%; height: auto; border-radius: 4px;" />
+      </div>
+      <div class="ustacik-confirmation__actions" style="margin-top: 20px; justify-content: center;">
+        <button id="modal-close-btn" class="ustacik-confirmation__button ustacik-confirmation__button--cancel" type="button">
+          {{ t('btn.close', {}, 'Close') }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @form({ action: '/api/admin/craftsmen/0/verify', method: 'POST', id: 'verifications-csrf-form', style: 'display:none;' })
+  @end
+
+  @vite(['resources/js/admin-verifications.js'])
+@end

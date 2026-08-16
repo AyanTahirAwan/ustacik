@@ -125,7 +125,11 @@ export default class CraftsmenController {
       .orderBy('created_at', 'desc')
       .limit(20)
 
-    const reviews = await Review.query().where('craftsman_id', user.id)
+    const reviews = await Review.query()
+      .where('craftsman_id', user.id)
+      .preload('customer')
+      .orderBy('created_at', 'desc')
+
     const pendingJobs = await JobRequest.query()
       .where('craftsman_id', user.id)
       .where('status', 'pending')
@@ -153,13 +157,26 @@ export default class CraftsmenController {
         phone: user.phoneNormalised,
       },
       jobs: jobs.map((job) => ({
+        id: job.id,
         status: job.status,
         createdAt: job.createdAt,
-        customer: { fullName: job.customer.fullName },
-        category: { nameEn: job.category.nameEn, nameTr: job.category.nameTr },
-        region: { nameEn: job.region.nameEn, nameTr: job.region.nameTr },
+        customer: { fullName: job.customer?.fullName || 'Customer' },
+        category: { nameEn: job.category?.nameEn, nameTr: job.category?.nameTr },
+        region: { nameEn: job.region?.nameEn, nameTr: job.region?.nameTr },
+        description: job.description,
       })),
-      reviews,
+      reviews: reviews.map((review) => ({
+        id: review.id,
+        punctuality: review.punctuality,
+        workmanship: review.workmanship,
+        priceHonesty: review.priceHonesty,
+        communication: review.communication,
+        average: review.average,
+        comment: review.comment,
+        craftsmanReply: review.craftsmanReply,
+        customer: { fullName: review.customer?.fullName || 'Customer' },
+        createdAt: review.createdAt,
+      })),
       stats,
     })
   }

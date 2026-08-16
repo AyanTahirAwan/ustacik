@@ -41,14 +41,17 @@
 
         <nav class="admin-topnav" aria-label="Admin navigation">
           <a href="/admin" aria-current="{{ activeSection === 'dashboard' ? 'page' : 'false' }}">
-            {{ t('admin.dashboard') }}
+            {{ t('admin.dashboard', {}, 'Dashboard') }}
+          </a>
+          <a href="/admin/verifications" aria-current="{{ activeSection === 'verifications' ? 'page' : 'false' }}">
+            {{ t('admin.id_verifications', {}, 'ID Verifications') }}
           </a>
           <a href="/admin/users" aria-current="{{ activeSection === 'users' ? 'page' : 'false' }}">
-            {{ t('admin.user_management') }}
+            {{ t('admin.user_management', {}, 'Users') }}
           </a>
-          <a href="/admin/categories">{{ t('admin.categories') }}</a>
-          <a href="/admin/regions">{{ t('admin.regions') }}</a>
-          <a href="/admin/sub-services">{{ t('admin.sub_services') }}</a>
+          <a href="/admin/categories" aria-current="{{ activeSection === 'categories' ? 'page' : 'false' }}">{{ t('admin.categories', {}, 'Categories') }}</a>
+          <a href="/admin/regions" aria-current="{{ activeSection === 'regions' ? 'page' : 'false' }}">{{ t('admin.regions', {}, 'Regions') }}</a>
+          <a href="/admin/sub-services" aria-current="{{ activeSection === 'sub-services' ? 'page' : 'false' }}">{{ t('admin.sub_services', {}, 'Sub Services') }}</a>
         </nav>
 
         <div class="lang-switcher">

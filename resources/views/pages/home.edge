@@ -1,9 +1,13 @@
 @layout()
   <section class="hero-ad-banner">
-    <h2>{{ t('home.hero_title') }}</h2>
-    <p>
-      {{ t('home.hero_subtitle') }}
-    </p>
+    <div class="hero-ad-overlay">
+      <div class="hero-ad-content">
+        <h2>{{ t('home.hero_title', {}, 'Advertisement') }}</h2>
+        <p>
+          {{ t('home.hero_subtitle', {}, 'Welcome to Ustacik! Find trusted home repair professionals or join our craftsman network today.') }}
+        </p>
+      </div>
+    </div>
   </section>
 
   <div class="card-grid {{ auth.user ? 'card-grid-single' : '' }}">
