@@ -19,6 +19,7 @@ export default defineConfig({
         'resources/js/customer-notifications.js',
         'resources/css/craftsman-account.css',
         'resources/js/craftsman-profile.js',
+        'resources/js/public-craftsman-profile.js',
         'resources/js/craftsman-work-photos.js',
         'resources/js/craftsman-subscription.js',
         'resources/css/craftsman-dashboard.css',
