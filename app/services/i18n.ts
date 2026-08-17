@@ -891,10 +891,10 @@ export const translations: Record<Locale, Record<string, string>> = {
 
 export function translate(
   key: string,
-  locale: Locale = 'en',
+  locale: Locale = 'tr',
   params?: Record<string, string | number>
 ): string {
-  let text = translations[locale]?.[key] || translations['en']?.[key] || key
+  let text = translations[locale]?.[key] || translations['tr']?.[key] || translations['en']?.[key] || key
 
   if (params) {
     Object.entries(params).forEach(([paramKey, paramVal]) => {

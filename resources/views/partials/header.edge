@@ -16,16 +16,23 @@
       @end
     </div>
 
-    <button
-      class="site-menu-toggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="site-header-navigation"
-      data-site-menu-toggle
-    >
-      <span>{{ t('nav.menu') }}</span>
-      <span aria-hidden="true">☰</span>
-    </button>
+    <div class="site-header-mobile-controls">
+      <div class="lang-switcher lang-switcher-mobile">
+        <a href="/lang/tr" class="lang-btn {{ lang === 'tr' ? 'active' : '' }}">TR</a>
+        <a href="/lang/en" class="lang-btn {{ lang === 'en' ? 'active' : '' }}">EN</a>
+      </div>
+
+      <button
+        class="site-menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-header-navigation"
+        data-site-menu-toggle
+      >
+        <span>{{ t('nav.menu') }}</span>
+        <span aria-hidden="true">☰</span>
+      </button>
+    </div>
 
     <div id="site-header-navigation" class="site-header-navigation">
       @if(!auth.user || auth.user.role !== 'craftsman')
@@ -49,7 +56,7 @@
       @end
 
       <div class="nav-actions">
-        <div class="lang-switcher">
+        <div class="lang-switcher lang-switcher-desktop">
           <a href="/lang/tr" class="lang-btn {{ lang === 'tr' ? 'active' : '' }}">TR</a>
           <a href="/lang/en" class="lang-btn {{ lang === 'en' ? 'active' : '' }}">EN</a>
         </div>

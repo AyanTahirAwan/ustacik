@@ -3922,6 +3922,20 @@ textarea.craftsman-profile-control {
   background: var(--gray-3);
 }
 
+.site-header-mobile-controls {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-switcher-mobile {
+  display: none;
+}
+
+.lang-switcher-desktop {
+  display: inline-flex;
+}
+
 .site-menu-toggle {
   display: none;
   align-items: center;
@@ -3987,9 +4001,24 @@ textarea.craftsman-profile-control {
     padding: 12px 0;
   }
 
+  .site-header-mobile-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .lang-switcher-mobile {
+    display: inline-flex;
+  }
+
+  .lang-switcher-desktop {
+    display: none !important;
+  }
+
   .site-menu-toggle {
     display: inline-flex;
-    margin-left: auto;
+    margin-left: 0;
   }
 
   .site-header-navigation {

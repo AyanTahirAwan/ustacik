@@ -14,7 +14,7 @@ export default class LocaleMiddleware {
     const sessionLang = ctx.session?.get('lang') as string | undefined
     const cookieLang = ctx.request.cookie('lang') as string | undefined
 
-    let lang: Locale = 'en'
+    let lang: Locale = 'tr'
 
     if (queryLang === 'tr' || queryLang === 'en') {
       lang = queryLang
