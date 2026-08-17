@@ -204,6 +204,7 @@ router
     router.get('api/admin/users/:id', [UsersController, 'show'])
     router.patch('api/admin/users/:id/suspend', [UsersController, 'suspend'])
     router.patch('api/admin/users/:id/unsuspend', [UsersController, 'unsuspend'])
+    router.delete('api/admin/users/:id', [UsersController, 'destroy'])
 
     router.get('api/admin/categories', [CategoriesController, 'index'])
     router.post('api/admin/categories', [CategoriesController, 'store'])

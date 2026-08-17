@@ -11,6 +11,10 @@ export default class CraftsmenController {
     const categoryId = request.input('categoryId')
 
     const query = Craftsman.query()
+      .whereNot('verification_status', 'rejected')
+      .whereHas('user', (userQuery) => {
+        userQuery.where('status', 'active')
+      })
       .preload('category')
       .preload('workPhotos')
       .orderBy('business_name', 'asc')
@@ -85,6 +89,10 @@ export default class CraftsmenController {
   async showPublic({ params, response }: HttpContext) {
     const craftsman = await Craftsman.query()
       .where('user_id', params.id)
+      .whereNot('verification_status', 'rejected')
+      .whereHas('user', (userQuery) => {
+        userQuery.where('status', 'active')
+      })
       .preload('category')
       .preload('workPhotos')
       .preload('user')

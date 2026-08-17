@@ -13,6 +13,13 @@ export default class CatalogSearchService {
     const { categoryId, subServiceId, regionId, minimumPrice, maximumPrice } = filters
     const query = ServicePriceCatalog.query()
       .where('is_active', true)
+      .whereHas('craftsman', (craftsmanQuery) => {
+        craftsmanQuery
+          .whereNot('verification_status', 'rejected')
+          .whereHas('user', (userQuery) => {
+            userQuery.where('status', 'active')
+          })
+      })
       .preload('craftsman', (craftsmen) =>
         craftsmen.select(['userId', 'businessName', 'trustLevel'])
       )

@@ -330,9 +330,9 @@ export class ServicePriceCatalogSchema extends BaseModel {
   @column()
   declare isActive: boolean
   @column()
-  declare maxPrice: number
+  declare maxPrice: string
   @column()
-  declare minPrice: number
+  declare minPrice: string
   @column()
   declare regionId: number
   @column()
@@ -366,7 +366,7 @@ export class SubscriptionSchema extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
   @column()
-  declare monthlyFee: number
+  declare monthlyFee: string
   @column.date()
   declare periodEnd: DateTime | null
   @column.date()

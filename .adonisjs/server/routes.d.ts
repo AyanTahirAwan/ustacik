@@ -81,6 +81,7 @@ export type ScannedRoutes = {
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.suspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.unsuspend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.index': { paramsTuple?: []; params?: {} }
     'categories.store': { paramsTuple?: []; params?: {} }
     'categories.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -249,6 +250,7 @@ export type ScannedRoutes = {
     'customer_favorites.destroy': { paramsTuple: [ParamValue]; params: {'craftsmanId': ParamValue} }
     'work_photos.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'service_price_catalogs.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'sub_services.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'regions.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

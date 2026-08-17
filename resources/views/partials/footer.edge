@@ -1,0 +1,48 @@
+<footer id="contact" class="site-footer-black" aria-labelledby="footer-contact-title">
+  <div class="site-footer-inner">
+    <div class="footer-contact-block">
+      <div class="footer-contact-info">
+        <h2 id="footer-contact-title" class="footer-title">{{ t('footer.contact_title', {}, 'Contact Us') }}</h2>
+        <p class="footer-desc">
+          {{ t('footer.contact_desc', {}, "Have a question, need help finding a craftsman, or want to learn more about Ustacik? We're here to help. Get in touch with us and we'll be happy to assist you.") }}
+        </p>
+        <p class="footer-email-text" style="margin-top: 14px; font-size: 1.05rem; color: #cbd5e1;">
+          ✉️ {{ lang === 'tr' ? 'E-posta:' : 'Email:' }}
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ustacikktc@gmail.com&su=Inquiry%20via%20Ustacik" style="color: #ffffff; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; margin-left: 4px;">
+            ustacikktc@gmail.com
+          </a>
+        </p>
+      </div>
+      <div class="footer-contact-action">
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ustacikktc@gmail.com&su=Inquiry%20via%20Ustacik" class="btn-primary footer-btn">
+          {{ t('footer.contact_btn', {}, 'Contact Us') }}
+        </a>
+      </div>
+    </div>
+
+    <hr class="footer-divider" />
+
+    <div class="footer-bottom-row">
+      <div class="footer-brand-wrap">
+        <a href="/" class="footer-brand-link" aria-label="Ustacik Home">
+          <img src="/ustacik-icon.svg" alt="Ustacik Logo" class="footer-brand-icon" width="28" height="28" />
+          <span class="footer-brand-name">ustaçık</span>
+        </a>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Ustacik</a>
+        <a href="/#about">{{ t('footer.about_us', {}, 'About Us') }}</a>
+        <a href="/categories">{{ t('nav.categories', {}, 'Categories') }}</a>
+        <a href="/regions">{{ t('nav.regions', {}, 'Regions') }}</a>
+        <a href="/craftsmen">{{ t('nav.craftsmen', {}, 'Craftsmen') }}</a>
+        <a href="/search">{{ t('nav.search', {}, 'Search') }}</a>
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ustacikktc@gmail.com&su=Inquiry%20via%20Ustacik">{{ t('footer.contact', {}, 'Contact') }}</a>
+      </nav>
+
+      <p class="footer-copyright">
+        {{ t('footer.copyright', {}, '© 2026 Ustacik. All rights reserved.') }}
+      </p>
+    </div>
+  </div>
+</footer>

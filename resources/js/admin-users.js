@@ -1,3 +1,5 @@
+import { confirmAction } from './confirmation-modal.js'
+
 const isTr = window.APP_LOCALE === 'tr'
 const tr = (en, trText) => (isTr ? trText : en)
 
@@ -92,13 +94,68 @@ document.addEventListener('DOMContentLoaded', () => {
       statusCell.appendChild(createBadge(user.status, 'status'))
 
       const actionCell = document.createElement('td')
-      const detailLink = document.createElement('a')
+      actionCell.style.display = 'flex'
+      actionCell.style.alignItems = 'center'
+      actionCell.style.gap = '8px'
 
+      const detailLink = document.createElement('a')
       detailLink.href = `/admin/users/${user.id}`
       detailLink.className = 'btn-back admin-user-view-link'
       detailLink.textContent = tr('View Details', 'Detayları Gör')
 
-      actionCell.appendChild(detailLink)
+      const deleteBtn = document.createElement('button')
+      deleteBtn.type = 'button'
+      deleteBtn.className = 'admin-user-delete-btn'
+      deleteBtn.setAttribute('title', tr('Delete Account', 'Hesabı Sil'))
+      deleteBtn.setAttribute('aria-label', tr('Delete Account', 'Hesabı Sil'))
+      deleteBtn.style.backgroundColor = '#dc2626'
+      deleteBtn.style.color = '#ffffff'
+      deleteBtn.style.border = 'none'
+      deleteBtn.style.width = '38px'
+      deleteBtn.style.height = '38px'
+      deleteBtn.style.minWidth = '38px'
+      deleteBtn.style.borderRadius = '8px'
+      deleteBtn.style.display = 'inline-flex'
+      deleteBtn.style.alignItems = 'center'
+      deleteBtn.style.justifyContent = 'center'
+      deleteBtn.style.cursor = 'pointer'
+      deleteBtn.style.fontSize = '1.05rem'
+      deleteBtn.style.padding = '0'
+      deleteBtn.style.transition = 'all 0.2s ease'
+      deleteBtn.innerHTML = '🗑️'
+      deleteBtn.addEventListener('mouseenter', () => { deleteBtn.style.backgroundColor = '#b91c1c' })
+      deleteBtn.addEventListener('mouseleave', () => { deleteBtn.style.backgroundColor = '#dc2626' })
+
+      deleteBtn.addEventListener('click', async () => {
+        const name = getDisplayName(user)
+        const confirmed = await confirmAction({
+          title: tr('Delete user account?', 'Kullanıcı hesabı silinsin mi?'),
+          message: isTr
+            ? `"${name}" kullanıcısını ve tüm ilişkili verilerini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.`
+            : `Are you sure you want to delete "${name}" and all associated data? This action cannot be undone.`,
+          confirmLabel: tr('Delete', 'Sil'),
+          cancelLabel: tr('Cancel', 'İptal'),
+        })
+
+        if (!confirmed) return
+
+        try {
+          const res = await fetch(`/api/admin/users/${user.id}`, {
+            method: 'DELETE',
+            headers: { Accept: 'application/json' },
+            credentials: 'same-origin',
+          })
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}))
+            throw new Error(data.message || 'Failed to delete user')
+          }
+          await loadUsers()
+        } catch (err) {
+          alert(err.message || 'Failed to delete user')
+        }
+      })
+
+      actionCell.append(detailLink, deleteBtn)
 
       row.append(
         idCell,

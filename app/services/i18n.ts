@@ -36,6 +36,41 @@ export const translations: Record<Locale, Record<string, string>> = {
       'Need something fixed or installed? Browse our specialized service categories to find top-rated local craftsmen.',
     'home.get_service_btn': 'Browse Services →',
 
+    // Landing Page Sections
+    'home.about_title': 'About Ustacik',
+    'home.about_desc':
+      'Ustacik makes it easier to find reliable craftsmen for the work you need. Whether you need a plumber, electrician, painter, or another professional, you can explore available craftsmen, compare their profiles and portfolios, and choose the right person for your job.',
+    'home.about_btn': 'Learn More',
+
+    'home.categories_title': 'Find the Right Service',
+    'home.categories_desc':
+      'Explore our wide range of service categories and quickly find the type of professional you need. From home repairs and maintenance to specialized services, browse by category to narrow down your search.',
+    'home.categories_btn': 'Explore Categories',
+
+    'home.regions_title': 'Find Craftsmen Near You',
+    'home.regions_desc':
+      'Search for craftsmen based on their location and find professionals who provide services in your area. Select a region to discover available services and craftsmen nearby.',
+    'home.regions_btn': 'Explore Regions',
+
+    'home.craftsmen_title': 'Meet Our Craftsmen',
+    'home.craftsmen_desc':
+      'Browse craftsmen and learn more about their experience, skills, services, and previous work. View their profiles and portfolios to help you choose the right professional for your job.',
+    'home.craftsmen_btn': 'Browse Craftsmen',
+
+    'home.search_title': 'Find What You Need',
+    'home.search_desc':
+      'Looking for something specific? Use our search to quickly find craftsmen and services based on what you need. Search, filter, and explore your options all in one place.',
+    'home.search_btn': 'Start Searching',
+
+    // Footer
+    'footer.contact_title': 'Contact Us',
+    'footer.contact_desc':
+      "Have a question, need help finding a craftsman, or want to learn more about Ustacik? We're here to help. Get in touch with us and we'll be happy to assist you.",
+    'footer.contact_btn': 'Contact Us',
+    'footer.copyright': '© 2026 Ustacik. All rights reserved.',
+    'footer.about_us': 'About Us',
+    'footer.contact': 'Contact',
+
     // Auth
     'auth.signup_heading': 'Signup',
     'auth.signup_sub': 'Enter your details below to create your account',
@@ -443,6 +478,41 @@ export const translations: Record<Locale, Record<string, string>> = {
     'home.get_service_desc':
       'Bir şeyin tamir edilmesine veya kurulmasına mı ihtiyacınız var? En iyi ustalara ulaşmak için uzmanlık kategorilerimizi inceleyin.',
     'home.get_service_btn': 'Hizmetleri İncele →',
+
+    // Landing Page Sections
+    'home.about_title': 'Ustacık Hakkında',
+    'home.about_desc':
+      'Ustacık, ihtiyacınız olan işler için güvenilir ustaları bulmanızı kolaylaştırır. İster tesisatçı, ister elektrikçi, boyacı veya başka bir uzmana ihtiyacınız olsun; mevcut ustaları inceleyebilir, profillerini ve çalışmalarını karşılaştırabilir ve işiniz için doğru kişiyi seçebilirsiniz.',
+    'home.about_btn': 'Daha Fazla Bilgi',
+
+    'home.categories_title': 'Doğru Hizmeti Bulun',
+    'home.categories_desc':
+      'Geniş hizmet kategorilerimizi keşfedin ve ihtiyacınız olan profesyonel türünü hızla bulun. Ev tamiri ve bakımından uzmanlık gerektiren hizmetlere kadar aramanızı daraltmak için kategoriye göre göz atın.',
+    'home.categories_btn': 'Kategorileri Keşfedin',
+
+    'home.regions_title': 'Size En Yakın Ustayı Bulun',
+    'home.regions_desc':
+      'Ustaları bulundukları konuma göre arayın ve bölgenizde hizmet veren profesyonelleri bulun. Çevrenizdeki hizmetleri ve ustaları keşfetmek için bir bölge seçin.',
+    'home.regions_btn': 'Bölgeleri Keşfedin',
+
+    'home.craftsmen_title': 'Ustalarımızla Tanışın',
+    'home.craftsmen_desc':
+      'Ustalara göz atın ve deneyimleri, becerileri, hizmetleri ve geçmiş çalışmaları hakkında bilgi edinin. İşiniz için doğru ustayı seçmek üzere profillerini ve portföylerini görüntüleyin.',
+    'home.craftsmen_btn': 'Ustalara Göz Atın',
+
+    'home.search_title': 'İhtiyacınız Olanı Bulun',
+    'home.search_desc':
+      'Özel bir şey mi arıyorsunuz? İhtiyacınıza göre ustaları ve hizmetleri hızlıca bulmak için arama özelliğimizi kullanın. Hepsini tek bir yerden arayın, filtreleyin ve seçenekleri keşfedin.',
+    'home.search_btn': 'Aramaya Başlayın',
+
+    // Footer
+    'footer.contact_title': 'İletişime Geçin',
+    'footer.contact_desc':
+      'Bir sorunuz mu var, usta bulma konusunda yardıma mı ihtiyacınız var veya Ustacık hakkında daha fazla bilgi mi almak istiyorsunuz? Size yardımcı olmaktan mutluluk duyarız.',
+    'footer.contact_btn': 'Bize Ulaşın',
+    'footer.copyright': '© 2026 Ustacık. Tüm hakları saklıdır.',
+    'footer.about_us': 'Hakkımızda',
+    'footer.contact': 'İletişim',
 
     // Auth
     'auth.signup_heading': 'Kayıt Ol',

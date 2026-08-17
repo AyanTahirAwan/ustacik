@@ -10,31 +10,118 @@
     </div>
   </section>
 
-  <div class="card-grid {{ auth.user ? 'card-grid-single' : '' }}">
-    @if(!auth.user)
-      <div class="card">
-        <div>
-          <h2 class="card-title">{{ t('home.join_title') }}</h2>
-          <p class="card-description">
-            {{ t('home.join_desc') }}
-          </p>
-        </div>
-        <div class="action-container">
-          @!link({ href: '/signup?role=craftsman', text: t('home.join_btn'), class: 'btn-primary' })
-        </div>
-      </div>
-    @end
-
-    <div class="card">
-      <div>
-        <h2 class="card-title">{{ t('home.get_service_title') }}</h2>
-        <p class="card-description">
-          {{ t('home.get_service_desc') }}
+  <div class="landing-sections-flow">
+    <!-- 1. About Us Section -->
+    <section id="about" class="landing-block">
+      <div class="landing-block-header">
+        <h2 class="landing-block-title">{{ t('home.about_title', {}, 'About Ustacik') }}</h2>
+        <p class="landing-block-desc">
+          {{ t('home.about_desc', {}, 'Ustacik makes it easier to find reliable craftsmen for the work you need. Whether you need a plumber, electrician, painter, or another professional, you can explore available craftsmen, compare their profiles and portfolios, and choose the right person for your job.') }}
         </p>
       </div>
       <div class="action-container">
-        @!link({ href: '/categories', text: t('home.get_service_btn'), class: 'btn-primary' })
+        @!link({ href: '#categories', text: t('home.about_btn', {}, 'Learn More'), class: 'btn-primary' })
       </div>
-    </div>
+    </section>
+
+    <!-- 2. Categories Section -->
+    <section id="categories" class="landing-block">
+      <div class="landing-block-header">
+        <h2 class="landing-block-title">{{ t('home.categories_title', {}, 'Find the Right Service') }}</h2>
+        <p class="landing-block-desc">
+          {{ t('home.categories_desc', {}, 'Explore our wide range of service categories and quickly find the type of professional you need. From home repairs and maintenance to specialized services, browse by category to narrow down your search.') }}
+        </p>
+        <div class="landing-preview-pills">
+          <a href="/categories" class="landing-pill">🔧 {{ lang === 'tr' ? 'Su Tesisatı' : 'Plumbing' }}</a>
+          <a href="/categories" class="landing-pill">⚡ {{ lang === 'tr' ? 'Elektrik' : 'Electrical' }}</a>
+          <a href="/categories" class="landing-pill">❄️ {{ lang === 'tr' ? 'Klima & Soğutma' : 'HVAC & AC' }}</a>
+          <a href="/categories" class="landing-pill">🧺 {{ lang === 'tr' ? 'Beyaz Eşya Tamiri' : 'Appliance Repair' }}</a>
+          <a href="/categories" class="landing-pill">🎨 {{ lang === 'tr' ? 'Boya & Alçı' : 'Painting' }}</a>
+          <a href="/categories" class="landing-pill">🪚 {{ lang === 'tr' ? 'Marangoz & Mobilya' : 'Carpentry' }}</a>
+          <a href="/categories" class="landing-pill">🪟 {{ lang === 'tr' ? 'Alüminyum & Cam' : 'Aluminium & Glass' }}</a>
+          <a href="/categories" class="landing-pill">🌿 {{ lang === 'tr' ? 'Bahçe & Havuz' : 'Garden & Pool' }}</a>
+        </div>
+      </div>
+      <div class="action-container">
+        @!link({ href: '/categories', text: t('home.categories_btn', {}, 'Explore Categories'), class: 'btn-primary' })
+      </div>
+    </section>
+
+    <!-- 3. Regions Section -->
+    <section id="regions" class="landing-block">
+      <div class="landing-block-header">
+        <h2 class="landing-block-title">{{ t('home.regions_title', {}, 'Find Craftsmen Near You') }}</h2>
+        <p class="landing-block-desc">
+          {{ t('home.regions_desc', {}, 'Search for craftsmen based on their location and find professionals who provide services in your area. Select a region to discover available services and craftsmen nearby.') }}
+        </p>
+        <div class="landing-preview-pills">
+          <a href="/regions" class="landing-pill">📍 {{ lang === 'tr' ? 'Lefkoşa' : 'Nicosia' }}</a>
+          <a href="/regions" class="landing-pill">📍 {{ lang === 'tr' ? 'Girne' : 'Kyrenia' }}</a>
+          <a href="/regions" class="landing-pill">📍 {{ lang === 'tr' ? 'Gazimağusa' : 'Famagusta' }}</a>
+          <a href="/regions" class="landing-pill">📍 {{ lang === 'tr' ? 'İskele' : 'Iskele' }}</a>
+          <a href="/regions" class="landing-pill">📍 {{ lang === 'tr' ? 'Güzelyurt' : 'Guzelyurt' }}</a>
+          <a href="/regions" class="landing-pill">📍 {{ lang === 'tr' ? 'Lefke' : 'Lefke' }}</a>
+        </div>
+      </div>
+      <div class="action-container">
+        @!link({ href: '/regions', text: t('home.regions_btn', {}, 'Explore Regions'), class: 'btn-primary' })
+      </div>
+    </section>
+
+    <!-- 4. Craftsmen Section -->
+    <section id="craftsmen" class="landing-block">
+      <div class="landing-block-header">
+        <h2 class="landing-block-title">{{ t('home.craftsmen_title', {}, 'Meet Our Craftsmen') }}</h2>
+        <p class="landing-block-desc">
+          {{ t('home.craftsmen_desc', {}, 'Browse craftsmen and learn more about their experience, skills, services, and previous work. View their profiles and portfolios to help you choose the right professional for your job.') }}
+        </p>
+        <div class="landing-features-grid">
+          <div class="landing-feature-card">
+            <span class="landing-feature-icon">🛡️</span>
+            <div class="landing-feature-text">
+              <strong>{{ lang === 'tr' ? 'Kimlik Doğrulaması' : 'Verified ID' }}</strong>
+              <span>{{ lang === 'tr' ? 'Yönetici onaylı resmi kimlik denetimi' : 'Admin-verified identity check' }}</span>
+            </div>
+          </div>
+          <div class="landing-feature-card">
+            <span class="landing-feature-icon">⭐</span>
+            <div class="landing-feature-text">
+              <strong>{{ lang === 'tr' ? 'Gerçek Müşteri Yorumları' : 'Authentic Reviews' }}</strong>
+              <span>{{ lang === 'tr' ? 'Tamamlanan işler sonrası şeffaf puanlama' : 'Transparent scores on completed jobs' }}</span>
+            </div>
+          </div>
+          <div class="landing-feature-card">
+            <span class="landing-feature-icon">📸</span>
+            <div class="landing-feature-text">
+              <strong>{{ lang === 'tr' ? 'İş Portföyleri' : 'Work Portfolios' }}</strong>
+              <span>{{ lang === 'tr' ? 'Gerçekleşmiş işlerin fotoğrafları' : 'Photos of actual past projects' }}</span>
+            </div>
+          </div>
+          <div class="landing-feature-card">
+            <span class="landing-feature-icon">💬</span>
+            <div class="landing-feature-text">
+              <strong>{{ lang === 'tr' ? 'Hızlı İletişim' : 'Direct Contact' }}</strong>
+              <span>{{ lang === 'tr' ? 'Tek tıkla WhatsApp veya talep oluşturma' : 'One-click WhatsApp or job request' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="action-container">
+        @!link({ href: '/craftsmen', text: t('home.craftsmen_btn', {}, 'Browse Craftsmen'), class: 'btn-primary' })
+      </div>
+    </section>
+
+    <!-- 5. Search Section -->
+    <section id="search" class="landing-block">
+      <div class="landing-block-header">
+        <h2 class="landing-block-title">{{ t('home.search_title', {}, 'Find What You Need') }}</h2>
+        <p class="landing-block-desc">
+          {{ t('home.search_desc', {}, 'Looking for something specific? Use our search to quickly find craftsmen and services based on what you need. Search, filter, and explore your options all in one place.') }}
+        </p>
+      </div>
+      <div class="action-container">
+        @!link({ href: '/search', text: t('home.search_btn', {}, 'Start Searching'), class: 'btn-primary' })
+      </div>
+    </section>
   </div>
 @end

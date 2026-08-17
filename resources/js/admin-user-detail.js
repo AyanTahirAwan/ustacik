@@ -385,5 +385,57 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
+  const deleteButton = document.getElementById('admin-user-delete')
+  if (deleteButton) {
+    deleteButton.addEventListener('click', async () => {
+      if (!currentUser) return
+
+      const name = getDisplayName(currentUser)
+      const confirmed = await confirmAction({
+        title: tr('Delete user account?', 'Kullanıcı hesabı silinsin mi?'),
+        message: isTr
+          ? `"${name}" kullanıcısını ve ilişkili tüm verilerini kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.`
+          : `Are you sure you want to permanently delete "${name}" and all associated records? This action cannot be undone.`,
+        confirmLabel: tr('Delete Account', 'Hesabı Sil'),
+        cancelLabel: tr('Cancel', 'İptal'),
+      })
+
+      if (!confirmed) return
+
+      error.hidden = true
+      success.hidden = true
+
+      deleteButton.disabled = true
+      deleteButton.textContent = tr('Deleting...', 'Siliniyor...')
+
+      try {
+        const response = await fetch(`/api/admin/users/${currentUser.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json',
+            'x-csrf-token': csrfInput?.value || '',
+          },
+          credentials: 'same-origin',
+        })
+
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}))
+          throw new Error(data.message || 'Failed to delete user account')
+        }
+
+        window.location.assign('/admin/users')
+      } catch (deleteErr) {
+        console.error('Failed to delete user', deleteErr)
+        errorMessage.textContent = deleteErr.message || tr(
+          'Unable to delete the user. Please try again.',
+          'Kullanıcı silinemedi. Lütfen tekrar deneyin.'
+        )
+        error.hidden = false
+        deleteButton.disabled = false
+        deleteButton.textContent = tr('Delete Account', 'Hesabı Sil')
+      }
+    })
+  }
+
   loadUser()
 })
