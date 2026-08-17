@@ -193,10 +193,11 @@ main {
   margin-bottom: 40px;
   box-shadow: 0 12px 32px rgba(138, 82, 57, 0.16);
   border: 1px solid rgba(138, 82, 57, 0.2);
+  transition: background-image 0.3s ease;
 }
 
 .hero-ad-overlay {
-  background: linear-gradient(135deg, rgba(26, 16, 11, 0.78) 0%, rgba(48, 25, 14, 0.68) 50%, rgba(20, 15, 10, 0.82) 100%);
+  background: linear-gradient(135deg, rgba(26, 16, 11, 0.82) 0%, rgba(48, 25, 14, 0.72) 50%, rgba(20, 15, 10, 0.85) 100%);
   padding: 60px 40px;
   display: flex;
   align-items: center;
@@ -206,24 +207,53 @@ main {
 
 .hero-ad-content {
   max-width: 780px;
+  width: 100%;
 }
 
 .hero-ad-banner h2 {
   font-family: var(--font-serif);
-  font-size: 2.4rem;
+  font-size: clamp(1.8rem, 4.5vw, 2.75rem);
   font-weight: 700;
-  margin-bottom: 14px;
-  color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  letter-spacing: -0.02em;
+  margin-bottom: clamp(10px, 2vw, 16px);
+  color: var(--brand-rust, #c85a32);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  letter-spacing: -0.015em;
+  line-height: 1.25;
 }
 
 .hero-ad-banner p {
-  font-size: 1.15rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
   margin: 0 auto;
+  max-width: 680px;
+}
+
+/* Mobile & Small Tablet Hero Banner Switch */
+@media (max-width: 768px) {
+  .hero-ad-banner {
+    background-image: url('/images/hero-banner-mobile.png');
+    background-position: center;
+    background-size: cover;
+    margin-bottom: 28px;
+    border-radius: 16px;
+  }
+
+  .hero-ad-overlay {
+    padding: 44px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-ad-banner {
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+
+  .hero-ad-overlay {
+    padding: 32px 16px;
+  }
 }
 
 /* Cards grid (existing element style) */
@@ -3102,10 +3132,6 @@ textarea.craftsman-profile-control {
 
   .brand-title {
     font-size: 1.8rem;
-  }
-
-  .hero-ad-banner {
-    padding: 30px 20px;
   }
 
   input.form-control,

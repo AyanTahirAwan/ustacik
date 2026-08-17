@@ -24,7 +24,7 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     // Home Page
     'home.title': 'Ustacik — Find trusted craftsmen in your area',
-    'home.hero_title': 'Advertisement',
+    'home.hero_title': 'Ustacik',
     'home.hero_subtitle':
       'Welcome to Ustacik! Find trusted home repair professionals or join our craftsman network today.',
     'home.join_title': 'Join the team',
@@ -467,7 +467,7 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     // Home Page
     'home.title': 'Ustacık — Bölgenizdeki güvenilir ustaları bulun',
-    'home.hero_title': 'Duyuru',
+    'home.hero_title': 'Ustacık',
     'home.hero_subtitle':
       'Ustacık’a hoş geldiniz! Güvenilir ev tamir uzmanları bulun veya usta ağımıza hemen katılın.',
     'home.join_title': 'Aramıza Katılın',
