@@ -9,9 +9,9 @@
     <circle cx="24" cy="18" r="2.5" fill="#C85A32" />
   </g>
 
-  <!-- Typography: ustaçık -->
+  <!-- Typography: ustacık -->
   <text x="62" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="800" fill="#1E293B" letter-spacing="-0.03em">
-    usta<tspan fill="#C85A32">çık</tspan>
+    usta<tspan fill="#C85A32">cık</tspan>
   </text>
   <text x="184" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" fill="#8A5239" letter-spacing="0.05em">KTC</text>
 

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ lang || 'en' }}">
+<html lang="{{ lang || 'tr' }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ $props.get('title') ?? t('nav.craftsman_workspace') }} — UstaÇık</title>
-    <script>window.APP_LOCALE = "{{ lang || 'en' }}";</script>
+    <title>{{ $props.get('title') ?? t('nav.craftsman_workspace') }} — Ustacık</title>
+    <script>window.APP_LOCALE = "{{ lang || 'tr' }}";</script>
     @if($props.get('accountPage'))
       @vite([
         'resources/css/app.css',

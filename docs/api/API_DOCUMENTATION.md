@@ -1,9 +1,9 @@
-# UstaÇık — API Documentation
+# Ustacık — API Documentation
 
 ## 1. General Information
 
 ### 1.1 Project Name
-**UstaÇık** (`ustacik`) — A service marketplace platform connecting customers with verified craftsmen (Usta = "master craftsman" in Turkish, Çık = wordplay on "çıkış"/"discovery").
+**Ustacık** (`ustacik`) — A service marketplace platform connecting customers with verified craftsmen.
 
 ### 1.2 Base URL
 
