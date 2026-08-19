@@ -23,10 +23,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     'nav.craftsman_workspace': 'Craftsman Workspace',
 
     // Home Page
-    'home.title': 'Ustacik — Find trusted craftsmen in your area',
-    'home.hero_title': 'Ustacik',
+    'home.title': 'Ustacık — Find trusted craftsmen in your area',
+    'home.hero_title': 'Ustacık',
     'home.hero_subtitle':
-      'Welcome to Ustacik! Find trusted home repair professionals or join our craftsman network today.',
+      'Welcome to Ustacık! Find trusted home repair professionals or join our craftsman network today.',
     'home.join_title': 'Join the team',
     'home.join_desc':
       'Are you a qualified professional looking for work? Register your business and discover nearby local service opportunities.',
@@ -37,9 +37,9 @@ export const translations: Record<Locale, Record<string, string>> = {
     'home.get_service_btn': 'Browse Services →',
 
     // Landing Page Sections
-    'home.about_title': 'About Ustacik',
+    'home.about_title': 'About Ustacık',
     'home.about_desc':
-      'Ustacik makes it easier to find reliable craftsmen for the work you need. Whether you need a plumber, electrician, painter, or another professional, you can explore available craftsmen, compare their profiles and portfolios, and choose the right person for your job.',
+      'Ustacık makes it easier to find reliable craftsmen for the work you need. Whether you need a plumber, electrician, painter, or another professional, you can explore available craftsmen, compare their profiles and portfolios, and choose the right person for your job.',
     'home.about_btn': 'Learn More',
 
     'home.categories_title': 'Find the Right Service',
@@ -65,10 +65,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     // Footer
     'footer.contact_title': 'Contact Us',
     'footer.contact_desc':
-      "Have a question, need help finding a craftsman, or want to learn more about Ustacik? We're here to help. Get in touch with us and we'll be happy to assist you.",
+      "Have a question, need help finding a craftsman, or want to learn more about Ustacık? We're here to help. Get in touch with us and we'll be happy to assist you.",
     'footer.contact_btn': 'Contact Us',
-    'footer.copyright': '© 2026 Ustacik. All rights reserved.',
-    'footer.about_us': 'About Us',
+    'footer.copyright': '© 2026 Ustacık. All rights reserved.',
+    'footer.about_us': 'About Ustacık',
     'footer.contact': 'Contact',
 
     // Auth
@@ -327,7 +327,7 @@ export const translations: Record<Locale, Record<string, string>> = {
       'Are you sure you want to unsuspend this account? The account will regain access to the application.',
     'admin.craftsmen_performance': 'Craftsmen Performance',
     'admin.platform_analytics': 'Platform analytics',
-    'admin.performance_sub': 'How craftsman participation, trust, and job activity are progressing across ustacik.',
+    'admin.performance_sub': 'How craftsman participation, trust, and job activity are progressing across Ustacık.',
     'admin.date_range': 'Date range',
     'admin.last_30_days': 'Last 30 days',
     'admin.last_90_days': 'Last 90 days',
